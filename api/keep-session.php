@@ -5,6 +5,7 @@
  * Archivo: api/keep-session.php
  */
 
+require_once '../config/session.php';
 session_start();
 header('Content-Type: application/json');
 

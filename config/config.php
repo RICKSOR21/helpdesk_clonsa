@@ -14,6 +14,7 @@
 define('IS_DEVELOPMENT', in_array($_SERVER['SERVER_NAME'] ?? 'localhost', [
     'localhost',
     '127.0.0.1',
+    '192.168.1.88',
     'helpdesk.test'
 ]));
 
@@ -43,13 +44,15 @@ define('DB_CHARSET', 'utf8mb4');
 
 define('APP_NAME', 'Helpdesk Clonsa');
 define('APP_VERSION', '1.0.0');
-define('APP_URL', IS_DEVELOPMENT ? 'http://localhost/helpdesk' : 'https://helpdesk.clonsa.pe');
+define('APP_URL', IS_DEVELOPMENT ? 'http://localhost/helpdesk' : 'https://clonsaingenieria.com/helpdesk');
 
 // ═══════════════════════════════════════════════════════════════════
 // CONFIGURACIÓN DE EMAIL (SMTP)
 // ═══════════════════════════════════════════════════════════════════
 
-define('SMTP_ENABLED', !IS_DEVELOPMENT);  // Solo enviar emails en producción
+// Habilitar envio de correos en cualquier entorno.
+// Si quieres desactivarlo temporalmente, cambia a false.
+define('SMTP_ENABLED', true);
 
 if (IS_DEVELOPMENT) {
     // En desarrollo: No enviar emails reales (solo logs)
@@ -97,14 +100,14 @@ define('EMAIL_FROM_NAME', SMTP_FROM_NAME);
 
 // ⏱️ TIMEOUT DE SESIÓN - Configurable aquí
 // Tiempo de inactividad antes de mostrar popup (en segundos)
-define('SESSION_TIMEOUT', 60);  // 1 hora = 3600 segundos
+define('SESSION_TIMEOUT', 3600);  // 1 hora = 3600 segundos
                                    // 1800 = 30 minutos
                                    // 7200 = 2 horas
 
 // Tiempo de espera del popup antes de cerrar sesión automáticamente (en segundos)
-define('SESSION_POPUP_TIMEOUT', 30);  // 1 minuto = 60 segundos
+define('SESSION_POPUP_TIMEOUT', 120);  // 2 minutos = 120 segundos
                                        // 30 = 30 segundos
-                                       // 120 = 2 minutos
+                                       // 60 = 1 minuto
 
 // Configuración de sesión PHP
 define('SESSION_LIFETIME', SESSION_TIMEOUT);  // Usar el mismo valor que SESSION_TIMEOUT
@@ -259,7 +262,7 @@ function writeLog($filename, $message) {
     $log_file = LOGS_PATH . '/' . $filename;
     $timestamp = date('Y-m-d H:i:s');
     $log_message = "[{$timestamp}] {$message}\n";
-    file_put_contents($log_message, $log_message, FILE_APPEND);
+    file_put_contents($log_file, $log_message, FILE_APPEND);
 }
 
 // ═══════════════════════════════════════════════════════════════════

@@ -1,4 +1,9 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
+ob_start();
+
+require_once '../config/session.php';
 session_start();
 header('Content-Type: application/json');
 
@@ -9,20 +14,8 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Conexión a BD
-$host = 'localhost';
-$dbname = 'helpdesk_clonsa';
-$username = 'root';
-$password = '';
-
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Error de conexión']);
-    exit;
-}
+require_once '../config/config.php';
+$db = getDBConnection();
 
 // ============================================
 // OBTENER INFORMACIÓN DEL USUARIO
@@ -49,31 +42,32 @@ if (!$puede_ver_todos) {
 }
 
 // ============================================
-// ✅ CALCULAR FECHAS SEGÚN PERÍODO (FIJAS)
+// ✅ CALCULAR FECHAS SEGÚN PERÍODO (DINÁMICO)
 // ============================================
+$hoy = new DateTime();
+
 if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
     $desde = DateTime::createFromFormat('d/m/Y', $fecha_desde);
     $hasta = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
-    
+
     if ($desde && $hasta) {
         $fechaDesde = $desde->format('Y-m-d 00:00:00');
         $fechaHasta = $hasta->format('Y-m-d 23:59:59');
     } else {
-        $fechaDesde = '2026-01-24 00:00:00';
-        $fechaHasta = '2026-01-31 23:59:59';
+        $fechaDesde = $hoy->modify('-7 days')->format('Y-m-d 00:00:00');
+        $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
     }
 } else {
-    // ✅ FECHAS FIJAS
     switch($periodo) {
         case 'mes':
-            // Todo Enero 2026
-            $fechaDesde = '2026-01-01 00:00:00';
-            $fechaHasta = '2026-01-31 23:59:59';
+            // Mes actual: desde el 1 hasta el último día del mes actual
+            $fechaDesde = $hoy->format('Y-m-01 00:00:00');
+            $fechaHasta = $hoy->format('Y-m-t 23:59:59'); // 't' = último día del mes
             break;
         case 'año':
-            // Año 2026
-            $fechaDesde = '2026-01-01 00:00:00';
-            $fechaHasta = '2026-12-31 23:59:59';
+            // Año actual: desde el 1 de enero hasta el 31 de diciembre
+            $fechaDesde = $hoy->format('Y-01-01 00:00:00');
+            $fechaHasta = $hoy->format('Y-12-31 23:59:59');
             break;
         case 'todo':
             $fechaDesde = '2000-01-01 00:00:00';
@@ -81,9 +75,10 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
             break;
         case 'semana':
         default:
-            // ✅ ÚLTIMA SEMANA: 24-31 Enero 2026
-            $fechaDesde = '2026-01-24 00:00:00';
-            $fechaHasta = '2026-01-31 23:59:59';
+            // Última semana: últimos 7 días
+            $desde = (new DateTime())->modify('-7 days');
+            $fechaDesde = $desde->format('Y-m-d 00:00:00');
+            $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
             break;
     }
 }
@@ -103,8 +98,10 @@ if ($departamento_id !== 'all') {
 }
 
 if ($es_usuario) {
-    $whereConditions[] = "t.usuario_id = :user_id";
-    $params[':user_id'] = $user_id;
+    $whereConditions[] = "(t.asignado_a = :user_asignado OR (t.usuario_id = :user_creador AND (t.asignado_a IS NULL OR t.asignado_a = 0 OR t.asignado_a = :user_mismo)))";
+    $params[':user_asignado'] = $user_id;
+    $params[':user_creador'] = $user_id;
+    $params[':user_mismo'] = $user_id;
 } elseif ($es_jefe) {
     $whereConditions[] = "(t.usuario_id IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe) 
                            OR t.asignado_a IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe2))";
@@ -118,20 +115,20 @@ $whereClause = implode(' AND ', $whereConditions);
 // MÉTRICAS ACTUALES
 // ============================================
 
-// 1. Tickets Abiertos
-$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id IN (1,2,3)";
+// 1. Tickets Abiertos (todo lo NO resuelto: Abierto + En Atención + Rechazado)
+$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id IN (1,2,3,5)";
 $stmt = $db->prepare($query);
 $stmt->execute($params);
 $tickets_abiertos = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-// 2. Tickets en Proceso
-$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id = 2";
+// 2. Tickets en Proceso (En Atención + Rechazado con avance pendiente)
+$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id IN (2,5)";
 $stmt = $db->prepare($query);
 $stmt->execute($params);
 $tickets_proceso = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-// 3. Tickets Resueltos
-$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id IN (4,5)";
+// 3. Tickets Resueltos (solo estado_id=4, NO incluir Rechazado=5)
+$query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause AND t.estado_id = 4";
 $stmt = $db->prepare($query);
 $stmt->execute($params);
 $tickets_resueltos = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
@@ -184,16 +181,20 @@ $comparativas = [
 ];
 
 if ($periodo !== 'todo') {
+    $hoyComp = new DateTime();
+
     switch($periodo) {
         case 'mes':
-            // Mes anterior: Diciembre 2025
-            $fechaDesdeAnterior = '2025-12-01 00:00:00';
-            $fechaHastaAnterior = '2025-12-31 23:59:59';
+            // Mes anterior al mes actual
+            $mesAnterior = (new DateTime())->modify('first day of last month');
+            $fechaDesdeAnterior = $mesAnterior->format('Y-m-01 00:00:00');
+            $fechaHastaAnterior = $mesAnterior->format('Y-m-t 23:59:59');
             break;
         case 'año':
-            // Año anterior: 2025
-            $fechaDesdeAnterior = '2025-01-01 00:00:00';
-            $fechaHastaAnterior = '2025-12-31 23:59:59';
+            // Año anterior
+            $anioAnterior = $hoyComp->format('Y') - 1;
+            $fechaDesdeAnterior = $anioAnterior . '-01-01 00:00:00';
+            $fechaHastaAnterior = $anioAnterior . '-12-31 23:59:59';
             break;
         case 'personalizado':
             $dias_diferencia = (strtotime($fechaHasta) - strtotime($fechaDesde)) / 86400;
@@ -202,9 +203,9 @@ if ($periodo !== 'todo') {
             break;
         case 'semana':
         default:
-            // ✅ SEMANA ANTERIOR: 17-23 Enero 2026
-            $fechaDesdeAnterior = '2026-01-17 00:00:00';
-            $fechaHastaAnterior = '2026-01-23 23:59:59';
+            // Semana anterior: 7 días antes del período actual
+            $fechaDesdeAnterior = (new DateTime())->modify('-14 days')->format('Y-m-d 00:00:00');
+            $fechaHastaAnterior = (new DateTime())->modify('-8 days')->format('Y-m-d 23:59:59');
             break;
     }
     
@@ -220,8 +221,10 @@ if ($periodo !== 'todo') {
     }
     
     if ($es_usuario) {
-        $whereConditionsAnterior[] = "t.usuario_id = :user_id";
-        $paramsAnterior[':user_id'] = $user_id;
+        $whereConditionsAnterior[] = "(t.asignado_a = :user_asignado OR (t.usuario_id = :user_creador AND (t.asignado_a IS NULL OR t.asignado_a = 0 OR t.asignado_a = :user_mismo)))";
+        $paramsAnterior[':user_asignado'] = $user_id;
+        $paramsAnterior[':user_creador'] = $user_id;
+        $paramsAnterior[':user_mismo'] = $user_id;
     } elseif ($es_jefe) {
         $whereConditionsAnterior[] = "(t.usuario_id IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe) 
                                        OR t.asignado_a IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe2))";
@@ -231,17 +234,17 @@ if ($periodo !== 'todo') {
     
     $whereClauseAnterior = implode(' AND ', $whereConditionsAnterior);
     
-    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id IN (1,2,3)";
+    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id IN (1,2,3,5)";
     $stmt = $db->prepare($query);
     $stmt->execute($paramsAnterior);
     $tickets_abiertos_anterior = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    
-    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id = 2";
+
+    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id IN (2,5)";
     $stmt = $db->prepare($query);
     $stmt->execute($paramsAnterior);
     $tickets_proceso_anterior = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     
-    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id IN (4,5)";
+    $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClauseAnterior AND t.estado_id = 4";
     $stmt = $db->prepare($query);
     $stmt->execute($paramsAnterior);
     $tickets_resueltos_anterior = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
@@ -254,7 +257,10 @@ if ($periodo !== 'todo') {
     $tiempo_promedio_anterior = $stmt->fetch(PDO::FETCH_ASSOC)['promedio'] ?? 0;
     
     function calcularPorcentajeCambio($actual, $anterior) {
-        if ($anterior == 0) return 0;
+        // Si ambos son 0, no hay cambio
+        if ($actual == 0 && $anterior == 0) return 0;
+        // Si el anterior es 0 pero hay datos actuales, es un incremento del 100%
+        if ($anterior == 0) return ($actual > 0) ? 100 : 0;
         return round((($actual - $anterior) / $anterior) * 100, 1);
     }
     
@@ -267,6 +273,8 @@ if ($periodo !== 'todo') {
 // ============================================
 // RESPUESTA JSON
 // ============================================
+ob_end_clean();
+
 $response = [
     'metricas' => [
         'tickets_abiertos' => $tickets_abiertos,

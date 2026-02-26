@@ -1,4 +1,5 @@
 <?php
+require_once '../config/session.php';
 session_start();
 header('Content-Type: application/json');
 
@@ -8,19 +9,8 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$host = 'localhost';
-$dbname = 'helpdesk_clonsa';
-$username = 'root';
-$password = '';
-
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Error de conexión']);
-    exit;
-}
+require_once '../config/config.php';
+$db = getDBConnection();
 
 $user_id = $_SESSION['user_id'];
 $user_rol = $_SESSION['user_rol'] ?? 'Usuario';
@@ -39,31 +29,37 @@ if (!$puede_ver_todos) {
     $departamento_id = $user_departamento;
 }
 
-// CALCULAR FECHAS
+// CALCULAR FECHAS (DINÁMICO)
+$hoy = new DateTime();
+
 if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
     $desde = DateTime::createFromFormat('d/m/Y', $fecha_desde);
     $hasta = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
-    
+
     if ($desde && $hasta) {
         $fechaDesde = $desde->format('Y-m-d 00:00:00');
         $fechaHasta = $hasta->format('Y-m-d 23:59:59');
     } else {
-        $fechaDesde = date('Y-m-d 00:00:00', strtotime('-7 days'));
-        $fechaHasta = date('Y-m-d 23:59:59');
+        $fechaDesde = (new DateTime())->modify('-7 days')->format('Y-m-d 00:00:00');
+        $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
     }
 } else {
-    $fechaHasta = date('Y-m-d 23:59:59');
-    
     switch($periodo) {
         case 'mes':
-            $fechaDesde = date('Y-m-d 00:00:00', strtotime('-30 days'));
+            // Mes actual completo
+            $fechaDesde = $hoy->format('Y-m-01 00:00:00');
+            $fechaHasta = $hoy->format('Y-m-t 23:59:59');
             break;
         case 'año':
-            $fechaDesde = date('Y-m-d 00:00:00', strtotime('-1 year'));
+            // Año actual completo
+            $fechaDesde = $hoy->format('Y-01-01 00:00:00');
+            $fechaHasta = $hoy->format('Y-12-31 23:59:59');
             break;
         case 'semana':
         default:
-            $fechaDesde = date('Y-m-d 00:00:00', strtotime('-7 days'));
+            // Últimos 7 días
+            $fechaDesde = (new DateTime())->modify('-7 days')->format('Y-m-d 00:00:00');
+            $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
             break;
     }
 }
@@ -175,43 +171,27 @@ $labelsYGrupos = generarLabelsYGrupos($periodo, $fechaDesde, $fechaHasta);
 $labels = $labelsYGrupos['labels'];
 $grupos = $labelsYGrupos['grupos'];
 
-// ✅ DETERMINAR ACTIVIDADES - GENERAL Y SOPORTE IGUALES
+// ✅ DETERMINAR ACTIVIDADES SEGÚN DEPARTAMENTO - SIEMPRE LEYENDA FIJA
 $actividades_ids = [];
 $actividades_info = [];
-$tipo_grafico = 'fijo';
+$tipo_grafico = 'fijo'; // Siempre usar leyenda fija (sin dropdown)
 
 if ($departamento_id === 'all' || $departamento_id == 2) {
-    // ✅ GENERAL Y SOPORTE: Leyenda fija con 3 actividades
+    // ✅ GENERAL Y SOPORTE TÉCNICO: 3 actividades de mantenimiento
     $actividades_ids = [1, 2, 3];
     $actividades_info = [
         ['id' => 1, 'nombre' => 'Mantto Preventivo', 'color' => '#1F3BB3'],
         ['id' => 2, 'nombre' => 'Mantto Correctivo', 'color' => '#4CAF50'],
         ['id' => 3, 'nombre' => 'Mantto Predictivo', 'color' => '#FF9800']
     ];
-    $tipo_grafico = 'fijo';
-    
-} elseif ($departamento_id == 4) {
-    // IT & DESARROLLO
-    $sqlAct = "SELECT actividad_id FROM actividades_departamentos WHERE departamento_id = 4";
-    $stmtAct = $db->query($sqlAct);
-    $actividades_ids = $stmtAct->fetchAll(PDO::FETCH_COLUMN);
-    
-    if (!empty($actividades_ids)) {
-        $placeholders = implode(',', array_fill(0, count($actividades_ids), '?'));
-        $sqlInfo = "SELECT id, nombre, color FROM actividades WHERE id IN ($placeholders) ORDER BY id";
-        $stmtInfo = $db->prepare($sqlInfo);
-        $stmtInfo->execute($actividades_ids);
-        $actividades_info = $stmtInfo->fetchAll(PDO::FETCH_ASSOC);
-    }
-    $tipo_grafico = 'dinamico';
-    
+
 } else {
-    // OTROS DEPARTAMENTOS
+    // ✅ OTROS DEPARTAMENTOS: Obtener actividades dinámicamente
     $sqlAct = "SELECT actividad_id FROM actividades_departamentos WHERE departamento_id = :dept_id";
     $stmtAct = $db->prepare($sqlAct);
     $stmtAct->execute([':dept_id' => $departamento_id]);
     $actividades_ids = $stmtAct->fetchAll(PDO::FETCH_COLUMN);
-    
+
     if (!empty($actividades_ids)) {
         $placeholders = implode(',', array_fill(0, count($actividades_ids), '?'));
         $sqlInfo = "SELECT id, nombre, color FROM actividades WHERE id IN ($placeholders) ORDER BY id";
@@ -219,7 +199,6 @@ if ($departamento_id === 'all' || $departamento_id == 2) {
         $stmtInfo->execute($actividades_ids);
         $actividades_info = $stmtInfo->fetchAll(PDO::FETCH_ASSOC);
     }
-    $tipo_grafico = 'dinamico';
 }
 
 // QUERY BASE
@@ -232,8 +211,10 @@ if ($departamento_id !== 'all') {
 }
 
 if ($es_usuario) {
-    $whereConditions[] = "t.usuario_id = :user_id";
-    $params[':user_id'] = $user_id;
+    $whereConditions[] = "(t.asignado_a = :user_asignado OR (t.usuario_id = :user_creador AND (t.asignado_a IS NULL OR t.asignado_a = 0 OR t.asignado_a = :user_mismo)))";
+    $params[':user_asignado'] = $user_id;
+    $params[':user_creador'] = $user_id;
+    $params[':user_mismo'] = $user_id;
 } elseif ($es_jefe) {
     $whereConditions[] = "(t.usuario_id IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe) 
                            OR t.asignado_a IN (SELECT id FROM usuarios WHERE departamento_id = :dept_jefe2))";

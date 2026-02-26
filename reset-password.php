@@ -8,14 +8,10 @@ if (empty($token)) {
 }
 
 // Verificar token
-$host = 'localhost';
-$dbname = 'helpdesk_clonsa';
-$username = 'root';
-$password = '';
+require_once 'config/config.php';
 
 try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = getDBConnection();
     
     $query = "SELECT id, username, email, nombre_completo FROM usuarios 
               WHERE reset_token = :token 

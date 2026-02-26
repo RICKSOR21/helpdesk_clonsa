@@ -1,0 +1,41 @@
+# Archivos de configuración sensibles
+config/config.php
+
+# Directorios de sesiones y temporales
+sessions/
+*.sess
+
+# Logs
+logs/
+*.log
+
+# Uploads de usuarios
+uploads/*
+!uploads/.gitkeep
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Dependencias (si usas composer)
+vendor/
+node_modules/
+
+# Archivos temporales
+tmp/
+temp/
+cache/
+
+# Backups
+*.bak
+*.backup
+*.sql.gz

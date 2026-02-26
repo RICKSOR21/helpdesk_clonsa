@@ -1,4 +1,5 @@
-<?php
+﻿<?php
+require_once 'config/session.php';
 session_start();
 
 // Evitar caché del navegador
@@ -18,18 +19,8 @@ if (!isset($_SESSION['last_activity'])) {
     $_SESSION['last_activity'] = time();
 }
 
-// Conexión directa
-$host = 'localhost';
-$dbname = 'helpdesk_clonsa';
-$username = 'root';
-$password = '';
-
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
+require_once 'config/config.php';
+$db = getDBConnection();
 
 $user_name = $_SESSION['user_name'] ?? 'Usuario';
 $user_rol = $_SESSION['user_rol'] ?? 'Usuario';
@@ -63,13 +54,12 @@ $stmt = $db->query("SELECT t.codigo, t.titulo, t.progreso, u.nombre_completo as 
 $tickets_recientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Configuración de timeout desde config.php
-require_once 'config/config.php';
 $SESSION_TIMEOUT_JS = defined('SESSION_TIMEOUT') ? SESSION_TIMEOUT : 120;
 $SESSION_POPUP_TIMEOUT_JS = defined('SESSION_POPUP_TIMEOUT') ? SESSION_POPUP_TIMEOUT : 900;
 
 date_default_timezone_set('America/Lima');
 $hora = date('H');
-$saludo = ($hora >= 5 && $hora < 12) ? 'Buenos días' : (($hora >= 12 && $hora < 19) ? 'Buenas tardes' : 'Buenas noches');
+$saludo = ($hora >= 5 && $hora < 12) ? 'Buenos dias' : (($hora >= 12 && $hora < 19) ? 'Buenas tardes' : 'Buenas noches');
 $primer_nombre = explode(' ', $user_name)[0];
 $fecha_actual = date('d/m/Y');
 ?>
@@ -98,7 +88,7 @@ $fecha_actual = date('d/m/Y');
   <!-- inject:css -->
   <link rel="stylesheet" href="template/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="template/images/favicon.png" />
+  <link rel="shortcut icon" href="template/images/favicon.svg" />
 </head>
 <body class="authenticated">
   <div class="container-scroller"> 
@@ -111,10 +101,10 @@ $fecha_actual = date('d/m/Y');
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="index.html">
+          <a class="navbar-brand brand-logo" href="dashboard.php">
             <img src="template/images/logo.svg" alt="logo" />
           </a>
-          <a class="navbar-brand brand-logo-mini" href="index.html">
+          <a class="navbar-brand brand-logo-mini" href="dashboard.php">
             <img src="template/images/logo-mini.svg" alt="logo" />
           </a>
         </div>
@@ -123,7 +113,7 @@ $fecha_actual = date('d/m/Y');
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text"><?php echo $saludo; ?>, <span class="text-black fw-bold"><?php echo htmlspecialchars($primer_nombre); ?></span></h1>
-            <h3 class="welcome-sub-text">Tu resumen de rendimiento - Portal SIRA Clonsa Ingeniería</h3>
+            <h3 class="welcome-sub-text">Tu resumen de rendimiento - Portal SIRA Clonsa Ingenieria</h3>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -168,10 +158,10 @@ $fecha_actual = date('d/m/Y');
                           <p class="mb-0 font-weight-medium float-left">General</p>
                       </a>
                       <a class="dropdown-item py-3" href="#" data-departamento="2">
-                          <p class="mb-0 font-weight-medium float-left">Soporte Técnico</p>
+                          <p class="mb-0 font-weight-medium float-left">Soporte Tecnico</p>
                       </a>
                       <a class="dropdown-item py-3" href="#" data-departamento="3">
-                          <p class="mb-0 font-weight-medium float-left">Administración</p>
+                          <p class="mb-0 font-weight-medium float-left">Administracion</p>
                       </a>
                       <a class="dropdown-item py-3" href="#" data-departamento="4">
                           <p class="mb-0 font-weight-medium float-left">IT & Desarrollo</p>
@@ -202,6 +192,7 @@ $fecha_actual = date('d/m/Y');
               window.USER_ROL = '<?php echo $user_rol; ?>';
               window.USER_DEPARTAMENTO = <?php echo $departamento_usuario; ?>;
               window.PUEDE_VER_TODOS = <?php echo $puede_ver_todos ? 'true' : 'false'; ?>;
+              window.CURRENT_USER_ID = <?php echo intval($_SESSION['user_id'] ?? 0); ?>;
           </script>
        
           <li class="nav-item d-none d-lg-block">
@@ -223,82 +214,51 @@ $fecha_actual = date('d/m/Y');
                 <input type="text" id="fechaHasta" class="form-control" readonly style="background: white; width: 120px; text-align: center; cursor: not-allowed;">
               </div>
           </li>
+          <!-- COMUNICADOS DEL SISTEMA (Icono de carta) -->
           <li class="nav-item dropdown">
-            <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+            <a class="nav-link count-indicator" id="comunicadosDropdown" href="#" data-bs-toggle="dropdown">
               <i class="icon-mail icon-lg"></i>
+              <span class="count count-comunicados badge-notif"></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-              <a class="dropdown-item py-3 border-bottom">
-                <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
-                <span class="badge badge-pill badge-primary float-right">View all</span>
-              </a>
-              <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-alert m-auto text-primary"></i>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="comunicadosDropdown" style="width: 340px;">
+              <div class="dropdown-item py-2 border-bottom d-flex justify-content-between align-items-center" style="cursor: default; background: #f8f9fa;">
+                <div class="d-flex align-items-center">
+                  <i class="mdi mdi-email-outline text-primary me-2" style="font-size: 18px;"></i>
+                  <span class="font-weight-bold" style="font-size: 13px;">Comunicados</span>
                 </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-                  <p class="fw-light small-text mb-0"> Just now </p>
+                <a href="comunicados.php" class="btn btn-sm btn-primary" style="font-size: 10px; padding: 3px 10px;">
+                  Ver todos <i class="mdi mdi-arrow-right"></i>
+                </a>
+              </div>
+              <div id="comunicadosContainer" style="max-height: 280px; overflow-y: auto;">
+                <div class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 </div>
-              </a>
-              <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-settings m-auto text-primary"></i>
-                </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-                  <p class="fw-light small-text mb-0"> Private message </p>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-airballoon m-auto text-primary"></i>
-                </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-                  <p class="fw-light small-text mb-0"> 2 days ago </p>
-                </div>
-              </a>
+              </div>
             </div>
           </li>
-          <li class="nav-item dropdown"> 
-            <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+
+          <!-- NOTIFICACIONES DE TICKETS (Icono de campana) -->
+          <li class="nav-item dropdown">
+            <a class="nav-link count-indicator" id="ticketsDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="icon-bell"></i>
-              <span class="count"></span>
+              <span class="count count-tickets badge-notif"></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
-              <a class="dropdown-item py-3">
-                <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
-                <span class="badge badge-pill badge-primary float-right">View all</span>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <img src="template/images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="ticketsDropdown" style="width: 340px;">
+              <div class="dropdown-item py-2 border-bottom d-flex justify-content-between align-items-center" style="cursor: default; background: #f8f9fa;">
+                <div class="d-flex align-items-center">
+                  <i class="mdi mdi-bell-outline text-primary me-2" style="font-size: 18px;"></i>
+                  <span class="font-weight-bold" style="font-size: 13px;">Notificaciones</span>
                 </div>
-                <div class="preview-item-content flex-grow py-2">
-                  <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-                  <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+                <a href="notificaciones.php" class="btn btn-sm btn-primary" style="font-size: 10px; padding: 3px 10px;">
+                  Ver todas <i class="mdi mdi-arrow-right"></i>
+                </a>
+              </div>
+              <div id="ticketsNotificacionesContainer" style="max-height: 280px; overflow-y: auto;">
+                <div class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 </div>
-              </a>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <img src="template/images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
-                </div>
-                <div class="preview-item-content flex-grow py-2">
-                  <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-                  <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <img src="template/images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
-                </div>
-                <div class="preview-item-content flex-grow py-2">
-                  <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-                  <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                </div>
-              </a>
+              </div>
             </div>
           </li>
           <li class="nav-item dropdown d-none d-lg-block user-dropdown">
@@ -310,11 +270,11 @@ $fecha_actual = date('d/m/Y');
                 <p class="mb-1 mt-3 font-weight-semibold"><?php echo htmlspecialchars($user_name); ?></p>
                 <p class="fw-light text-muted mb-0"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="395855555c5754564b5c5756795e54585055175a5654"><?php echo htmlspecialchars($_SESSION["user_email"] ?? ""); ?></a></p>
               </div>
-              <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Mi Perfil <span class="badge badge-pill badge-danger">1</span></a>
+              <a class="dropdown-item" href="perfil.php"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Mi Perfil <span class="badge badge-pill badge-danger">1</span></a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Mensajes</a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Actividad</a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-              <a class="dropdown-item" href="api/logout.php"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Cerrar Sesión</a>
+              <a class="dropdown-item" href="api/logout.php"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Cerrar Sesion</a>
             </div>
           </li>
         </ul>
@@ -507,21 +467,39 @@ $fecha_actual = date('d/m/Y');
             </a>
           </li>
           
-          <li class="nav-item nav-category">Gestión de Tickets</li>
+          <li class="nav-item nav-category">GESTION DE TICKETS</li>
           
           <!-- Tickets -->
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#tickets-menu" aria-expanded="false" aria-controls="tickets-menu">
+            <a class="nav-link" data-bs-toggle="collapse" href="#tickets-menu" aria-expanded="true" aria-controls="tickets-menu">
               <i class="menu-icon mdi mdi-ticket-confirmation"></i>
               <span class="menu-title">Tickets</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="tickets-menu">
+            <div class="collapse show" id="tickets-menu">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="tickets.php">Todos los Tickets</a></li>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center justify-content-between" href="tickets.php">
+                    <span>Todos los Tickets</span>
+                    <span class="count-todos-sidebar sidebar-badge">0</span>
+                  </a>
+                </li>
                 <li class="nav-item"> <a class="nav-link" href="tickets-create.php">Crear Ticket</a></li>
-                <li class="nav-item"> <a class="nav-link" href="tickets-mis.php">Mis Tickets</a></li>
-                <li class="nav-item"> <a class="nav-link" href="tickets-asignados.php">Asignados a Mí</a></li>
+                <?php if ($user_rol === 'Administrador' || $user_rol === 'Admin' || $user_rol === 'Jefe'): ?>
+                <li class="nav-item"> <a class="nav-link d-flex align-items-center justify-content-between" href="tickets-mis.php"><span>Mis Tickets</span><span class="count-mis-sidebar sidebar-badge">0</span></a></li>
+                <?php endif; ?>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center justify-content-between" href="tickets-asignados.php">
+                    <span>Asignados a Mi</span>
+                    <span class="count-asignados-sidebar sidebar-badge">0</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center justify-content-between" href="notificaciones.php">
+                    <span>Notificaciones</span>
+                    <span class="count-notificaciones-sidebar sidebar-badge">0</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -536,28 +514,29 @@ $fecha_actual = date('d/m/Y');
             </a>
             <div class="collapse" id="usuarios-menu">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="usuarios.php">Lista de Usuarios</a></li>
                 <?php if ($user_rol === 'Administrador'): ?>
                 <li class="nav-item"> <a class="nav-link" href="usuarios-create.php">Crear Usuario</a></li>
                 <?php endif; ?>
+                <li class="nav-item"> <a class="nav-link" href="usuarios.php">Lista de Usuarios</a></li>
               </ul>
             </div>
           </li>
           <?php endif; ?>
 
-          <!-- Catálogos (solo Admin) -->
+          <!-- Catalogos (solo Admin) -->
           <?php if ($user_rol === 'Administrador'): ?>
-          <li class="nav-item nav-category">Configuración</li>
+          <li class="nav-item nav-category">CONFIGURACION</li>
+        <li class="nav-item"><a class="nav-link" href="perfil.php"><i class="menu-icon mdi mdi-account-circle-outline"></i><span class="menu-title">Perfil</span></a></li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#catalogos-menu" aria-expanded="false" aria-controls="catalogos-menu">
               <i class="menu-icon mdi mdi-table-settings"></i>
-              <span class="menu-title">Catálogos</span>
+              <span class="menu-title">Catalogos</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="catalogos-menu">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="catalogos-departamentos.php">Departamentos</a></li>
-                <li class="nav-item"> <a class="nav-link" href="catalogos-canales.php">Canales de Atención</a></li>
+                <li class="nav-item"> <a class="nav-link" href="catalogos-canales.php">Canales de Atencion</a></li>
                 <li class="nav-item"> <a class="nav-link" href="catalogos-actividades.php">Tipos de Actividad</a></li>
                 <li class="nav-item"> <a class="nav-link" href="catalogos-fallas.php">Tipos de Falla</a></li>
                 <li class="nav-item"> <a class="nav-link" href="catalogos-ubicaciones.php">Ubicaciones</a></li>
@@ -577,19 +556,34 @@ $fecha_actual = date('d/m/Y');
             </a>
             <div class="collapse" id="reportes-menu">
               <ul class="nav flex-column sub-menu">
+                <?php if ($user_rol === 'Administrador' || $user_rol === 'Admin' || $user_rol === 'Jefe'): ?>
                 <li class="nav-item"> <a class="nav-link" href="reportes-general.php">Reporte General</a></li>
                 <li class="nav-item"> <a class="nav-link" href="reportes-departamento.php">Por Departamento</a></li>
+                <?php endif; ?>
                 <li class="nav-item"> <a class="nav-link" href="reportes-usuario.php">Por Usuario</a></li>
               </ul>
             </div>
           </li>
 
           <!-- Ayuda -->
-          <li class="nav-item nav-category">Ayuda</li>
+                          <li class="nav-item nav-category">COMUNICADOS</li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="collapse" href="#comunicados-menu" aria-expanded="false" aria-controls="comunicados-menu">
+            <i class="menu-icon mdi mdi-email-outline"></i>
+            <span class="menu-title">Comunicados</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="comunicados-menu">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"><a class="nav-link d-flex align-items-center justify-content-between" href="comunicados.php"><span>Avisos</span><span class="count-comunicados-sidebar sidebar-badge">0</span></a></li>
+            </ul>
+          </div>
+        </li>
+<li class="nav-item nav-category">AYUDA</li>
           <li class="nav-item">
             <a class="nav-link" href="documentacion.php">
               <i class="menu-icon mdi mdi-file-document"></i>
-              <span class="menu-title">Documentación</span>
+              <span class="menu-title">Documentacion</span>
             </a>
           </li>
         </ul>
@@ -605,13 +599,13 @@ $fecha_actual = date('d/m/Y');
                 <div class="d-sm-flex align-items-center justify-content-between border-bottom">
                   <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                      <a class="nav-link active ps-0" id="home-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Últ. Semana</a>
+                      <a class="nav-link active ps-0" id="home-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Ult. Semana</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#audiences" role="tab" aria-selected="false">Últ Mes</a>
+                      <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#audiences" role="tab" aria-selected="false">Ult Mes</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#demographics" role="tab" aria-selected="false">Últ Año</a>
+                      <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#demographics" role="tab" aria-selected="false">Ult A&ntilde;o</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link border-0" id="more-tab" data-bs-toggle="tab" href="#more" role="tab" aria-selected="false">Personalizado</a>
@@ -619,9 +613,9 @@ $fecha_actual = date('d/m/Y');
                   </ul>
                   <div>
                     <div class="btn-wrapper">
-                      <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
-                      <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
-                      <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+                      <a href="#" class="btn btn-outline-secondary btn-share"><i class="mdi mdi-share-variant"></i> Compartir</a>
+                      <a href="#" class="btn btn-outline-secondary btn-print"><i class="mdi mdi-printer"></i> Imprimir</a>
+                      <a href="#" class="btn btn-primary text-white me-0 btn-export"><i class="mdi mdi-download"></i> Exportar</a>
                     </div>
                   </div>
                 </div>
@@ -639,18 +633,20 @@ $fecha_actual = date('d/m/Y');
                             </p>
                           </div>
                           <div>
-                            <p class="statistics-title">Ticket en Proceso</p>
+                            <p class="statistics-title">Ticket en Atención</p>
                             <h3 class="rate-percentage" id="ticketsProceso">4</h3>
                             <p class="text-success d-flex" id="ticketsProcesoComp">
                               <i class="mdi mdi-menu-up"></i><span>+0.1%</span>
                             </p>
                           </div>
                           <div>
-                            <p class="statistics-title">Ticket Resueltos</p>
-                            <h3 class="rate-percentage" id="ticketsResueltos">68.8</h3>
-                            <p class="text-danger d-flex" id="ticketsResueltosComp">
-                              <i class="mdi mdi-menu-down"></i><span>68.8%</span>
-                            </p>
+                              <p class="statistics-title">Ticket Resueltos</p>
+                              <h3 class="rate-percentage" id="ticketsResueltos">
+                                  <span class="spinner-border spinner-border-sm" role="status"></span>
+                              </h3>
+                              <p class="text-success d-flex" id="ticketsResueltosComp">
+                                  <i class="mdi mdi-menu-up"></i><span>+0%</span>
+                              </p>
                           </div>
                           <div class="d-none d-md-block">
                             <p class="statistics-title">Tiempo Promedio</p>
@@ -685,7 +681,7 @@ $fecha_actual = date('d/m/Y');
                                 <div class="d-sm-flex justify-content-between align-items-start">
                                   <div>
                                     <h4 class="card-title card-title-dash">Resultados Mantenimientos</h4>
-                                    <h5 class="card-subtitle card-subtitle-dash">Clonsa Ingeniería</h5>
+                                    <h5 class="card-subtitle card-subtitle-dash">Clonsa Ingenieria</h5>
                                   </div>
                                   <div class="mx-5" id="performance-line-legend"></div>
                                 </div>
@@ -726,7 +722,7 @@ $fecha_actual = date('d/m/Y');
                           <div class="col-md-6 col-lg-12 grid-margin stretch-card">
                             <div class="card card-rounded">
                                 <div class="card-body">
-                                    <p><b> <h4 class="text-black fw-bold text-success text-center">ÚLTIMOS HISTÓRICOS SIRA</h4> </b></p>
+                                    <p><b> <h4 class="text-black fw-bold text-success text-center">ULTIMOS HISTORICOS SIRA</h4> </b></p>
                                     <br>
                                     <div class="row" id="actividadesCirculos">
                                         <!-- Los círculos se generan dinámicamente aquí -->
@@ -745,30 +741,17 @@ $fecha_actual = date('d/m/Y');
                               <div class="card-body">
                                 <div class="d-sm-flex justify-content-between align-items-start">
                                   <div>
-                                    <h4 class="card-title card-title-dash">Histórico Personal Clonsa</h4>
-                                   <p class="card-subtitle card-subtitle-dash">Top Ticket Resueltos - SIRA Clonsa Ingeniería 2026</p>
+                                    <h4 class="card-title card-title-dash">Historico Personal Clonsa</h4>
+                                   <p class="card-subtitle card-subtitle-dash">Top Ticket Resueltos - SIRA Clonsa Ingenieria 2026</p>
                                   </div>
                                   <div>
-                                    <div class="dropdown">
-                                      <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Todos </button>
-                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                        <h6 class="dropdown-header">General</h6>
-                                          <a class="dropdown-item" href="#">Todos</a>
-                                        <div class="dropdown-divider"></div>
-                                        <h6 class="dropdown-header">Soporte Técnico</h6>
-                                          <a class="dropdown-item" href="#">Mannto Preventivo</a>
-                                          <a class="dropdown-item" href="#">Mannto Correctivo</a>
-                                          <a class="dropdown-item" href="#">Mantto Predictivo</a>
-                                        <div class="dropdown-divider"></div>
-                                        <h6 class="dropdown-header">Administración</h6>
-                                          <a class="dropdown-item" href="#">Ejemplo 1</a>
-                                          <a class="dropdown-item" href="#">Ejemplo 2</a>
-                                          <a class="dropdown-item" href="#">Ejemplo 3</a>
-                                        <div class="dropdown-divider"></div>
-                                        <h6 class="dropdown-header">TI & Desarrollo</h6>
-                                          <a class="dropdown-item" href="#">Ejemplo 1</a>
-                                          <a class="dropdown-item" href="#">Ejemplo 2</a>
-                                          <a class="dropdown-item" href="#">Ejemplo 3</a>
+                                    <div class="dropdown" id="filtroActividadesDropdown">
+                                      <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span id="filtroActividadTexto">Todos</span>
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="dropdownActividadesMenu">
+                                        <!-- Se carga dinámicamente -->
+                                        <h6 class="dropdown-header">Cargando...</h6>
                                       </div>
                                     </div>
                                   </div>
@@ -802,71 +785,17 @@ $fecha_actual = date('d/m/Y');
                               <div class="card-body">
                                 <div class="row">
                                   <div class="col-lg-12">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                      <h4 class="card-title card-title-dash">Últimos Ticket Creados</h4>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                      <h4 class="card-title card-title-dash mb-0">Ultimos Ticket Creados</h4>
+                                      <a href="tickets.php" class="text-primary" style="font-size: 13px;">Ver Todos <i class="mdi mdi-arrow-right"></i></a>
                                     </div>
 
-                                    <div class="list align-items-center border-bottom py-2">
-                                      <div class="wrapper w-100">
-                                        <p class="mb-2 font-weight-medium">
-                                          Luis Ruiz
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                          <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-calendar text-muted me-1"></i>
-                                            <p class="mb-0 text-small text-muted">Enero 18, 2026</p>
-                                          </div>
+                                    <!-- Contenedor dinámico para últimos tickets -->
+                                    <div id="ultimosTicketsContainer">
+                                      <div class="text-center py-4">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                          <span class="visually-hidden">Cargando...</span>
                                         </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="list align-items-center border-bottom py-2">
-                                      <div class="wrapper w-100">
-                                        <p class="mb-2 font-weight-medium">
-                                          Amador Contreras
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                          <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-calendar text-muted me-1"></i>
-                                            <p class="mb-0 text-small text-muted">Enero 17, 2026</p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="list align-items-center border-bottom py-2">
-                                      <div class="wrapper w-100">
-                                        <p class="mb-2 font-weight-medium">
-                                          Carlos Medina
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                          <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-calendar text-muted me-1"></i>
-                                            <p class="mb-0 text-small text-muted">Enero 16, 2026</p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="list align-items-center border-bottom py-2">
-                                      <div class="wrapper w-100">
-                                        <p class="mb-2 font-weight-medium">
-                                          Richard Arias
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                          <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-calendar text-muted me-1"></i>
-                                            <p class="mb-0 text-small text-muted">Enero 15, 2026</p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                
-                                    <div class="list align-items-center pt-3">
-                                      <div class="wrapper w-100">
-                                        <p class="mb-0">
-                                          <a href="#" class="fw-bold text-primary">Ver Todos <i class="mdi mdi-arrow-right ms-2"></i></a>
-                                        </p>
                                       </div>
                                     </div>
 
@@ -888,8 +817,12 @@ $fecha_actual = date('d/m/Y');
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+              Portal SIRA <a href="https://www.clonsa.pe/" target="_blank">Clonsa Ingenieria</a> <?php echo date('Y'); ?>
+            </span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+              Sistema Integral de Registro y Atencion
+            </span>
           </div>
         </footer>
         <!-- partial -->
@@ -945,9 +878,173 @@ $fecha_actual = date('d/m/Y');
   <script src="assets/js/dashboard-filters.js"></script>
 
   <!-- Top Empleados -->
-  <script src="assets/js/top-empleados.js"></script>
+  <script src="assets/js/top-empleados.js?v=<?php echo time(); ?>"></script>
+  <script src="assets/js/ultimos-tickets.js?v=<?php echo time(); ?>"></script>
+  <!-- Notificaciones -->
+  <script src="assets/js/notificaciones.js?v=<?php echo time(); ?>"></script>
+
+  <!-- Html2Canvas para capturas de pantalla -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- SweetAlert2 para alertas elegantes -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Dashboard Export (Share, Print, Export) -->
+  <script src="assets/js/dashboard-export.js?v=<?php echo time(); ?>"></script>
 
   <style>
+/* ================================================
+   ESTILOS PARA BADGES DE NOTIFICACIONES
+   ================================================ */
+.count-indicator {
+    position: relative !important;
+}
+.count-indicator .badge-notif {
+    position: absolute !important;
+    top: 5px !important;
+    right: 2px !important;
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    padding: 0 5px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 18px !important;
+    border: 2px solid #f4f5f7 !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3) !important;
+    z-index: 999 !important;
+    text-align: center !important;
+}
+.count-indicator .badge-notif.show {
+    display: flex !important;
+}
+.sidebar-badge {
+    background: #dc3545;
+    color: #fff;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    line-height: 18px;
+    margin-left: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+.sidebar-badge.show {
+    display: inline-flex;
+}
+
+/* ================================================
+   ESTILOS PARA ITEMS DE NOTIFICACIÓN - PROFESIONAL
+   ================================================ */
+.notif-item {
+    padding: 10px 14px !important;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+.notif-item:hover {
+    background-color: #f5f7fa !important;
+}
+.notif-item.unread {
+    background-color: #eef4ff !important;
+}
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+/* Fila principal de notificación */
+.notif-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Indicador de estado (punto rojo o icono visto) */
+.status-indicator {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.status-indicator .unread-dot {
+    width: 9px;
+    height: 9px;
+    background: #dc3545;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15); }
+    50% { box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.1); }
+}
+
+/* Icono de la notificación */
+.notif-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.notif-icon i {
+    font-size: 18px;
+}
+
+/* Contenido de la notificación */
+.notif-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.notif-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.notif-item.unread .notif-title {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+.notif-subtitle {
+    font-size: 11px;
+    color: #666;
+    margin: 0;
+    line-height: 1.3;
+}
+.notif-time {
+    font-size: 10px;
+    color: #1F3BB3;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 1px;
+}
+.notif-time i {
+    font-size: 10px;
+}
+
 /* ================================================
    ESTILOS PERSONALIZADOS PARA GRÁFICO DE MANTENIMIENTOS
    ================================================ */
@@ -969,76 +1066,90 @@ $fecha_actual = date('d/m/Y');
 
 /* Contenedor de leyenda */
 #performance-line-legend {
-    flex: 0 0 auto !important; /* ✅ No crece, solo ocupa lo necesario */
-    margin-left: auto !important; /* ✅ Empuja a la derecha */
+    flex: 0 1 auto !important;
+    margin-left: auto !important;
 }
 
-#performance-line-legend .chartjs-legend ul {
+#performance-line-legend .chartjs-legend,
+#performance-line-legend > div {
+    display: block !important;
+}
+
+#performance-line-legend .chartjs-legend ul,
+#performance-line-legend .legend-list {
     display: flex !important;
+    flex-direction: row !important;
     flex-wrap: nowrap !important;
-    justify-content: flex-end !important; /* ✅ Alineado a la derecha */
+    justify-content: flex-end !important;
     align-items: center !important;
-    gap: 80px !important; /* ✅ Espacio balanceado */
-    padding-left: 0 !important;
-    margin-bottom: 0 !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
     list-style: none !important;
 }
 
-#performance-line-legend .chartjs-legend .legend-item {
+#performance-line-legend .chartjs-legend .legend-item,
+#performance-line-legend .legend-list .legend-item,
+#performance-line-legend li.legend-item {
     display: inline-flex !important;
     align-items: center !important;
-    justify-content: center !important;
     font-size: 13px !important;
     color: #6B778C !important;
     white-space: nowrap !important;
     cursor: pointer !important;
-    padding: 6px 12px !important;
+    padding: 6px 15px !important;
+    margin: 0 5px !important;
     border-radius: 6px !important;
     transition: all 0.2s ease !important;
     user-select: none !important;
-    margin: 0 !important;
     background-color: transparent !important;
-    line-height: 1 !important;
+    line-height: 1.2 !important;
 }
 
-#performance-line-legend .chartjs-legend .legend-item:hover {
+#performance-line-legend .chartjs-legend .legend-item:hover,
+#performance-line-legend .legend-list .legend-item:hover,
+#performance-line-legend li.legend-item:hover {
     background-color: rgba(102, 126, 234, 0.1) !important;
     transform: translateY(-1px);
 }
 
-#performance-line-legend .chartjs-legend .legend-item:active {
+#performance-line-legend .chartjs-legend .legend-item:active,
+#performance-line-legend .legend-list .legend-item:active,
+#performance-line-legend li.legend-item:active {
     transform: translateY(0);
 }
 
-#performance-line-legend .chartjs-legend .legend-color {
+#performance-line-legend .chartjs-legend .legend-color,
+#performance-line-legend .legend-list .legend-color,
+#performance-line-legend .legend-color {
     display: inline-block !important;
     width: 12px !important;
     height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
     border-radius: 50% !important;
     margin-right: 8px !important;
     flex-shrink: 0 !important;
-    transition: all 0.2s ease !important;
-    vertical-align: middle !important;
 }
 
-#performance-line-legend .chartjs-legend .legend-text {
-    transition: all 0.2s ease !important;
+#performance-line-legend .chartjs-legend .legend-text,
+#performance-line-legend .legend-list .legend-text,
+#performance-line-legend .legend-text {
     font-weight: 400 !important;
-    line-height: 1 !important;
-    vertical-align: middle !important;
-    display: inline-block !important;
+    line-height: 1.2 !important;
+    display: inline !important;
 }
 
 /* Estilo cuando está deshabilitado */
-#performance-line-legend .chartjs-legend .legend-item-hidden {
+#performance-line-legend .legend-item-hidden {
     opacity: 0.35 !important;
 }
 
-#performance-line-legend .chartjs-legend .legend-item-hidden .legend-color {
+#performance-line-legend .legend-item-hidden .legend-color {
     background-color: #bbb !important;
 }
 
-#performance-line-legend .chartjs-legend .legend-item-hidden .legend-text {
+#performance-line-legend .legend-item-hidden .legend-text {
     text-decoration: line-through !important;
     color: #bbb !important;
 }
@@ -1061,41 +1172,49 @@ $fecha_actual = date('d/m/Y');
 
 /* Responsive */
 @media (max-width: 1200px) {
-    #performance-line-legend .chartjs-legend ul {
-        gap: 30px !important;
+    #performance-line-legend .legend-item,
+    #performance-line-legend li.legend-item {
+        padding: 5px 10px !important;
+        margin: 0 3px !important;
+        font-size: 12px !important;
     }
 }
 
 @media (max-width: 992px) {
-    #performance-line-legend .chartjs-legend ul {
-        gap: 20px !important;
+    #performance-line-legend .legend-item,
+    #performance-line-legend li.legend-item {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+        margin: 0 2px !important;
     }
-    
-    #performance-line-legend .chartjs-legend .legend-item {
-        font-size: 12px !important;
-        padding: 5px 10px !important;
+
+    #performance-line-legend .legend-color {
+        width: 10px !important;
+        height: 10px !important;
+        min-width: 10px !important;
+        min-height: 10px !important;
+        margin-right: 6px !important;
     }
 }
 
 @media (max-width: 768px) {
-    #performance-line-legend .chartjs-legend ul {
-        justify-content: center !important;
-        gap: 15px !important;
-    }
-    
     .chartjs-wrapper {
         height: 250px;
     }
-    
-    #performance-line-legend .chartjs-legend .legend-item {
-        font-size: 11px !important;
-        padding: 4px 8px !important;
+
+    #performance-line-legend .legend-item,
+    #performance-line-legend li.legend-item {
+        font-size: 10px !important;
+        padding: 3px 6px !important;
+        margin: 0 2px !important;
     }
-    
-    #performance-line-legend .chartjs-legend .legend-color {
-        width: 10px !important;
-        height: 10px !important;
-        margin-right: 6px !important;
+
+    #performance-line-legend .legend-color {
+        width: 8px !important;
+        height: 8px !important;
+        min-width: 8px !important;
+        min-height: 8px !important;
+        margin-right: 4px !important;
     }
 }
 
@@ -1219,60 +1338,6 @@ $fecha_actual = date('d/m/Y');
     }
 }
 
-/* ================================================
-   LEYENDA DE GRÁFICO - MEJORADA
-   ================================================ */
-
-#performance-line-legend .legend-list {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 60px;
-    flex-wrap: nowrap;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-#performance-line-legend .legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #6B778C;
-    cursor: pointer;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    user-select: none;
-    white-space: nowrap;
-}
-
-#performance-line-legend .legend-item:hover {
-    background-color: rgba(102, 126, 234, 0.1);
-    transform: translateY(-1px);
-}
-
-#performance-line-legend .legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-#performance-line-legend .legend-item-hidden {
-    opacity: 0.35;
-}
-
-#performance-line-legend .legend-item-hidden .legend-color {
-    background-color: #bbb !important;
-}
-
-#performance-line-legend .legend-item-hidden .legend-text {
-    text-decoration: line-through;
-    color: #bbb;
-}
-
 /* Dropdown actividades */
 .actividad-toggle {
     padding: 8px 16px !important;
@@ -1333,6 +1398,222 @@ $fecha_actual = date('d/m/Y');
     word-wrap: break-word;
 }
 
+/* ================================================
+   ESTILOS PARA BOTONES DE EXPORTACIÓN
+   ================================================ */
+.btn-wrapper .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-wrapper .btn-outline-secondary {
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+.btn-wrapper .btn-outline-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.btn-wrapper .btn i {
+    margin-right: 5px;
+}
+
+/* ================================================
+   ESTILOS PARA IMPRESIÓN
+   ================================================ */
+@media print {
+    /* Ocultar sidebar y elementos no necesarios */
+    .sidebar,
+    .navbar,
+    .btn-wrapper,
+    .nav-tabs,
+    footer,
+    .settings-panel,
+    .sidebar-offcanvas,
+    #shareModal,
+    .modal-backdrop {
+        display: none !important;
+    }
+
+    /* Expandir contenido principal */
+    .main-panel {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .content-wrapper {
+        padding: 10px !important;
+    }
+
+    /* Asegurar que los gráficos se vean */
+    .card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 15px !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Ajustar tamaños */
+    body {
+        font-size: 12px !important;
+        background: white !important;
+    }
+
+    .statistics-details .statistics-title {
+        font-size: 11px !important;
+    }
+
+    .statistics-details .rate-percentage {
+        font-size: 20px !important;
+    }
+
+    /* Encabezado de impresión */
+    .print-header {
+        display: block !important;
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 2px solid #333;
+        margin-bottom: 20px;
+    }
+
+    .print-header h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .print-header p {
+        font-size: 12px;
+        color: #666;
+        margin: 5px 0 0;
+    }
+
+    /* Ocultar elementos interactivos */
+    .dropdown-toggle::after,
+    .btn,
+    button {
+        display: none !important;
+    }
+
+    /* Mostrar todos los tabs */
+    .tab-content > .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+    /* ================================================
+       LEYENDA DEL GRÁFICO - IMPRESIÓN
+       ================================================ */
+
+    /* Contenedor principal de la leyenda */
+    #performance-line-legend {
+        margin-left: 0 !important;
+        margin-top: 15px !important;
+        width: auto !important;
+        flex: 1 1 auto !important;
+    }
+
+    /* Lista de leyenda - usar display table para mejor alineación */
+    #performance-line-legend .chartjs-legend ul,
+    #performance-line-legend .legend-list,
+    #performance-line-legend ul {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 30px !important;
+        padding: 5px 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+
+    /* Items de leyenda */
+    #performance-line-legend .chartjs-legend .legend-item,
+    #performance-line-legend .legend-item,
+    #performance-line-legend li {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+
+    /* Círculos de color */
+    #performance-line-legend .legend-color {
+        width: 8px !important;
+        height: 8px !important;
+        min-width: 8px !important;
+        min-height: 8px !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+        display: inline-block !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Texto de leyenda */
+    #performance-line-legend .legend-text {
+        font-size: 10px !important;
+        line-height: 1 !important;
+    }
+
+    /* Forzar que el contenedor flex sea en fila */
+    .card-rounded .card-body > .d-sm-flex {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+    }
+
+    /* Canvas del gráfico */
+    .chartjs-wrapper {
+        height: 200px !important;
+        min-height: 200px !important;
+    }
+
+    canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Asegurar colores al imprimir */
+    * {
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
+
+/* Clase para cuando se está imprimiendo */
+body.printing-dashboard .sidebar,
+body.printing-dashboard .navbar {
+    display: none !important;
+}
+
+body.printing-dashboard .main-panel {
+    width: 100% !important;
+    margin-left: 0 !important;
+}
+
 </style>
+<script src="js/sidebar-badges.js"></script>
 </body>
 </html>
+
+
+
+
+
+

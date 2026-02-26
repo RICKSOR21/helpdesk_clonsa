@@ -947,7 +947,7 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLE
 DELIMITER //
 CREATE TRIGGER `before_update_ticket_progreso` BEFORE UPDATE ON `tickets` FOR EACH ROW BEGIN
     IF NEW.progreso = 100 AND OLD.progreso != 100 THEN
-        SET NEW.estado_id = 5;
+        SET NEW.estado_id = 4;
         SET NEW.fecha_resolucion = NOW();
     END IF;
 END//

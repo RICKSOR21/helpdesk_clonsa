@@ -398,32 +398,89 @@ $(document).ready(function() {
     // ============================================
     
     function renderizarLeyendaFija(actividades) {
-        let html = '<div class="chartjs-legend"><ul class="legend-list">';
-        
+        // Crear contenedor usando DOM directamente
+        var container = document.getElementById('performance-line-legend');
+        container.innerHTML = '';
+
+        var wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.flexWrap = 'nowrap';
+        wrapper.style.justifyContent = 'flex-end';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.gap = '0';
+
         actividades.forEach(function(actividad, index) {
-            const meta = performanceChart.getDatasetMeta(index);
-            const hidden = meta.hidden ? 'legend-item-hidden' : '';
-            
-            html += `
-                <li class="legend-item ${hidden}" data-index="${index}">
-                    <span class="legend-color" style="background-color: ${actividad.color}"></span>
-                    <span class="legend-text">${actividad.nombre}</span>
-                </li>
-            `;
-        });
-        
-        html += '</ul></div>';
-        
-        document.getElementById('performance-line-legend').innerHTML = html;
-        
-        $('#performance-line-legend .legend-item').on('click', function() {
-            var index = $(this).data('index');
             var meta = performanceChart.getDatasetMeta(index);
-            
+
+            // Crear item de leyenda
+            var item = document.createElement('span');
+            item.className = 'legend-item' + (meta.hidden ? ' legend-item-hidden' : '');
+            item.setAttribute('data-index', index);
+            item.style.display = 'inline-flex';
+            item.style.alignItems = 'center';
+            item.style.fontSize = '13px';
+            item.style.color = '#6B778C';
+            item.style.whiteSpace = 'nowrap';
+            item.style.cursor = 'pointer';
+            item.style.padding = '6px 14px';
+            item.style.marginLeft = '25px';
+            item.style.borderRadius = '6px';
+            item.style.transition = 'all 0.2s ease';
+            if (meta.hidden) item.style.opacity = '0.35';
+
+            // Crear círculo de color
+            var circle = document.createElement('span');
+            circle.className = 'legend-color';
+            circle.style.display = 'inline-block';
+            circle.style.width = '12px';
+            circle.style.height = '12px';
+            circle.style.minWidth = '12px';
+            circle.style.minHeight = '12px';
+            circle.style.borderRadius = '50%';
+            circle.style.marginRight = '8px';
+            circle.style.backgroundColor = actividad.color;
+            circle.style.flexShrink = '0';
+
+            // Crear texto
+            var text = document.createElement('span');
+            text.className = 'legend-text';
+            text.style.fontWeight = '400';
+            text.style.lineHeight = '1';
+            text.textContent = actividad.nombre;
+
+            item.appendChild(circle);
+            item.appendChild(text);
+            wrapper.appendChild(item);
+        });
+
+        container.appendChild(wrapper);
+
+        // Agregar eventos de click
+        $(container).find('.legend-item').on('click', function() {
+            var index = parseInt($(this).attr('data-index'));
+            var meta = performanceChart.getDatasetMeta(index);
+
             meta.hidden = meta.hidden === null ? !performanceChart.data.datasets[index].hidden : null;
-            $(this).toggleClass('legend-item-hidden');
+
+            if (meta.hidden) {
+                $(this).css('opacity', '0.35');
+                $(this).find('.legend-color').css('background-color', '#bbb');
+                $(this).find('.legend-text').css({'text-decoration': 'line-through', 'color': '#bbb'});
+            } else {
+                $(this).css('opacity', '1');
+                var originalColor = performanceChart.data.datasets[index].borderColor;
+                $(this).find('.legend-color').css('background-color', originalColor);
+                $(this).find('.legend-text').css({'text-decoration': 'none', 'color': '#6B778C'});
+            }
+
             performanceChart.update();
         });
+
+        // Hover effects
+        $(container).find('.legend-item').hover(
+            function() { $(this).css('background-color', 'rgba(102, 126, 234, 0.1)'); },
+            function() { $(this).css('background-color', 'transparent'); }
+        );
     }
     
     // ============================================
@@ -523,7 +580,7 @@ $(document).ready(function() {
         $('#ticketsProceso').text(metricas.tickets_proceso);
         actualizarComparativa('#ticketsProcesoComp', comparativas.tickets_proceso);
         
-        $('#ticketsResueltos').text(metricas.tickets_resueltos);
+        $('#ticketsResueltos').text(parseInt(metricas.tickets_resueltos) || 0);
         actualizarComparativa('#ticketsResueltosComp', comparativas.tickets_resueltos);
         
         $('#tiempoPromedio').text(metricas.tiempo_promedio);
@@ -634,8 +691,13 @@ $(document).ready(function() {
         $('#messageDropdown').text(texto);
         window.departamentoActual = deptId.toString();
         actividadesSeleccionadas = {};
-        
+
         actualizarDashboard();
+
+        // Actualizar también los últimos tickets
+        if (typeof window.cargarUltimosTickets === 'function') {
+            window.cargarUltimosTickets();
+        }
     });
     
     if (!window.PUEDE_VER_TODOS) {
@@ -644,23 +706,27 @@ $(document).ready(function() {
     
     function calcularFechas(periodo) {
         const hoy = new Date();
-        let desde;
-        
+        let desde, hasta;
+
         switch(periodo) {
             case 'mes':
-                desde = new Date(hoy);
-                desde.setDate(hoy.getDate() - 30);
+                // Mes actual: desde el 1 hasta el último día del mes actual
+                desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+                hasta = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0); // Último día del mes
                 break;
             case 'año':
-                desde = new Date(hoy);
-                desde.setFullYear(hoy.getFullYear() - 1);
+                // Año actual: desde el 1 de enero hasta el 31 de diciembre del año actual
+                desde = new Date(hoy.getFullYear(), 0, 1); // 1 de enero
+                hasta = new Date(hoy.getFullYear(), 11, 31); // 31 de diciembre
                 break;
             default:
+                // Semana: últimos 7 días
                 desde = new Date(hoy);
                 desde.setDate(hoy.getDate() - 7);
+                hasta = new Date();
         }
-        
-        return { desde, hasta: new Date() };
+
+        return { desde, hasta };
     }
     
     function mostrarLoading() {

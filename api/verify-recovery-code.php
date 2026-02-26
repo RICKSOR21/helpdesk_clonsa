@@ -13,14 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+require_once '../config/config.php';
+
 try {
-    $host = 'localhost';
-    $dbname = 'helpdesk_clonsa';
-    $username = 'root';
-    $password = '';
-    
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = getDBConnection();
     
     $email = trim($_POST['email'] ?? '');
     $code = trim($_POST['code'] ?? '');

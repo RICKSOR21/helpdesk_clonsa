@@ -1,0 +1,11 @@
+<svg width="220" height="34" viewBox="0 0 220 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&amp;display=swap');
+      .logo-text { font-family: 'Nunito', 'Trebuchet MS', sans-serif; font-size: 28px; font-weight: 700; }
+    </style>
+  </defs>
+  <text class="logo-text" y="28">
+    <tspan fill="#000000">Sira</tspan><tspan fill="#1F3BB3">Portal</tspan>
+  </text>
+</svg>

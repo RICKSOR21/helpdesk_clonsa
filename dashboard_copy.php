@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 
 // Evitar caché del navegador
@@ -98,7 +98,7 @@ $fecha_actual = date('d/m/Y');
   <!-- inject:css -->
   <link rel="stylesheet" href="template/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="template/images/favicon.png" />
+  <link rel="shortcut icon" href="template/images/favicon.svg" />
 </head>
 <body class="authenticated">
   <div class="container-scroller"> 
@@ -511,12 +511,12 @@ $fecha_actual = date('d/m/Y');
           
           <!-- Tickets -->
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#tickets-menu" aria-expanded="false" aria-controls="tickets-menu">
+            <a class="nav-link" data-bs-toggle="collapse" href="#tickets-menu" aria-expanded="true" aria-controls="tickets-menu">
               <i class="menu-icon mdi mdi-ticket-confirmation"></i>
               <span class="menu-title">Tickets</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="tickets-menu">
+            <div class="collapse show" id="tickets-menu">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="tickets.php">Todos los Tickets</a></li>
                 <li class="nav-item"> <a class="nav-link" href="tickets-create.php">Crear Ticket</a></li>

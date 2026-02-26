@@ -13,15 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+require_once '../config/config.php';
+
 try {
-    // Conexión a la base de datos
-    $host = 'localhost';
-    $dbname = 'helpdesk_clonsa';
-    $username = 'root';
-    $password = '';
-    
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = getDBConnection();
     
     $email = trim($_POST['email'] ?? '');
     
@@ -68,9 +63,7 @@ try {
     $stmt->execute();
     
     // Construir URL de recuperación
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $reset_url = "$protocol://$host/helpdesk/reset-password.php?token=$token";
+    $reset_url = APP_URL . "/reset-password.php?token=$token";
     
     // Preparar correo
     $to = $user['email'];

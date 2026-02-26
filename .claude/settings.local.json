@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"http://localhost/helpdesk/fix_tickets_admin.php\")",
+      "Bash(/c/laragon/bin/mysql/mysql-8.0.30-winx64/bin/mysql.exe:*)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(php -r:*)",
+      "Bash(C:/laragon/bin/php/php8.3.14/php.exe -r:*)",
+      "Bash(\"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.28-Win32-vs16-x64\\\\php.exe\" -r:*)",
+      "Bash(\"C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\bin\\\\mysql.exe\" -u root helpdesk_clonsa -e:*)",
+      "Bash(\"C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\bin\\\\mysql.exe\":*)",
+      "Bash(where:*)",
+      "Bash(C:laragonbinphpphp-8.2.28-nts-Win32-vs16-x64php.exe -r \"require_once ''C:\\\\laragon\\\\www\\\\helpdesk\\\\config\\\\database.php''; $db=\\(new Database\\(\\)\\)->getConnection\\(\\); print_r\\($db->query\\(''SELECT * FROM departamentos''\\)->fetchAll\\(PDO::FETCH_ASSOC\\)\\);\")",
+      "Bash(\"C:\\\\laragon\\\\bin\\\\php\\\\php-8.2.28-nts-Win32-vs16-x64\\\\php.exe\" -r \"require_once ''config/database.php''; $db=\\(new Database\\(\\)\\)->getConnection\\(\\); print_r\\($db->query\\(''SELECT * FROM departamentos''\\)->fetchAll\\(PDO::FETCH_ASSOC\\)\\);\")",
+      "Bash(del \"C:\\\\laragon\\\\www\\\\helpdesk\\\\tmp_query.php\")",
+      "Bash(C:laragonbinphpphp-8.1.10-Win32-vs16-x64php.exe -r \"require_once ''config/database.php''; $db = Database::connect\\(\\); $stmt = $db->query\\(\"\"SELECT id, nombre_completo, rol, departamento_id FROM usuarios WHERE nombre_completo LIKE ''%Ivan%'' OR nombre_completo LIKE ''%ivan%''\"\"\\); while\\($row = $stmt->fetch\\(PDO::FETCH_ASSOC\\)\\) { echo implode\\('' | '', $row\\) . PHP_EOL; }\")",
+      "Bash(dir /s /b C:laragonbinphp*php.exe)",
+      "Bash(dir \"C:\\\\laragon\\\\bin\\\\php\" /b)",
+      "Bash(dir:*)",
+      "Bash(python3:*)",
+      "Bash(/c/laragon/bin/php/php-8.3.28-Win32-vs16-x64/php.exe:*)",
+      "Bash(grep:*)",
+      "Bash(ls \"C:\\\\laragon\\\\www\\\\helpdesk\\\\includes\"\" 2>/dev/null || echo \"NO EXISTS \")",
+      "Bash(mysql:*)",
+      "Bash(C:/laragon/bin/mysql/mysql-8.0.30-winx64/bin/mysql.exe:*)",
+      "Bash(C:/laragon/bin/php/php-8.1.10-Win32-vs16-x64/php.exe -r \"\n$_SERVER[''SERVER_NAME''] = ''localhost'';\n$_SESSION = [''user_id'' => 1, ''user_rol'' => ''Administrador'', ''departamento_id'' => 1];\ndefine\\(''STDIN'', fopen\\(''php://stdin'', ''r''\\)\\);\nob_start\\(\\);\nrequire ''C:/laragon/www/helpdesk/config/config.php'';\n$db = getDBConnection\\(\\);\necho ''DB OK'' . PHP_EOL;\n$stmt = $db->query\\(''SELECT COUNT\\(*\\) as c FROM notificaciones_leidas''\\);\necho ''notificaciones_leidas: '' . $stmt->fetch\\(\\)[''c''] . PHP_EOL;\n$stmt = $db->query\\(''SELECT COUNT\\(*\\) as c FROM ticket_comentarios''\\);\necho ''ticket_comentarios: '' . $stmt->fetch\\(\\)[''c''] . PHP_EOL;\n$stmt = $db->query\\(''SELECT COUNT\\(*\\) as c FROM tickets''\\);\necho ''tickets: '' . $stmt->fetch\\(\\)[''c''] . PHP_EOL;\nob_end_clean\\(\\);\necho ''All queries OK'';\n\")"
+    ]
+  }
+}

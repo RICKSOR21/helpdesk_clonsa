@@ -1,4 +1,5 @@
-<?php
+﻿<?php
+require_once 'config/session.php';
 session_start();
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
@@ -14,7 +15,7 @@ if (isset($_SESSION['user_id'])) {
   <link rel="stylesheet" href="template/vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="template/vendors/css/vendor.bundle.base.css">
   <link rel="stylesheet" href="template/css/vertical-layout-light/style.css">
-  <link rel="shortcut icon" href="template/images/favicon.png" />
+  <link rel="shortcut icon" href="template/images/favicon.svg" />
   <style>
     /* ═══════════════════════════════════════════════════════════════
        FONDO CON IMAGEN - CON !IMPORTANT PARA FORZAR

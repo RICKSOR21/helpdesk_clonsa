@@ -6,6 +6,7 @@
  * Archivo: api/logout.php
  */
 
+require_once '../config/session.php';
 session_start();
 
 // Verificar si es llamada AJAX (desde session-manager.js)
