@@ -54,7 +54,7 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
         $fechaDesde = $desde->format('Y-m-d 00:00:00');
         $fechaHasta = $hasta->format('Y-m-d 23:59:59');
     } else {
-        $fechaDesde = $hoy->modify('-7 days')->format('Y-m-d 00:00:00');
+        $fechaDesde = $hoy->modify('-6 days')->format('Y-m-d 00:00:00');
         $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
     }
 } else {
@@ -76,7 +76,7 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
         case 'semana':
         default:
             // Última semana: últimos 7 días
-            $desde = (new DateTime())->modify('-7 days');
+            $desde = (new DateTime())->modify('-6 days');
             $fechaDesde = $desde->format('Y-m-d 00:00:00');
             $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
             break;
@@ -204,8 +204,8 @@ if ($periodo !== 'todo') {
         case 'semana':
         default:
             // Semana anterior: 7 días antes del período actual
-            $fechaDesdeAnterior = (new DateTime())->modify('-14 days')->format('Y-m-d 00:00:00');
-            $fechaHastaAnterior = (new DateTime())->modify('-8 days')->format('Y-m-d 23:59:59');
+            $fechaDesdeAnterior = (new DateTime())->modify('-13 days')->format('Y-m-d 00:00:00');
+            $fechaHastaAnterior = (new DateTime())->modify('-7 days')->format('Y-m-d 23:59:59');
             break;
     }
     

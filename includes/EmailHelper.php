@@ -1,8 +1,12 @@
-<?php
+﻿<?php
 /**
  * EmailHelper - Sistema centralizado de notificaciones por correo
  * Usa PHPMailer con SMTP para enviar correos del helpdesk
  */
+
+if (file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -37,6 +41,10 @@ class EmailHelper
      */
     private static function createMailer()
     {
+        if (!class_exists(PHPMailer::class)) {
+            throw new \RuntimeException('PHPMailer no esta disponible en el servidor');
+        }
+
         $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->Host       = SMTP_HOST;
@@ -53,16 +61,42 @@ class EmailHelper
     }
 
     /**
+     * Fallback de envio usando mail() nativo
+     */
+    private static function sendWithNativeMail($toEmail, $toName, $subject, $htmlBody)
+    {
+        $fromEmail = defined('SMTP_FROM') ? SMTP_FROM : 'no-reply@localhost';
+        $fromName = defined('SMTP_FROM_NAME') ? SMTP_FROM_NAME : 'Helpdesk';
+
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+        $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
+
+        $ok = @mail($toEmail, $subject, $htmlBody, $headers);
+        if ($ok) {
+            self::log("OK (mail fallback) - Enviado a: {$toEmail} | Asunto: {$subject}");
+        } else {
+            self::log("ERROR (mail fallback) - No enviado a: {$toEmail} | Asunto: {$subject}");
+        }
+        return $ok;
+    }
+
+    /**
      * Envia un correo individual
      */
     private static function sendEmail($toEmail, $toName, $subject, $htmlBody)
     {
         if (!defined('SMTP_ENABLED') || !SMTP_ENABLED) {
-            self::log("SMTP deshabilitado - No enviado a: {$toEmail} | Asunto: {$subject}");
-            return false;
+            self::log("SMTP deshabilitado - usando mail() para: {$toEmail}");
+            return self::sendWithNativeMail($toEmail, $toName, $subject, $htmlBody);
         }
 
         try {
+            if (!defined('SMTP_PASS') || SMTP_PASS === '' || SMTP_PASS === 'password_del_email') {
+                self::log("SMTP sin password valido - usando mail() para: {$toEmail}");
+                return self::sendWithNativeMail($toEmail, $toName, $subject, $htmlBody);
+            }
+
             $mail = self::createMailer();
             $mail->addAddress($toEmail, $toName);
             $mail->Subject = $subject;
@@ -71,9 +105,9 @@ class EmailHelper
             $mail->send();
             self::log("OK - Enviado a: {$toEmail} | Asunto: {$subject}");
             return true;
-        } catch (Exception $e) {
-            self::log("ERROR - No enviado a: {$toEmail} | Asunto: {$subject} | Error: " . $e->getMessage());
-            return false;
+        } catch (\Throwable $e) {
+            self::log("ERROR SMTP - No enviado a: {$toEmail} | Asunto: {$subject} | Error: " . $e->getMessage() . " | Intentando mail()");
+            return self::sendWithNativeMail($toEmail, $toName, $subject, $htmlBody);
         }
     }
 
@@ -86,12 +120,17 @@ class EmailHelper
         if ($actionUrl) {
             $buttonHtml = '
             <div style="text-align:center; margin:25px 0;">
-                <a href="' . htmlspecialchars($actionUrl) . '"
-                   style="background:linear-gradient(135deg, #4B49AC, #7B7BF7); color:#ffffff;
-                          padding:12px 30px; text-decoration:none; border-radius:6px;
-                          font-weight:bold; font-size:14px; display:inline-block;">
-                    ' . htmlspecialchars($actionText) . '
-                </a>
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                    <tr>
+                        <td bgcolor="#4B49AC" style="border-radius:6px; background:#4B49AC;">
+                            <a href="' . htmlspecialchars($actionUrl) . '"
+                               style="display:inline-block; padding:12px 30px; color:#ffffff !important;
+                                      text-decoration:none; font-weight:bold; font-size:14px; font-family:Arial,Helvetica,sans-serif;">
+                                ' . htmlspecialchars($actionText) . '
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </div>';
         }
 
@@ -271,90 +310,147 @@ class EmailHelper
     }
 
     /**
+     * Obtiene destinatarios por lista explicita de usuarios
+     * Retorna array de ['id'=>, 'email'=>, 'nombre'=>, 'rol'=>]
+     */
+    private static function getUsersByIds(array $userIds, $db)
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $userIds), function ($id) {
+            return $id > 0;
+        })));
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $db->prepare("SELECT u.id, u.email, u.nombre_completo, r.nombre as rol_nombre
+                              FROM usuarios u
+                              INNER JOIN roles r ON r.id = u.rol_id
+                              WHERE u.id IN ({$placeholders}) AND u.activo = 1");
+        $stmt->execute($ids);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $recipients = [];
+        foreach ($users as $user) {
+            if (empty($user['email'])) {
+                continue;
+            }
+            $recipients[] = [
+                'id'     => (int)$user['id'],
+                'email'  => $user['email'],
+                'nombre' => $user['nombre_completo'],
+                'rol'    => $user['rol_nombre']
+            ];
+        }
+
+        return $recipients;
+    }
+
+    /**
      * Configuracion de cada tipo de evento
      */
     private static function getEventConfig($eventType)
     {
+        // Iconos como entidades HTML para evitar corrupcion por codificacion.
         $events = [
             'ticket_creado' => [
                 'title'   => 'Nuevo Ticket Creado',
-                'icon'    => '🎫',
+                'icon'    => '&#x1F3AB;',
                 'color'   => '#4B49AC',
                 'subject' => 'Nuevo Ticket: {codigo} - {titulo}'
             ],
+            'ticket_asignado' => [
+                'title'   => 'Nuevo Ticket Asignado',
+                'icon'    => '&#x1F4CC;',
+                'color'   => '#1f8ef1',
+                'subject' => 'Nuevo Ticket Asignado: {codigo} - {titulo}'
+            ],
             'ticket_actualizado' => [
                 'title'   => 'Ticket Actualizado',
-                'icon'    => '📝',
+                'icon'    => '&#x1F4DD;',
                 'color'   => '#2196F3',
                 'subject' => 'Ticket Actualizado: {codigo} - {titulo}'
             ],
             'progreso_actualizado' => [
                 'title'   => 'Progreso Actualizado',
-                'icon'    => '📊',
+                'icon'    => '&#x1F4CA;',
                 'color'   => '#17a2b8',
                 'subject' => 'Progreso Actualizado: {codigo} ({progreso}%)'
             ],
             'pendiente_verificacion' => [
-                'title'   => 'Pendiente de Verificación',
-                'icon'    => '✅',
+                'title'   => 'Pendiente de Verificacion',
+                'icon'    => '&#x2705;',
                 'color'   => '#F59E0B',
-                'subject' => 'Verificación Requerida: {codigo} - {titulo}'
+                'subject' => 'Verificacion Requerida: {codigo} - {titulo}'
             ],
             'estado_actualizado' => [
                 'title'   => 'Estado del Ticket Actualizado',
-                'icon'    => '🔄',
+                'icon'    => '&#x1F504;',
                 'color'   => '#6f42c1',
                 'subject' => 'Estado Actualizado: {codigo}'
             ],
             'ticket_aprobado' => [
-                'title'   => 'Ticket Aprobado / Verificado',
-                'icon'    => '✅',
+                'title'   => 'Ticket Resuelto / Verificado',
+                'icon'    => '&#x2705;',
                 'color'   => '#28a745',
-                'subject' => 'Ticket Aprobado: {codigo} - {titulo}'
+                'subject' => 'Ticket Resuelto / Verificado: {codigo} - {titulo}'
             ],
             'ticket_rechazado' => [
                 'title'   => 'Ticket Rechazado',
-                'icon'    => '❌',
+                'icon'    => '&#x274C;',
                 'color'   => '#dc3545',
                 'subject' => 'Ticket Rechazado: {codigo} - {titulo}'
             ],
+            'ticket_rechazado_por_ti' => [
+                'title'   => 'Rechazaste Ticket',
+                'icon'    => '&#x274C;',
+                'color'   => '#dc3545',
+                'subject' => 'Rechazaste Ticket: {codigo} - {titulo}'
+            ],
             'comentario_agregado' => [
                 'title'   => 'Nuevo Comentario en Ticket',
-                'icon'    => '💬',
+                'icon'    => '&#x1F4AC;',
                 'color'   => '#20c997',
                 'subject' => 'Nuevo Comentario: {codigo} - {titulo}'
             ],
             'transferencia_solicitada' => [
-                'title'   => 'Solicitud de Transferencia',
-                'icon'    => '🔀',
+                'title'   => 'Solicitud de Transferencia de Ticket',
+                'icon'    => '&#x1F500;',
                 'color'   => '#F59E0B',
-                'subject' => 'Solicitud de Transferencia: {codigo}'
+                'subject' => 'Solicitud de Transferencia de Ticket: {codigo}'
             ],
             'transferencia_directa' => [
-                'title'   => 'Ticket Transferido',
-                'icon'    => '➡️',
+                'title'   => 'Transferencia Directa de Ticket',
+                'icon'    => '&#x27A1;&#xFE0F;',
                 'color'   => '#6f42c1',
-                'subject' => 'Ticket Transferido: {codigo} - {titulo}'
+                'subject' => 'Transferencia Directa de Ticket: {codigo} - {titulo}'
             ],
             'transferencia_aprobada' => [
-                'title'   => 'Transferencia Aprobada',
-                'icon'    => '✅',
+                'title'   => 'Transferencia Aprobada de Ticket',
+                'icon'    => '&#x2705;',
                 'color'   => '#28a745',
-                'subject' => 'Transferencia Aprobada: {codigo}'
+                'subject' => 'Transferencia Aprobada de Ticket: {codigo}'
             ],
             'transferencia_rechazada' => [
-                'title'   => 'Transferencia Rechazada',
-                'icon'    => '❌',
+                'title'   => 'Transferencia Rechazada de Ticket',
+                'icon'    => '&#x274C;',
                 'color'   => '#dc3545',
-                'subject' => 'Transferencia Rechazada: {codigo}'
+                'subject' => 'Transferencia Rechazada de Ticket: {codigo}'
+            ],
+            'transferencia_rechazada_por_ti' => [
+                'title'   => 'Rechazaste Transferencia de Ticket',
+                'icon'    => '&#x274C;',
+                'color'   => '#dc3545',
+                'subject' => 'Rechazaste Transferencia de Ticket: {codigo}'
             ],
         ];
 
         return $events[$eventType] ?? [
-            'title'   => 'Notificación del Sistema',
-            'icon'    => '📢',
+            'title'   => 'Notificacion del Sistema',
+            'icon'    => '&#x1F4E2;',
             'color'   => '#4B49AC',
-            'subject' => 'Notificación: {codigo}'
+            'subject' => 'Notificacion: {codigo}'
         ];
     }
 
@@ -381,21 +477,34 @@ class EmailHelper
         switch ($eventType) {
             case 'ticket_creado':
                 $details = [
-                    'Código'       => $data['codigo'] ?? '',
-                    'Título'       => $data['titulo'] ?? '',
-                    'Descripción'  => mb_substr($data['descripcion'] ?? '', 0, 200),
-                    'Departamento' => $data['departamento'] ?? '',
-                    'Creado por'   => $actorName,
-                    'Asignado a'   => $data['asignado_nombre'] ?? '',
-                    'Prioridad'    => $data['prioridad'] ?? '',
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Descripcion' => mb_substr($data['descripcion'] ?? '', 0, 200),
+                    'Departamento'=> $data['departamento'] ?? '',
+                    'Creado por'  => $actorName,
+                    'Asignado a'  => $data['asignado_nombre'] ?? '',
+                    'Prioridad'   => $data['prioridad'] ?? '',
                 ];
                 return '<p style="color:#495057; font-size:14px;">Se ha creado un nuevo ticket en el sistema.</p>'
                     . self::buildDetailsTable($details);
 
+            case 'ticket_asignado':
+                $details = [
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Descripcion' => mb_substr($data['descripcion'] ?? '', 0, 200),
+                    'Asignado por'=> $actorName,
+                    'Asignado a'  => $data['asignado_nombre'] ?? '',
+                    'Departamento'=> $data['departamento'] ?? '',
+                    'Prioridad'   => $data['prioridad'] ?? '',
+                ];
+                return '<p style="color:#495057; font-size:14px;">Se ha asignado un ticket en el sistema.</p>'
+                    . self::buildDetailsTable($details);
+
             case 'ticket_actualizado':
                 $details = [
-                    'Código'        => $data['codigo'] ?? '',
-                    'Título'        => $data['titulo'] ?? '',
+                    'Codigo'        => $data['codigo'] ?? '',
+                    'Titulo'        => $data['titulo'] ?? '',
                     'Actualizado por' => $actorName,
                     'Cambios'       => $data['cambios'] ?? 'Campos actualizados',
                 ];
@@ -406,8 +515,8 @@ class EmailHelper
                 $progreso = $data['progreso'] ?? 0;
                 $barColor = $progreso >= 75 ? '#28a745' : ($progreso >= 50 ? '#17a2b8' : ($progreso >= 25 ? '#ffc107' : '#dc3545'));
                 $details = [
-                    'Código'        => $data['codigo'] ?? '',
-                    'Título'        => $data['titulo'] ?? '',
+                    'Codigo'        => $data['codigo'] ?? '',
+                    'Titulo'        => $data['titulo'] ?? '',
                     'Progreso'      => $progreso . '%',
                     'Actualizado por' => $actorName,
                 ];
@@ -422,99 +531,127 @@ class EmailHelper
 
             case 'pendiente_verificacion':
                 $details = [
-                    'Código'        => $data['codigo'] ?? '',
-                    'Título'        => $data['titulo'] ?? '',
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
                     'Completado por' => $actorName,
                 ];
-                return '<p style="color:#495057; font-size:14px;"><strong>El ticket ha alcanzado el 100% y requiere verificaci&oacute;n.</strong></p>'
+                return '<p style="color:#495057; font-size:14px;"><strong>El ticket ha alcanzado el 100% y requiere verificacion.</strong></p>'
                     . self::buildDetailsTable($details)
-                    . '<p style="color:#F59E0B; font-size:13px; font-weight:bold;">⚠️ Este ticket necesita ser aprobado o rechazado por un Jefe o Administrador.</p>';
+                    . '<p style="color:#F59E0B; font-size:13px; font-weight:bold;">Este ticket necesita ser aprobado o rechazado por un Jefe o Administrador.</p>';
 
             case 'estado_actualizado':
                 $details = [
-                    'Código'      => $data['codigo'] ?? '',
-                    'Título'      => $data['titulo'] ?? '',
-                    'Nuevo Estado' => $data['estado'] ?? '',
-                    'Cambiado por' => $actorName,
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Nuevo Estado'=> $data['estado'] ?? '',
+                    'Cambiado por'=> $actorName,
                 ];
                 return '<p style="color:#495057; font-size:14px;">El estado del ticket ha sido actualizado.</p>'
                     . self::buildDetailsTable($details);
 
             case 'ticket_aprobado':
                 $details = [
-                    'Código'      => $data['codigo'] ?? '',
-                    'Título'      => $data['titulo'] ?? '',
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
                     'Aprobado por' => $actorName,
-                    'Comentario'  => $data['comentario'] ?? '',
+                    'Resuelto por' => $data['resuelto_por'] ?? ($data['completado_por'] ?? ($data['asignado_nombre'] ?? '')),
+                    'Comentario'   => $data['comentario'] ?? '',
                 ];
-                return '<p style="color:#28a745; font-size:14px; font-weight:bold;">El ticket ha sido aprobado y verificado exitosamente.</p>'
+                return '<p style="color:#28a745; font-size:14px; font-weight:bold;">El ticket ha sido resuelto y verificado exitosamente.</p>'
                     . self::buildDetailsTable($details);
 
             case 'ticket_rechazado':
                 $details = [
-                    'Código'      => $data['codigo'] ?? '',
-                    'Título'      => $data['titulo'] ?? '',
-                    'Rechazado por' => $actorName,
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Rechazado por'=> $actorName,
                     'Motivo'      => $data['motivo'] ?? '',
+                    'Realizado por' => $data['realizado_por'] ?? ($data['asignado_nombre'] ?? ''),
                 ];
-                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">El ticket ha sido rechazado y vuelve a estado "En Atenci&oacute;n" con 90%.</p>'
+                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">El ticket ha sido rechazado y vuelve a estado "En Atencion" con 90%.</p>'
+                    . self::buildDetailsTable($details);
+
+            case 'ticket_rechazado_por_ti':
+                $details = [
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Rechazado por'=> $actorName,
+                    'Motivo'      => $data['motivo'] ?? '',
+                    'Realizado por' => $data['realizado_por'] ?? ($data['asignado_nombre'] ?? ''),
+                ];
+                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">Has rechazado el cierre de un ticket.</p>'
                     . self::buildDetailsTable($details);
 
             case 'comentario_agregado':
                 $details = [
-                    'Código'       => $data['codigo'] ?? '',
-                    'Título'       => $data['titulo'] ?? '',
-                    'Comentado por' => $actorName,
-                    'Comentario'   => mb_substr($data['comentario'] ?? '', 0, 300),
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
+                    'Comentado por'=> $actorName,
+                    'Comentario'  => mb_substr($data['comentario'] ?? '', 0, 300),
                 ];
                 return '<p style="color:#495057; font-size:14px;">Se ha agregado un nuevo comentario al ticket.</p>'
                     . self::buildDetailsTable($details);
 
             case 'transferencia_solicitada':
                 $details = [
-                    'Código'        => $data['codigo'] ?? '',
-                    'Título'        => $data['titulo'] ?? '',
+                    'Codigo'      => $data['codigo'] ?? '',
+                    'Titulo'      => $data['titulo'] ?? '',
                     'Solicitado por' => $actorName,
-                    'Transferir a'  => $data['destino_nombre'] ?? '',
-                    'Motivo'        => $data['motivo'] ?? '',
+                    'Transferir a' => $data['destino_nombre'] ?? '',
+                    'Motivo'      => $data['motivo'] ?? '',
                 ];
-                return '<p style="color:#F59E0B; font-size:14px; font-weight:bold;">Se ha solicitado una transferencia de ticket que requiere aprobaci&oacute;n.</p>'
+                return '<p style="color:#F59E0B; font-size:14px; font-weight:bold;">Se ha solicitado una transferencia de ticket que requiere aprobacion.</p>'
                     . self::buildDetailsTable($details);
 
             case 'transferencia_directa':
                 $details = [
-                    'Código'          => $data['codigo'] ?? '',
-                    'Título'          => $data['titulo'] ?? '',
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
                     'Transferido por' => $actorName,
-                    'De'              => $data['origen_nombre'] ?? '',
-                    'A'               => $data['destino_nombre'] ?? '',
-                    'Motivo'          => $data['motivo'] ?? '',
+                    'De'           => $data['origen_nombre'] ?? '',
+                    'A'            => $data['destino_nombre'] ?? '',
+                    'Motivo'       => $data['motivo'] ?? '',
                 ];
-                return '<p style="color:#495057; font-size:14px;">Un ticket ha sido transferido directamente.</p>'
+                return '<p style="color:#495057; font-size:14px;">Se ejecuto una transferencia directa de ticket.</p>'
                     . self::buildDetailsTable($details);
 
             case 'transferencia_aprobada':
                 $details = [
-                    'Código'       => $data['codigo'] ?? '',
-                    'Título'       => $data['titulo'] ?? '',
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
+                    'De'           => $data['origen_nombre'] ?? '',
+                    'A'            => $data['destino_nombre'] ?? '',
                     'Aprobado por' => $actorName,
-                    'Nuevo asignado' => $data['destino_nombre'] ?? '',
                 ];
-                return '<p style="color:#28a745; font-size:14px; font-weight:bold;">La solicitud de transferencia ha sido aprobada.</p>'
+                return '<p style="color:#28a745; font-size:14px; font-weight:bold;">La solicitud de transferencia de ticket ha sido aprobada.</p>'
                     . self::buildDetailsTable($details);
 
             case 'transferencia_rechazada':
                 $details = [
-                    'Código'        => $data['codigo'] ?? '',
-                    'Título'        => $data['titulo'] ?? '',
-                    'Rechazado por' => $actorName,
-                    'Comentario'    => $data['comentario'] ?? '',
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
+                    'De'           => $data['origen_nombre'] ?? '',
+                    'A'            => $data['destino_nombre'] ?? '',
+                    'Rechazado por'=> $actorName,
+                    'Comentario'   => $data['comentario'] ?? '',
                 ];
-                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">La solicitud de transferencia ha sido rechazada.</p>'
+                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">La solicitud de transferencia de ticket ha sido rechazada.</p>'
+                    . self::buildDetailsTable($details);
+
+            case 'transferencia_rechazada_por_ti':
+                $details = [
+                    'Codigo'       => $data['codigo'] ?? '',
+                    'Titulo'       => $data['titulo'] ?? '',
+                    'De'           => $data['origen_nombre'] ?? '',
+                    'A'            => $data['destino_nombre'] ?? '',
+                    'Rechazado por'=> $actorName,
+                    'Comentario'   => $data['comentario'] ?? '',
+                ];
+                return '<p style="color:#dc3545; font-size:14px; font-weight:bold;">Has rechazado una transferencia de ticket.</p>'
                     . self::buildDetailsTable($details);
 
             default:
-                return '<p style="color:#495057; font-size:14px;">Notificaci&oacute;n del sistema de tickets.</p>';
+                return '<p style="color:#495057; font-size:14px;">Notificacion del sistema de tickets.</p>';
         }
     }
 
@@ -574,7 +711,7 @@ class EmailHelper
 
             // Obtener destinatarios
             // En ticket_creado, incluir al creador para que reciba confirmacion por correo
-            $includeActor = ($eventType === 'ticket_creado');
+            $includeActor = in_array($eventType, ['ticket_creado', 'ticket_asignado', 'ticket_aprobado'], true);
             $recipients = self::getTicketRecipients($ticketId, $actorId, $db, $includeActor);
 
             if (empty($recipients)) {
@@ -602,8 +739,94 @@ class EmailHelper
 
             self::log("Evento: {$eventType} | Ticket: {$data['codigo']} | Enviados: {$sent} | Fallidos: {$failed}");
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             self::log("EXCEPCION en notifyTicketEvent({$eventType}): " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Notifica un evento a una lista explicita de usuarios.
+     * Se usa cuando se necesita distinguir el tipo de correo por receptor.
+     */
+    public static function notifyTicketEventToUsers($eventType, $data, $actorId, $db, array $targetUserIds, $includeActor = false)
+    {
+        if (!defined('SMTP_ENABLED') || !SMTP_ENABLED) {
+            self::log("SMTP deshabilitado - Evento dirigido: {$eventType}");
+            return;
+        }
+
+        try {
+            $ticketId = $data['ticket_id'] ?? null;
+            if (!$ticketId) {
+                self::log("ERROR - notifyTicketEventToUsers sin ticket_id para evento: {$eventType}");
+                return;
+            }
+
+            if (empty($data['codigo']) || empty($data['titulo'])) {
+                $stmtTk = $db->prepare("SELECT t.codigo, t.titulo, t.descripcion, t.progreso,
+                                               t.usuario_id, t.asignado_a, t.departamento_id,
+                                               d.nombre as departamento_nombre,
+                                               uc.nombre_completo as creador_nombre,
+                                               ua.nombre_completo as asignado_nombre_completo
+                                        FROM tickets t
+                                        LEFT JOIN departamentos d ON d.id = t.departamento_id
+                                        LEFT JOIN usuarios uc ON uc.id = t.usuario_id
+                                        LEFT JOIN usuarios ua ON ua.id = t.asignado_a
+                                        WHERE t.id = :id");
+                $stmtTk->execute([':id' => $ticketId]);
+                $tkInfo = $stmtTk->fetch(PDO::FETCH_ASSOC);
+                if ($tkInfo) {
+                    $data['codigo']          = $data['codigo'] ?? $tkInfo['codigo'];
+                    $data['titulo']          = $data['titulo'] ?? $tkInfo['titulo'];
+                    $data['descripcion']     = $data['descripcion'] ?? $tkInfo['descripcion'];
+                    $data['departamento']    = $data['departamento'] ?? $tkInfo['departamento_nombre'];
+                    $data['asignado_nombre'] = $data['asignado_nombre'] ?? $tkInfo['asignado_nombre_completo'];
+                    $data['progreso']        = $data['progreso'] ?? $tkInfo['progreso'];
+                }
+            }
+
+            if (empty($data['actor_nombre'])) {
+                $stmtActor = $db->prepare("SELECT nombre_completo FROM usuarios WHERE id = :id");
+                $stmtActor->execute([':id' => $actorId]);
+                $actor = $stmtActor->fetch(PDO::FETCH_ASSOC);
+                $data['actor_nombre'] = $actor ? $actor['nombre_completo'] : 'Sistema';
+            }
+
+            $userIds = array_values(array_unique(array_filter(array_map('intval', $targetUserIds), function ($id) {
+                return $id > 0;
+            })));
+            if (!$includeActor) {
+                $userIds = array_values(array_filter($userIds, function ($id) use ($actorId) {
+                    return $id !== (int)$actorId;
+                }));
+            }
+
+            $recipients = self::getUsersByIds($userIds, $db);
+            if (empty($recipients)) {
+                self::log("Sin destinatarios explicitos para evento: {$eventType} | Ticket: " . ($data['codigo'] ?? 'N/A'));
+                return;
+            }
+
+            $config = self::getEventConfig($eventType);
+            $subject = self::parseSubject($config['subject'], $data);
+            $bodyHtml = self::buildEventBody($eventType, $data);
+            $ticketUrl = (defined('APP_URL') ? APP_URL : '') . '/ticket-view.php?id=' . $ticketId;
+            $html = self::buildTemplate($config['title'], $config['icon'], $config['color'], $bodyHtml, $ticketUrl);
+
+            $sent = 0;
+            $failed = 0;
+            foreach ($recipients as $r) {
+                $ok = self::sendEmail($r['email'], $r['nombre'], $subject, $html);
+                if ($ok) {
+                    $sent++;
+                } else {
+                    $failed++;
+                }
+            }
+
+            self::log("Evento dirigido: {$eventType} | Ticket: {$data['codigo']} | Destinatarios: " . count($recipients) . " | Enviados: {$sent} | Fallidos: {$failed}");
+        } catch (\Throwable $e) {
+            self::log("EXCEPCION en notifyTicketEventToUsers({$eventType}): " . $e->getMessage());
         }
     }
 
@@ -624,7 +847,7 @@ class EmailHelper
             $creadorId = $data['creado_por'] ?? 0;
 
             // Obtener nombre del creador
-            $creadorNombre = 'Administración';
+            $creadorNombre = 'Administracion';
             if ($creadorId) {
                 $stmtC = $db->prepare("SELECT nombre_completo FROM usuarios WHERE id = :id");
                 $stmtC->execute([':id' => $creadorId]);
@@ -640,14 +863,21 @@ class EmailHelper
                 'informativo'   => '#2196F3',
             ];
             $tipoNames = [
-                'actualizacion' => 'Actualización',
+                'actualizacion' => 'Actualizacion',
                 'mantenimiento' => 'Mantenimiento',
                 'alerta'        => 'Alerta',
                 'informativo'   => 'Informativo',
             ];
+            $tipoIcons = [
+                'actualizacion' => '&#x1F504;',
+                'mantenimiento' => '&#x1F527;',
+                'alerta'        => '&#x1F6A8;',
+                'informativo'   => '&#x1F4E2;',
+            ];
 
             $color = $tipoColors[$tipo] ?? '#2196F3';
             $tipoNombre = $tipoNames[$tipo] ?? 'Informativo';
+            $icon = $tipoIcons[$tipo] ?? '&#x1F4E2;';
 
             $details = [
                 'Tipo'        => $tipoNombre,
@@ -659,7 +889,7 @@ class EmailHelper
                 . self::buildDetailsTable($details);
 
             $comunicadosUrl = (defined('APP_URL') ? APP_URL : '') . '/comunicados.php';
-            $html = self::buildTemplate('Nuevo Comunicado', '📢', $color, $bodyHtml, $comunicadosUrl, 'Ver Comunicados');
+            $html = self::buildTemplate('Nuevo Comunicado', $icon, $color, $bodyHtml, $comunicadosUrl, 'Ver Comunicados');
 
             $subject = APP_NAME . ' - Comunicado: ' . $titulo;
 
@@ -685,3 +915,7 @@ class EmailHelper
         }
     }
 }
+
+
+
+

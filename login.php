@@ -1,6 +1,62 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
+
+$login_error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once 'config/config.php';
+
+    try {
+        $db = getDBConnection();
+        $user_input = trim($_POST['username'] ?? '');
+        $pass_input = $_POST['password'] ?? '';
+
+        if ($user_input === '' || $pass_input === '') {
+            $login_error = 'Usuario y contrasena son requeridos';
+        } else {
+            $query = "SELECT u.*, r.nombre as rol_nombre
+                      FROM usuarios u
+                      INNER JOIN roles r ON u.rol_id = r.id
+                      WHERE (u.username = :user_input OR u.email = :email_input)
+                      AND u.activo = 1";
+
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':user_input', $user_input, PDO::PARAM_STR);
+            $stmt->bindParam(':email_input', $user_input, PDO::PARAM_STR);
+            $stmt->execute();
+            $user = $stmt->fetch();
+
+            if (!$user) {
+                $login_error = 'Usuario no encontrado o inactivo';
+            } elseif (!password_verify($pass_input, $user['password'])) {
+                $login_error = 'Contrasena incorrecta';
+            } else {
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['nombre_completo'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_rol'] = $user['rol_nombre'];
+                $_SESSION['rol_id'] = $user['rol_id'];
+                $_SESSION['departamento_id'] = $user['departamento_id'];
+                $_SESSION['last_activity'] = time();
+                $_SESSION['session_created'] = time();
+
+                $upd = $db->prepare("UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = :user_id");
+                $upd->bindParam(':user_id', $user['id'], PDO::PARAM_INT);
+                $upd->execute();
+
+                header('Location: dashboard.php');
+                exit;
+            }
+        }
+    } catch (Throwable $e) {
+        $login_error = 'Error al iniciar sesion. Intenta nuevamente.';
+        error_log('Login fallback error: ' . $e->getMessage());
+    }
+}
+
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
     exit;
@@ -205,23 +261,30 @@ if (isset($_SESSION['user_id'])) {
               <h6 class="font-weight-light mb-4 page-subtitle">Inicia sesión para continuar</h6>
               
               <div id="alert-container"></div>
+              <?php if ($login_error !== ''): ?>
+                <div class="alert alert-danger fade show" role="alert">
+                  🔴 <?= htmlspecialchars($login_error, ENT_QUOTES, 'UTF-8') ?>
+                </div>
+              <?php endif; ?>
               
-              <form class="pt-3" id="loginForm">
+              <form class="pt-3" id="loginForm" method="POST" action="login.php">
                 <div class="form-group">
                   <i class="mdi mdi-account input-icon"></i>
                   <input type="text" class="form-control form-control-lg" id="username" 
+                         name="username"
                          placeholder="Usuario o Email" required autocomplete="username">
                 </div>
                 
                 <div class="form-group">
                   <i class="mdi mdi-lock input-icon"></i>
                   <input type="password" class="form-control form-control-lg" id="password" 
+                         name="password"
                          placeholder="Contraseña" required autocomplete="current-password">
                   <i class="mdi mdi-eye password-toggle" id="togglePassword"></i>
                 </div>
                 
                 <div class="mt-3 text-right">
-                  <a href="#" class="forgot-password" id="forgotPasswordLink">
+                  <a href="javascript:void(0)" class="forgot-password" id="forgotPasswordLink">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>

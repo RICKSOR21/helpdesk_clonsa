@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
 require_once 'config/config.php';
@@ -97,6 +97,41 @@ $es_usuario = ($user_rol === 'Usuario');
     .select-table tbody td p {
       font-size: 12px;
       margin-bottom: 0;
+    }
+    .jobcard-mini-badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0 10px 0 9px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #87d63b 0%, #7fcf36 100%);
+      box-shadow: inset 0 0 0 1px rgba(82, 140, 28, 0.28);
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    .jobcard-mini-badge::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 64%;
+      height: 100%;
+      background: #0b2a73;
+      clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .jobcard-mini-badge__label {
+      position: relative;
+      z-index: 1;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
+      line-height: 1;
+      white-space: nowrap;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .max-width-progress-wrap {
       min-width: 100px;
@@ -969,6 +1004,7 @@ $es_usuario = ($user_rol === 'Usuario');
             $('#filterEstado').append(`<option value="${item.id}">${estadoNombre}</option>`);
           });
           $('#filterEstado').append('<option value="verificando">Verificando</option>');
+          $('#filterEstado').append('<option value="ticket_jobcard">Ticket Jobcard</option>');
           $('#filterEstado').append('<option value="transferido">Transferido</option>');
         }
       });
@@ -1283,6 +1319,11 @@ $es_usuario = ($user_rol === 'Usuario');
         }
 
         const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombrePrincipal)}&background=667eea&color=fff&size=45`;
+        const jobcardText = String(ticket.jobcard_asociada || '').trim();
+        const hasJobcardAsociada = jobcardText !== '';
+        const jobcardBadgeHtml = hasJobcardAsociada
+          ? `<span class="jobcard-mini-badge" title="${escapeHtml(jobcardText)}"><span class="jobcard-mini-badge__label">${escapeHtml(jobcardText)}</span></span>`
+          : '';
 
         // Icono del canal
         let canalIcon = 'mdi-help-circle';
@@ -1330,7 +1371,10 @@ $es_usuario = ($user_rol === 'Usuario');
                 const label = dIds.length > 1 ? ticket.departamentos_actividad : ticket.departamento_nombre;
                 return label ? `<span style="font-size:10px;font-weight:600;color:#1F3BB3;letter-spacing:0.3px;text-transform:uppercase;display:block;margin-bottom:2px;">${label}</span>` : '';
               })()}
-              <h6 class="mb-1"><a href="ticket-view.php?id=${ticket.id}" class="text-dark">${ticket.codigo}</a></h6>
+              <h6 class="mb-1 d-flex align-items-center flex-wrap gap-2">
+                <a href="ticket-view.php?id=${ticket.id}" class="text-dark">${ticket.codigo}</a>
+                ${jobcardBadgeHtml}
+              </h6>
               <p class="text-muted mb-0" style="font-size: 12px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${ticket.titulo}</p>
             </td>
             <td class="text-center">
@@ -1408,17 +1452,28 @@ $es_usuario = ($user_rol === 'Usuario');
       const fechaHasta = $('#filterFechaHasta').val();
 
       filteredTickets = allTickets.filter(ticket => {
-        // Busqueda por texto (codigo, titulo o creador)
+        // Busqueda por texto (codigo, titulo, creador y jobcard asociada)
+        const codigo = String(ticket.codigo || '').toLowerCase();
+        const titulo = String(ticket.titulo || '').toLowerCase();
+        const creadorNombre = String(ticket.creador || '').toLowerCase();
+        const jobcard = String(ticket.jobcard_asociada || '').toLowerCase().trim();
+        const hasJobcard = jobcard !== '';
+        const searchIsJobcardKeyword = (search === 'jobcard' || search === 'reutech');
+
         const matchSearch = !search ||
-          ticket.codigo.toLowerCase().includes(search) ||
-          ticket.titulo.toLowerCase().includes(search) ||
-          (ticket.creador && ticket.creador.toLowerCase().includes(search));
+          codigo.includes(search) ||
+          titulo.includes(search) ||
+          creadorNombre.includes(search) ||
+          jobcard.includes(search) ||
+          (searchIsJobcardKeyword && hasJobcard);
 
         // Filtros de seleccion
         let matchEstado = true;
         if(estado) {
           if(estado === 'verificando') {
             matchEstado = parseInt(ticket.estado_id || 0) === 4 && parseInt(ticket.pendiente_aprobacion || 0) === 1;
+          } else if(estado === 'ticket_jobcard') {
+            matchEstado = hasJobcard;
           } else if(estado === 'transferido') {
             matchEstado = parseInt(ticket.transferencia_aprobada || 0) >= 1;
           } else if(estado == '2') {
@@ -1493,6 +1548,15 @@ $es_usuario = ($user_rol === 'Usuario');
       const date = new Date(dateString);
       if(isNaN(date.getTime())) return 'Fecha invalida';
       return date.toLocaleDateString('es-PE') + ' ' + date.toLocaleTimeString('es-PE', {hour: '2-digit', minute: '2-digit'});
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     function normalizarActividadNombre(nombre) {

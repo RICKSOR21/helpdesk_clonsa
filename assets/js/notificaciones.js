@@ -5,7 +5,7 @@ $(document).ready(function() {
     // ============================================
     // MARCAR COMO LEÍDO
     // ============================================
-    function marcarComoLeido(tipo, referenciaId, elemento) {
+    function marcarComoLeido(tipo, referenciaId, elemento, onDone) {
         $.ajax({
             url: 'api/marcar_leido.php',
             method: 'POST',
@@ -26,6 +26,14 @@ $(document).ready(function() {
                     } else {
                         actualizarBadge('.count-tickets');
                     }
+                }
+                if (typeof onDone === 'function') {
+                    onDone(response);
+                }
+            },
+            error: function() {
+                if (typeof onDone === 'function') {
+                    onDone({ success: false });
                 }
             }
         });
@@ -127,9 +135,19 @@ $(document).ready(function() {
 
         // Evento click para marcar como leído
         container.find('.notif-item').on('click', function(e) {
+            e.preventDefault();
             const tipo = $(this).data('tipo');
             const id = $(this).data('id');
-            marcarComoLeido(tipo, id, this);
+            const href = $(this).attr('href');
+            marcarComoLeido(tipo, id, this, function() {
+                if (href) {
+                    window.location.href = href;
+                    return;
+                }
+                if (window.location.pathname.toLowerCase().includes('comunicados.php')) {
+                    window.location.reload();
+                }
+            });
         });
     }
 
@@ -289,9 +307,15 @@ $(document).ready(function() {
 
         // Evento click para marcar como leído
         container.find('.notif-item').on('click', function(e) {
+            e.preventDefault();
             const tipo = $(this).data('tipo');
             const id = $(this).data('id');
-            marcarComoLeido(tipo, id, this);
+            const href = $(this).attr('href');
+            marcarComoLeido(tipo, id, this, function() {
+                if (href) {
+                    window.location.href = href;
+                }
+            });
         });
     }
 

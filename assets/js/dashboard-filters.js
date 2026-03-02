@@ -26,7 +26,7 @@ $(document).ready(function() {
         locale: "es",
         allowInput: false,
         clickOpens: false,
-        defaultDate: new Date(Date.now() - 7*24*60*60*1000)
+        defaultDate: new Date(Date.now() - 6*24*60*60*1000)
     });
     
     window.fechaHastaPickr = flatpickr("#fechaHasta", {
@@ -656,7 +656,7 @@ $(document).ready(function() {
                 'cursor': 'pointer',
                 'opacity': '1'
             });
-            window.fechaDesdePickr.setDate(new Date(Date.now() - 7*24*60*60*1000));
+            window.fechaDesdePickr.setDate(new Date(Date.now() - 6*24*60*60*1000));
             window.fechaHastaPickr.setDate(new Date());
         } else {
             window.fechaDesdePickr.set('clickOpens', false);
@@ -722,7 +722,7 @@ $(document).ready(function() {
             default:
                 // Semana: últimos 7 días
                 desde = new Date(hoy);
-                desde.setDate(hoy.getDate() - 7);
+                desde.setDate(hoy.getDate() - 6);
                 hasta = new Date();
         }
 

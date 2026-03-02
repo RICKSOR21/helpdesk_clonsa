@@ -60,7 +60,7 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
         case 'semana':
         default:
             // Últimos 7 días
-            $fecha_desde = (new DateTime())->modify('-7 days')->format('Y-m-d 00:00:00');
+            $fecha_desde = (new DateTime())->modify('-6 days')->format('Y-m-d 00:00:00');
             $fecha_hasta = (new DateTime())->format('Y-m-d 23:59:59');
             break;
     }
@@ -251,33 +251,83 @@ foreach ($todasActividades as &$actividad) {
 unset($actividad);
 
 // ============================================
-// 4. CREAR TOP 3 + OTROS
+// 4. CREAR RESUMEN (GENERAL/SOPORTE FIJO) O TOP 3 + OTROS
 // ============================================
 $topActividades = [];
+$esResumenMantenimientoFijo = ($departamento === 'all' || (string)$departamento === '2');
 
-// Tomar las primeras 3 actividades
-for ($i = 0; $i < min(3, count($todasActividades)); $i++) {
-    $topActividades[] = $todasActividades[$i];
-}
+if ($esResumenMantenimientoFijo) {
+    // Misma lógica de familias que el gráfico principal para mantener consistencia.
+    $bucketPreventivo = 0;
+    $bucketCorrectivo = 0;
+    $bucketPredictivo = 0;
+    $bucketOtros = 0;
 
-// Calcular "Otros" (suma de las actividades restantes)
-$otrosCantidad = 0;
-$otrosPorcentaje = 0;
+    foreach ($todasActividades as $actividad) {
+        $nombreActividad = strtolower((string)($actividad['nombre'] ?? ''));
+        $cantidadActividad = (int)($actividad['cantidad'] ?? 0);
 
-for ($i = 3; $i < count($todasActividades); $i++) {
-    $otrosCantidad += (int)$todasActividades[$i]['cantidad'];
-    $otrosPorcentaje += (float)$todasActividades[$i]['porcentaje'];
-}
+        if (strpos($nombreActividad, 'preventiv') !== false) {
+            $bucketPreventivo += $cantidadActividad;
+        } elseif (strpos($nombreActividad, 'correctiv') !== false) {
+            $bucketCorrectivo += $cantidadActividad;
+        } elseif (strpos($nombreActividad, 'predictiv') !== false) {
+            $bucketPredictivo += $cantidadActividad;
+        } else {
+            $bucketOtros += $cantidadActividad;
+        }
+    }
 
-// Agregar "Otros" si hay actividades adicionales
-if ($otrosCantidad > 0) {
-    $topActividades[] = [
-        'id' => 0,
-        'nombre' => 'Otros',
-        'color' => '#6c757d',
-        'cantidad' => $otrosCantidad,
-        'porcentaje' => round($otrosPorcentaje)
+    $seriesFijas = [
+        ['id' => 'mantto_preventivo', 'nombre' => 'Mantto Preventivo', 'color' => '#1F3BB3', 'cantidad' => $bucketPreventivo],
+        ['id' => 'mantto_correctivo', 'nombre' => 'Mantto Correctivo', 'color' => '#4CAF50', 'cantidad' => $bucketCorrectivo],
+        ['id' => 'mantto_predictivo', 'nombre' => 'Mantto Predictivo', 'color' => '#FF9800', 'cantidad' => $bucketPredictivo]
     ];
+
+    foreach ($seriesFijas as $serie) {
+        if ($serie['cantidad'] <= 0) {
+            continue;
+        }
+
+        $serie['porcentaje'] = $totalTickets > 0
+            ? round(($serie['cantidad'] * 100) / $totalTickets)
+            : 0;
+
+        $topActividades[] = $serie;
+    }
+
+    if ($bucketOtros > 0) {
+        $topActividades[] = [
+            'id' => 0,
+            'nombre' => 'Otros',
+            'color' => '#6c757d',
+            'cantidad' => $bucketOtros,
+            'porcentaje' => $totalTickets > 0 ? round(($bucketOtros * 100) / $totalTickets) : 0
+        ];
+    }
+} else {
+    // Comportamiento original para otros departamentos.
+    for ($i = 0; $i < min(3, count($todasActividades)); $i++) {
+        $topActividades[] = $todasActividades[$i];
+    }
+
+    $otrosCantidad = 0;
+    $otrosPorcentaje = 0;
+
+    for ($i = 3; $i < count($todasActividades); $i++) {
+        $otrosCantidad += (int)$todasActividades[$i]['cantidad'];
+        $otrosPorcentaje += (float)$todasActividades[$i]['porcentaje'];
+    }
+
+    if ($otrosCantidad > 0) {
+        $topActividades[] = [
+            'id' => 0,
+            'nombre' => 'Otros',
+            'color' => '#6c757d',
+            'cantidad' => $otrosCantidad,
+            'porcentaje' => round($otrosPorcentaje)
+        ];
+    }
 }
 
 // ============================================

@@ -31,9 +31,9 @@ if (IS_DEVELOPMENT) {
 } else {
     // PRODUCCIÓN (Hosting)
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'usuario_clonsa_helpdesk');  // ⚠️ Cambiar con prefijo de cPanel
-    define('DB_USER', 'usuario_clonsa_user');      // ⚠️ Cambiar con prefijo de cPanel
-    define('DB_PASS', 'TU_PASSWORD_SEGURA_AQUI');  // ⚠️ CAMBIAR ESTO
+    define('DB_NAME', 'clonsain_helpdesk');
+    define('DB_USER', 'clonsain_helpdesk');
+    define('DB_PASS', 'F&z9kt#^4#E179)T');
 }
 
 define('DB_CHARSET', 'utf8mb4');
@@ -59,7 +59,7 @@ if (IS_DEVELOPMENT) {
     define('SMTP_HOST', 'smtp.gmail.com');
     define('SMTP_PORT', 587);
     define('SMTP_SECURE', 'tls');
-    define('SMTP_USER', 'helpdesk@clonsa.pe');
+    define('SMTP_USER', 'helpdesk@clonsaingenieria.com');
     define('SMTP_PASS', '');
 } else {
     // PRODUCCIÓN: Configurar según tu proveedor
@@ -68,7 +68,7 @@ if (IS_DEVELOPMENT) {
     define('SMTP_HOST', 'mail.clonsa.pe');      // O mail.tudominio.com
     define('SMTP_PORT', 465);
     define('SMTP_SECURE', 'ssl');
-    define('SMTP_USER', 'helpdesk@clonsa.pe');  // ⚠️ Crear este email en cPanel
+    define('SMTP_USER', 'helpdesk@clonsaingenieria.com');  // ⚠️ Crear este email en cPanel
     define('SMTP_PASS', 'password_del_email');  // ⚠️ CAMBIAR ESTO
     
     // OPCIÓN 2: Gmail (Descomentar si usas Gmail)
@@ -87,7 +87,7 @@ if (IS_DEVELOPMENT) {
 }
 
 // Email remitente
-define('SMTP_FROM', 'helpdesk@clonsa.pe');
+define('SMTP_FROM', 'helpdesk@clonsaingenieria.com');
 define('SMTP_FROM_NAME', 'Helpdesk Clonsa Ingeniería');
 
 // Alias para compatibilidad con código existente

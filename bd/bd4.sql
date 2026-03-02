@@ -194,12 +194,13 @@ CREATE TABLE IF NOT EXISTS `comentario_archivos` (
   PRIMARY KEY (`id`),
   KEY `idx_comentario_id` (`comentario_id`),
   CONSTRAINT `comentario_archivos_ibfk_1` FOREIGN KEY (`comentario_id`) REFERENCES `ticket_comentarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.comentario_archivos: ~2 rows (aproximadamente)
 INSERT INTO `comentario_archivos` (`id`, `comentario_id`, `nombre_original`, `nombre_archivo`, `ruta`, `tamano`, `tipo_mime`, `created_at`) VALUES
 	(5, 41, 'evidencia_rechazo_1771092487863.png', '1771092492_rechazo_evidencia_rechazo_1771092487863.png', 'uploads/comentarios/TKN-IT-74/1771092492_rechazo_evidencia_rechazo_1771092487863.png', 295227, 'image/png', '2026-02-14 18:08:12'),
-	(6, 44, 'evidencia_rechazo_1771093009080.png', '1771093017_rechazo_evidencia_rechazo_1771093009080.png', 'uploads/comentarios/TKN-ST-107/1771093017_rechazo_evidencia_rechazo_1771093009080.png', 99124, 'image/png', '2026-02-14 18:16:57');
+	(6, 44, 'evidencia_rechazo_1771093009080.png', '1771093017_rechazo_evidencia_rechazo_1771093009080.png', 'uploads/comentarios/TKN-ST-107/1771093017_rechazo_evidencia_rechazo_1771093009080.png', 99124, 'image/png', '2026-02-14 18:16:57'),
+	(9, 85, 'reutech_v3.PNG', '1771972184_0_reutech_v3.PNG', 'uploads/comentarios/TKN-ST-112/1771972184_0_reutech_v3.PNG', 66550, 'image/png', '2026-02-24 22:29:44');
 
 -- Volcando estructura para tabla helpdesk_clonsa.comunicados
 CREATE TABLE IF NOT EXISTS `comunicados` (
@@ -315,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `historial` (
   KEY `idx_ticket` (`ticket_id`),
   CONSTRAINT `historial_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `historial_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=574 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=588 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.historial: ~472 rows (aproximadamente)
 INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modificado`, `valor_anterior`, `valor_nuevo`, `created_at`) VALUES
@@ -849,7 +850,21 @@ INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modif
 	(570, 291, 5, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-20 19:19:36'),
 	(571, 291, 5, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-20 19:19:36'),
 	(572, 291, 5, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-20 19:19:51'),
-	(573, 291, 5, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-20 19:19:51');
+	(573, 291, 5, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-20 19:19:51'),
+	(574, 293, 4, 'Ticket creado', NULL, NULL, NULL, '2026-02-24 22:27:50'),
+	(575, 293, 4, 'Estado cambiado', 'estado', 'Abierto', 'En Atención', '2026-02-24 22:30:33'),
+	(576, 293, 4, 'Progreso actualizado', 'progreso', '0%', '20%', '2026-02-24 22:30:33'),
+	(577, 293, 4, 'Estado cambiado', 'estado', 'En Atención', 'Resuelto', '2026-02-24 22:31:11'),
+	(578, 293, 4, 'Progreso actualizado', 'progreso', '20%', '100%', '2026-02-24 22:31:11'),
+	(579, 293, 4, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-24 22:31:47'),
+	(580, 293, 4, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-24 22:31:47'),
+	(581, 293, 4, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-24 22:32:25'),
+	(582, 293, 4, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-24 22:32:25'),
+	(583, 294, 4, 'Ticket creado', NULL, NULL, NULL, '2026-02-24 22:33:58'),
+	(584, 294, 4, 'Estado cambiado', 'estado', 'Abierto', 'En Atención', '2026-02-24 22:34:11'),
+	(585, 294, 4, 'Progreso actualizado', 'progreso', '0%', '20%', '2026-02-24 22:34:11'),
+	(586, 294, 4, 'Estado cambiado', 'estado', 'En Atención', 'Resuelto', '2026-02-24 22:41:31'),
+	(587, 294, 4, 'Progreso actualizado', 'progreso', '20%', '100%', '2026-02-24 22:41:31');
 
 -- Volcando estructura para tabla helpdesk_clonsa.notificaciones
 CREATE TABLE IF NOT EXISTS `notificaciones` (
@@ -881,7 +896,7 @@ CREATE TABLE IF NOT EXISTS `notificaciones_leidas` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_notif` (`usuario_id`,`tipo`,`referencia_id`),
   CONSTRAINT `notificaciones_leidas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.notificaciones_leidas: ~8 rows (aproximadamente)
 INSERT INTO `notificaciones_leidas` (`id`, `usuario_id`, `tipo`, `referencia_id`, `leida_at`) VALUES
@@ -894,7 +909,8 @@ INSERT INTO `notificaciones_leidas` (`id`, `usuario_id`, `tipo`, `referencia_id`
 	(16, 1, 'ticket', 290, '2026-02-16 17:12:55'),
 	(17, 1, '', 288, '2026-02-16 22:19:35'),
 	(18, 3, 'ticket', 292, '2026-02-20 18:40:06'),
-	(19, 3, '', 84, '2026-02-20 18:40:17');
+	(19, 3, '', 84, '2026-02-20 18:40:17'),
+	(20, 3, '', 291, '2026-02-24 22:26:59');
 
 -- Volcando estructura para tabla helpdesk_clonsa.prioridades
 CREATE TABLE IF NOT EXISTS `prioridades` (
@@ -990,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   CONSTRAINT `tickets_ibfk_7` FOREIGN KEY (`actividad_id`) REFERENCES `actividades` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tickets_ibfk_8` FOREIGN KEY (`tipo_falla_id`) REFERENCES `tipos_falla` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tickets_ibfk_9` FOREIGN KEY (`ubicacion_id`) REFERENCES `ubicaciones` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.tickets: ~237 rows (aproximadamente)
 INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion`, `usuario_id`, `area_id`, `prioridad_id`, `estado_id`, `asignado_a`, `canal_atencion_id`, `actividad_id`, `tipo_falla_id`, `ubicacion_id`, `equipo_id`, `codigo_equipo_id`, `progreso`, `pendiente_aprobacion`, `aprobado_por`, `fecha_aprobacion`, `fecha_limite`, `fecha_resolucion`, `created_at`, `updated_at`, `solicitante_nombre`, `solicitante_email`, `solicitante_telefono`) VALUES
@@ -1233,7 +1249,9 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(289, 2, 'TKN-ST-108', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 1, NULL, 2, 4, 7, 2, 11, 3, 8, 5, 1, 100, 0, 1, '2026-02-12 18:07:48', NULL, '2026-02-12 23:03:18', '2026-02-12 22:12:54', '2026-02-12 23:07:48', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
 	(290, 2, 'TKN-ST-109', 'Ticket de prueba Codex 20260214_210254', 'Ticket creado de prueba para validacion visual en modulo.', 1, NULL, 2, 4, 1, 1, 1, NULL, NULL, NULL, NULL, 100, 0, 1, '2026-02-18 16:30:41', NULL, '2026-02-18 21:30:33', '2026-02-15 02:02:54', '2026-02-18 21:30:41', NULL, NULL, NULL),
 	(291, 2, 'TKN-ST-110', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 4, 5, 4, 11, 3, 4, 5, 5, 100, 0, 1, '2026-02-20 14:19:59', NULL, '2026-02-20 19:19:51', '2026-02-19 23:48:48', '2026-02-20 19:19:59', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
-	(292, 2, 'TKN-ST-111', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 2, 4, 1, 4, 5, 8, 2, 1, 50, 0, NULL, NULL, NULL, NULL, '2026-02-20 16:29:01', '2026-02-20 20:13:10', '', '', '');
+	(292, 2, 'TKN-ST-111', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 2, 4, 1, 4, 5, 8, 2, 1, 50, 0, NULL, NULL, NULL, NULL, '2026-02-20 16:29:01', '2026-02-20 20:13:10', '', '', ''),
+	(293, 2, 'TKN-ST-112', 'Reparación de generador 237 ', 'Reparación de generador 237 ', 4, NULL, 3, 4, 4, 1, 10, 1, 5, 12, 3, 100, 0, 3, '2026-02-24 17:32:48', NULL, '2026-02-24 22:32:25', '2026-02-24 22:27:50', '2026-02-24 22:32:48', 'fELPU', 'FELPU@CLONSA.COM', '907289148'),
+	(294, 2, 'TKN-ST-113', 'Reparación de generador 237 ', 'Reparación de generador 237 ', 4, NULL, 3, 4, 4, 1, 11, 1, 5, 12, 3, 100, 0, 3, '2026-02-24 17:41:42', NULL, '2026-02-24 22:41:31', '2026-02-24 22:33:58', '2026-02-24 22:41:42', 'fELPU', 'FELPU@CLONSA.COM', '907289148');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_archivos
 CREATE TABLE IF NOT EXISTS `ticket_archivos` (
@@ -1251,7 +1269,7 @@ CREATE TABLE IF NOT EXISTS `ticket_archivos` (
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `ticket_archivos_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_archivos_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_archivos: ~9 rows (aproximadamente)
 INSERT INTO `ticket_archivos` (`id`, `ticket_id`, `nombre_original`, `nombre_archivo`, `ruta`, `tamano`, `tipo_mime`, `usuario_id`, `created_at`) VALUES
@@ -1263,7 +1281,9 @@ INSERT INTO `ticket_archivos` (`id`, `ticket_id`, `nombre_original`, `nombre_arc
 	(18, 285, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
 	(19, 285, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
 	(20, 288, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-IT-75/1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 01:15:39'),
-	(21, 289, 'me.txt', '1770934374_0_me.txt', 'uploads/tickets/TKN-ST-108/1770934374_0_me.txt', 0, 'text/plain', 1, '2026-02-12 22:12:54');
+	(21, 289, 'me.txt', '1770934374_0_me.txt', 'uploads/tickets/TKN-ST-108/1770934374_0_me.txt', 0, 'text/plain', 1, '2026-02-12 22:12:54'),
+	(22, 293, 'WhatsApp Image 2026-02-20 at 10.55.30 AM.jpeg', '1771972070_0_WhatsApp_Image_2026-02-20_at_10.55.30_AM.jpeg', 'uploads/tickets/TKN-ST-112/1771972070_0_WhatsApp_Image_2026-02-20_at_10.55.30_AM.jpeg', 364296, 'image/jpeg', 4, '2026-02-24 22:27:50'),
+	(23, 294, 'WhatsApp Image 2026-02-20 at 4.24.16 PM.jpeg', '1771972438_0_WhatsApp_Image_2026-02-20_at_4.24.16_PM.jpeg', 'uploads/tickets/TKN-ST-113/1771972438_0_WhatsApp_Image_2026-02-20_at_4.24.16_PM.jpeg', 57806, 'image/jpeg', 4, '2026-02-24 22:33:58');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_comentarios
 CREATE TABLE IF NOT EXISTS `ticket_comentarios` (
@@ -1280,9 +1300,9 @@ CREATE TABLE IF NOT EXISTS `ticket_comentarios` (
   KEY `idx_created_at` (`created_at`),
   CONSTRAINT `ticket_comentarios_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_comentarios_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla helpdesk_clonsa.ticket_comentarios: ~53 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk_clonsa.ticket_comentarios: ~60 rows (aproximadamente)
 INSERT INTO `ticket_comentarios` (`id`, `ticket_id`, `usuario_id`, `mensaje`, `tipo`, `created_at`, `updated_at`) VALUES
 	(24, 289, 1, '✅ **TICKET APROBADO**\nAprobado. Sin Observaciones', 'nota_interna', '2026-02-12 23:07:48', '2026-02-12 23:07:48'),
 	(26, 283, 1, 'h', 'comentario', '2026-02-12 23:21:32', '2026-02-12 23:21:32'),
@@ -1338,7 +1358,18 @@ INSERT INTO `ticket_comentarios` (`id`, `ticket_id`, `usuario_id`, `mensaje`, `t
 	(80, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Luis Ruiz\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 20:10:11', '2026-02-20 20:10:11'),
 	(81, 292, 4, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-111 al responsable "Amador Contreras L.".', 'nota_interna', '2026-02-20 20:10:32', '2026-02-20 20:10:32'),
 	(82, 292, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Amador Contreras L.', 'nota_interna', '2026-02-20 20:10:41', '2026-02-20 20:10:41'),
-	(83, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 20:13:10', '2026-02-20 20:13:10');
+	(83, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 20:13:10', '2026-02-20 20:13:10'),
+	(85, 293, 4, 'revisión de generador', 'comentario', '2026-02-24 22:29:44', '2026-02-24 22:29:44'),
+	(86, 293, 3, 'Hola Carlitos', 'comentario', '2026-02-24 22:30:08', '2026-02-24 22:30:08'),
+	(87, 293, 4, 'solucionado', 'comentario', '2026-02-24 22:31:06', '2026-02-24 22:31:06'),
+	(88, 293, 3, '❌ **TICKET RECHAZADO**\n**Motivo:** Especial', 'nota_interna', '2026-02-24 22:31:47', '2026-02-24 22:31:47'),
+	(89, 293, 4, 'solucionado x2', 'comentario', '2026-02-24 22:32:19', '2026-02-24 22:32:19'),
+	(90, 293, 3, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-24 22:32:48', '2026-02-24 22:32:48'),
+	(91, 294, 4, 'avanzando', 'comentario', '2026-02-24 22:34:16', '2026-02-24 22:34:16'),
+	(92, 294, 4, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-113 al responsable "Daniel Lazarte".', 'nota_interna', '2026-02-24 22:38:52', '2026-02-24 22:38:52'),
+	(93, 294, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Daniel Lazarte', 'nota_interna', '2026-02-24 22:39:34', '2026-02-24 22:39:34'),
+	(94, 294, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Daniel Lazarte\nA: Iván Rodriguez', 'nota_interna', '2026-02-24 22:41:19', '2026-02-24 22:41:19'),
+	(95, 294, 3, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-24 22:41:42', '2026-02-24 22:41:42');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_contadores
 CREATE TABLE IF NOT EXISTS `ticket_contadores` (
@@ -1354,7 +1385,7 @@ CREATE TABLE IF NOT EXISTS `ticket_contadores` (
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_contadores: ~4 rows (aproximadamente)
 INSERT INTO `ticket_contadores` (`id`, `departamento_id`, `ultimo_numero`, `prefijo`) VALUES
 	(1, 1, 18, 'TKN'),
-	(2, 2, 111, 'TKN'),
+	(2, 2, 113, 'TKN'),
 	(3, 4, 75, 'TKN'),
 	(4, 3, 39, 'TKN');
 
@@ -1376,7 +1407,7 @@ CREATE TABLE IF NOT EXISTS `ticket_transferencias` (
   KEY `idx_solicitado_por` (`solicitado_por`),
   KEY `idx_usuario_destino` (`usuario_destino`),
   KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_transferencias: ~24 rows (aproximadamente)
 INSERT INTO `ticket_transferencias` (`id`, `ticket_id`, `usuario_origen`, `usuario_destino`, `solicitado_por`, `motivo`, `estado`, `aprobado_por`, `comentario_aprobacion`, `created_at`, `updated_at`) VALUES
@@ -1403,7 +1434,9 @@ INSERT INTO `ticket_transferencias` (`id`, `ticket_id`, `usuario_origen`, `usuar
 	(21, 292, 6, 7, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:09:51', '2026-02-20 20:09:51'),
 	(22, 292, 7, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:10:11', '2026-02-20 20:10:11'),
 	(23, 292, 4, 3, 4, NULL, 'aprobada', 3, 'Solicitud aprobada', '2026-02-20 20:10:32', '2026-02-20 20:10:41'),
-	(24, 292, 3, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:13:10', '2026-02-20 20:13:10');
+	(24, 292, 3, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:13:10', '2026-02-20 20:13:10'),
+	(25, 294, 4, 6, 4, NULL, 'aprobada', 3, 'Solicitud aprobada', '2026-02-24 22:38:52', '2026-02-24 22:39:34'),
+	(26, 294, 6, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-24 22:41:19', '2026-02-24 22:41:19');
 
 -- Volcando estructura para tabla helpdesk_clonsa.tipos_falla
 CREATE TABLE IF NOT EXISTS `tipos_falla` (
@@ -1480,6 +1513,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `reset_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `recibir_notificaciones_email` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
@@ -1494,22 +1528,22 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.usuarios: ~15 rows (aproximadamente)
-INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `nombre_completo`, `telefono`, `rol_id`, `departamento_id`, `area_id`, `avatar`, `activo`, `ultimo_acceso`, `reset_token`, `reset_token_expires`, `created_at`) VALUES
-	(1, 'admin', 'admin@clonsa.pe', '$2y$12$3QqyOXkbm1KfUMH6rnIkgOw9pvFtQZ9DUqm3.GbY2DQhFSjBr3tGm', 'Administrador General', NULL, 1, 1, NULL, 'default-avatar.png', 1, '2026-02-20 19:30:19', '748592', '2026-01-23 21:16:36', '2026-01-23 16:13:59'),
-	(3, 'acontreras', 'acontreras@clonsa.com', '$2y$12$b77o8VBYZ0.PmC84/wqdC.3686u8IkEuu1J88pPXVle/zi6qm88kq', 'Amador Contreras L.', NULL, 2, 2, NULL, 'default-avatar.png', 1, '2026-02-20 21:15:03', NULL, NULL, '2026-01-25 23:18:44'),
-	(4, 'irodriguez', 'irodriguez@clonsa.com', '$2y$12$NSSbSR7xfJ0v5/Jk51RaH.J63zlU1O5JlCZoJf7RsnVW0OuDYiQ7S', 'Iván Rodriguez', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-22 03:00:09', NULL, NULL, '2026-01-25 23:18:44'),
-	(5, 'fquispe', 'fquispe@clonsa.com', '$2y$12$U4MJ3K.BPfEOmB5nEhPSWeDSEEioQtRwE.yOdhqJG.qd9VhFlCIOm', 'Fernando Quispe', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-20 19:56:59', NULL, NULL, '2026-01-25 23:18:44'),
-	(6, 'dlazarte', 'dlazarte@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Daniel Lazarte', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:40', NULL, NULL, '2026-01-25 23:18:44'),
-	(7, 'lruiz', 'lruiz@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Luis Ruiz', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:55:41', NULL, NULL, '2026-01-25 23:18:44'),
-	(8, 'jtunoque', 'jtunoque@clonsa.com', '$2y$12$X01EUax9uIpWJpnOgZeFvOK4mR94Urszi40GDh3/3SRrG/XYn8tjW', 'Jack Tuñoque S.', NULL, 2, 4, NULL, 'default-avatar.png', 1, '2026-02-20 16:42:52', NULL, NULL, '2026-01-25 23:18:44'),
-	(9, 'rarias', 'rarias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Richard Arias', NULL, 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(10, 'cmedina', 'cmedina@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Carlos Medina', NULL, 3, 4, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:19', NULL, NULL, '2026-01-25 23:18:44'),
-	(11, 'ejimenez', 'ejimenez@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Enzo Jimenez', NULL, 2, 3, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:28', NULL, NULL, '2026-01-25 23:18:44'),
-	(12, 'garias', 'garias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Geraldine Arias', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(13, 'jagreda', 'jagreda@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Jesus Agreda', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(14, 'prueba', 'admin@clonsa.com', '$2y$12$VFMtPRWfTKHpiHQSITLhTuRHJR3EHt4fPhJs9lWGo7.fQeZ4ohaHu', 'Prueba Dev', '989225914', 3, NULL, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:21:18'),
-	(15, 'admin1', 'jtunoquesa@unprg.edu.pe', '$2y$12$dfoP6uLkgGAjWFh67.6r7ufjtOC5PN8V2.epu8rPmLzRGq7HOuEcy', 'admin1', '989225914', 3, 2, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:23:36'),
-	(16, 'admin123456', 'admin@gmail.com', '$2y$12$2YKMrsi.Wl3BzB7QTnDzceTapaDp7K.faoA5GsebXJswYoddKbl3u', 'admin123456', '987564123', 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:32:40');
+INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `nombre_completo`, `telefono`, `rol_id`, `departamento_id`, `area_id`, `avatar`, `activo`, `ultimo_acceso`, `reset_token`, `reset_token_expires`, `created_at`, `recibir_notificaciones_email`) VALUES
+	(1, 'admin', 'admin@clonsa.pe', '$2y$12$3QqyOXkbm1KfUMH6rnIkgOw9pvFtQZ9DUqm3.GbY2DQhFSjBr3tGm', 'Administrador General', NULL, 1, 1, NULL, 'default-avatar.png', 1, '2026-02-26 17:10:39', '748592', '2026-01-23 21:16:36', '2026-01-23 16:13:59', 1),
+	(3, 'acontreras', 'acontreras@clonsa.com', '$2y$12$b77o8VBYZ0.PmC84/wqdC.3686u8IkEuu1J88pPXVle/zi6qm88kq', 'Amador Contreras L.', NULL, 2, 2, NULL, 'default-avatar.png', 1, '2026-02-24 22:50:39', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(4, 'irodriguez', 'irodriguez@clonsa.com', '$2y$12$NSSbSR7xfJ0v5/Jk51RaH.J63zlU1O5JlCZoJf7RsnVW0OuDYiQ7S', 'Iván Rodriguez', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-26 17:10:19', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(5, 'fquispe', 'fquispe@clonsa.com', '$2y$12$U4MJ3K.BPfEOmB5nEhPSWeDSEEioQtRwE.yOdhqJG.qd9VhFlCIOm', 'Fernando Quispe', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-20 19:56:59', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(6, 'dlazarte', 'dlazarte@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Daniel Lazarte', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:40', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(7, 'lruiz', 'lruiz@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Luis Ruiz', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:55:41', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(8, 'jtunoque', 'jtunoque@clonsa.com', '$2y$12$X01EUax9uIpWJpnOgZeFvOK4mR94Urszi40GDh3/3SRrG/XYn8tjW', 'Jack Tuñoque S.', NULL, 2, 4, NULL, 'default-avatar.png', 1, '2026-02-20 16:42:52', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(9, 'rarias', 'rarias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Richard Arias', NULL, 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(10, 'cmedina', 'cmedina@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Carlos Medina', NULL, 3, 4, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:19', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(11, 'ejimenez', 'ejimenez@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Enzo Jimenez', NULL, 2, 3, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:28', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(12, 'garias', 'garias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Geraldine Arias', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(13, 'jagreda', 'jagreda@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Jesus Agreda', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(14, 'prueba', 'admin@clonsa.com', '$2y$12$VFMtPRWfTKHpiHQSITLhTuRHJR3EHt4fPhJs9lWGo7.fQeZ4ohaHu', 'Prueba Dev', '989225914', 3, NULL, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:21:18', 1),
+	(15, 'admin1', 'jtunoquesa@unprg.edu.pe', '$2y$12$dfoP6uLkgGAjWFh67.6r7ufjtOC5PN8V2.epu8rPmLzRGq7HOuEcy', 'admin1', '989225914', 3, 2, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:23:36', 1),
+	(16, 'admin123456', 'admin@gmail.com', '$2y$12$2YKMrsi.Wl3BzB7QTnDzceTapaDp7K.faoA5GsebXJswYoddKbl3u', 'admin123456', '987564123', 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:32:40', 1);
 
 -- Volcando estructura para vista helpdesk_clonsa.vista_tickets
 -- Creando tabla temporal para superar errores de dependencia de VIEW

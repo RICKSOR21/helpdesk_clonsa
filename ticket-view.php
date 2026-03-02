@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
 require_once 'config/config.php';
@@ -178,6 +178,44 @@ $puede_editar = !$ticket_resuelto && !$ticket_resuelto_pendiente && ($user_rol =
     .form-control, .form-select { border-radius: 8px; border: 1px solid #e0e0e0; padding: 10px 15px; font-size: 14px; transition: all 0.2s; background-color: #fff !important; }
     .form-control:focus, .form-select:focus { border-color: #1F3BB3; box-shadow: 0 0 0 0.2rem rgba(31, 59, 179, 0.15); }
     .form-control::placeholder { color: #999 !important; }
+    .jobcard-view-card {
+      border: 1px solid #e6ecf8;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      padding: 14px;
+    }
+    .jobcard-view-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .jobcard-view-logo {
+      width: 150px;
+      height: auto;
+      max-height: 44px;
+      object-fit: contain;
+    }
+    .jobcard-view-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1F3BB3;
+      letter-spacing: .2px;
+    }
+    .jobcard-view-value {
+      border: 1px solid #dbe5f8;
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #344054;
+      word-break: break-word;
+      white-space: normal;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+    }
     #descripcion {
       min-height: 90px;
       resize: vertical;
@@ -950,6 +988,22 @@ $puede_editar = !$ticket_resuelto && !$ticket_resuelto_pendiente && ($user_rol =
                           <option value="">Seleccione...</option>
                         </select>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title"><i class="mdi mdi-ticket-outline"></i>Jobcard Asociada</div>
+                  <div class="jobcard-view-card">
+                    <div class="jobcard-view-head">
+                      <img src="assets/images/imagen_reutech.png" alt="Reutech" class="jobcard-view-logo">
+                      <div class="jobcard-view-title">Jobcard Asociada</div>
+                    </div>
+                    <div class="jobcard-view-value">
+                      <?php
+                        $jobcardAsociada = trim((string)($ticket['jobcard_asociada'] ?? ''));
+                        echo htmlspecialchars($jobcardAsociada !== '' ? $jobcardAsociada : 'Ningun Ticket de Jobcard Asociado.');
+                      ?>
                     </div>
                   </div>
                 </div>

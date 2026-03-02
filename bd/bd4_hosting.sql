@@ -1,8 +1,8 @@
--- --------------------------------------------------------
+﻿-- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Versión del servidor:         8.4.3 - MySQL Community Server - GPL
+-- VersiÃ³n del servidor:         8.4.3 - MySQL Community Server - GPL
 -- SO del servidor:              Win64
--- HeidiSQL Versión:             12.1.0.6537
+-- HeidiSQL VersiÃ³n:             12.1.0.6537
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -16,8 +16,6 @@
 
 
 -- Volcando estructura de base de datos para helpdesk_clonsa
-CREATE DATABASE IF NOT EXISTS `helpdesk_clonsa` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `helpdesk_clonsa`;
 
 -- Volcando estructura para tabla helpdesk_clonsa.actividades
 CREATE TABLE IF NOT EXISTS `actividades` (
@@ -34,14 +32,14 @@ CREATE TABLE IF NOT EXISTS `actividades` (
 -- Volcando datos para la tabla helpdesk_clonsa.actividades: ~12 rows (aproximadamente)
 INSERT INTO `actividades` (`id`, `nombre`, `descripcion`, `color`, `activo`, `created_at`) VALUES
 	(1, 'Mantenimiento Preventivo', 'Mantenimiento programado', '#28a745', 1, '2026-01-23 16:13:59'),
-	(2, 'Mantenimiento Correctivo', 'Reparación de fallas', '#dc3545', 1, '2026-01-23 16:13:59'),
+	(2, 'Mantenimiento Correctivo', 'ReparaciÃ³n de fallas', '#dc3545', 1, '2026-01-23 16:13:59'),
 	(3, 'Mantenimiento Predictivo', 'Mantenimiento predictivo', '#17a2b8', 1, '2026-01-23 16:13:59'),
 	(4, 'Software Radar MSR', 'Software Radar MSR', '#ffc107', 1, '2026-01-23 16:13:59'),
-	(5, 'Soporte Oficina Perú', 'Soporte Oficina Perú', '#28a745', 1, '2026-01-23 16:13:59'),
+	(5, 'Soporte Oficina PerÃº', 'Soporte Oficina PerÃº', '#28a745', 1, '2026-01-23 16:13:59'),
 	(6, 'Soporte Oficina Chile', 'Soporte Oficina Chile', '#dc3545', 1, '2026-01-23 16:13:59'),
-	(7, 'Desarrollo & Tecnología', 'Desarrollo y Tecnología', '#17a2b8', 1, '2026-01-23 16:13:59'),
-	(8, 'Gestión Documentaria', NULL, '#9C27B0', 1, '2026-02-01 21:26:14'),
-	(9, 'Facturación & Cobranzas', NULL, '#E91E63', 1, '2026-02-01 21:26:14'),
+	(7, 'Desarrollo & TecnologÃ­a', 'Desarrollo y TecnologÃ­a', '#17a2b8', 1, '2026-01-23 16:13:59'),
+	(8, 'GestiÃ³n Documentaria', NULL, '#9C27B0', 1, '2026-02-01 21:26:14'),
+	(9, 'FacturaciÃ³n & Cobranzas', NULL, '#E91E63', 1, '2026-02-01 21:26:14'),
 	(10, 'Mantto Correctivo', 'Mantenimiento correctivo de equipos', NULL, 1, '2026-02-11 00:02:23'),
 	(11, 'Mantto Predictivo', 'Mantenimiento predictivo de equipos', NULL, 1, '2026-02-11 00:02:23'),
 	(12, 'Mantto Preventivo', 'Mantenimiento preventivo de equipos', NULL, 1, '2026-02-11 00:02:23');
@@ -107,11 +105,11 @@ CREATE TABLE IF NOT EXISTS `areas` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.areas: ~5 rows (aproximadamente)
 INSERT INTO `areas` (`id`, `nombre`, `descripcion`, `activo`, `created_at`) VALUES
-	(1, 'Soporte Técnico', 'Área de soporte técnico', 1, '2026-01-23 16:13:59'),
-	(2, 'Tecnología (TI)', 'Área de TI', 1, '2026-01-23 16:13:59'),
-	(3, 'Administrativo', 'Área administrativa', 1, '2026-01-23 16:13:59'),
-	(4, 'Operaciones', 'Área de operaciones', 1, '2026-01-23 16:13:59'),
-	(5, 'General', 'Área general', 1, '2026-01-23 16:13:59');
+	(1, 'Soporte TÃ©cnico', 'Ãrea de soporte tÃ©cnico', 1, '2026-01-23 16:13:59'),
+	(2, 'TecnologÃ­a (TI)', 'Ãrea de TI', 1, '2026-01-23 16:13:59'),
+	(3, 'Administrativo', 'Ãrea administrativa', 1, '2026-01-23 16:13:59'),
+	(4, 'Operaciones', 'Ãrea de operaciones', 1, '2026-01-23 16:13:59'),
+	(5, 'General', 'Ãrea general', 1, '2026-01-23 16:13:59');
 
 -- Volcando estructura para tabla helpdesk_clonsa.canales_atencion
 CREATE TABLE IF NOT EXISTS `canales_atencion` (
@@ -126,11 +124,11 @@ CREATE TABLE IF NOT EXISTS `canales_atencion` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.canales_atencion: ~5 rows (aproximadamente)
 INSERT INTO `canales_atencion` (`id`, `nombre`, `descripcion`, `activo`, `created_at`) VALUES
-	(1, 'Telefónico', 'Atención por teléfono', 1, '2026-01-23 16:13:59'),
-	(2, 'Correo', 'Atención por email', 1, '2026-01-23 16:13:59'),
-	(3, 'Presencial', 'Atención en oficina', 1, '2026-01-23 16:13:59'),
-	(4, 'Chat', 'Atención por chat', 1, '2026-01-23 16:13:59'),
-	(5, 'WhatsApp', 'Atención por WhatsApp', 1, '2026-01-23 16:13:59');
+	(1, 'TelefÃ³nico', 'AtenciÃ³n por telÃ©fono', 1, '2026-01-23 16:13:59'),
+	(2, 'Correo', 'AtenciÃ³n por email', 1, '2026-01-23 16:13:59'),
+	(3, 'Presencial', 'AtenciÃ³n en oficina', 1, '2026-01-23 16:13:59'),
+	(4, 'Chat', 'AtenciÃ³n por chat', 1, '2026-01-23 16:13:59'),
+	(5, 'WhatsApp', 'AtenciÃ³n por WhatsApp', 1, '2026-01-23 16:13:59');
 
 -- Volcando estructura para tabla helpdesk_clonsa.codigos_equipo
 CREATE TABLE IF NOT EXISTS `codigos_equipo` (
@@ -155,10 +153,10 @@ INSERT INTO `codigos_equipo` (`id`, `codigo`, `equipo_id`, `ubicacion_id`, `desc
 	(1, 'MSR181', 2, 1, 'Radar MSRConnect 181', 1, '2026-01-23 16:13:59', 2),
 	(2, 'MSR184', 2, 1, 'Radar MSRConnect 184', 1, '2026-01-23 16:13:59', 2),
 	(3, 'MSR234', 2, 2, 'Radar MSRConnect 234', 1, '2026-01-23 16:13:59', 2),
-	(4, 'CAM001', 1, 1, 'Cámara 001', 1, '2026-01-23 16:13:59', 2),
-	(5, 'CAM002', 1, 2, 'Cámara 002', 1, '2026-01-23 16:13:59', 2),
+	(4, 'CAM001', 1, 1, 'CÃ¡mara 001', 1, '2026-01-23 16:13:59', 2),
+	(5, 'CAM002', 1, 2, 'CÃ¡mara 002', 1, '2026-01-23 16:13:59', 2),
 	(6, 'ADM-CONT-001', NULL, NULL, 'Sistema Contable Principal', 1, '2026-02-11 00:02:23', 3),
-	(7, 'ADM-FACT-001', NULL, NULL, 'Sistema de Facturación', 1, '2026-02-11 00:02:23', 3),
+	(7, 'ADM-FACT-001', NULL, NULL, 'Sistema de FacturaciÃ³n', 1, '2026-02-11 00:02:23', 3),
 	(8, 'ADM-DOC-001', NULL, NULL, 'Gestor Documental', 1, '2026-02-11 00:02:23', 3),
 	(9, 'IT-WEB-001', NULL, NULL, 'Servidor Web Principal', 1, '2026-02-11 00:02:23', 4),
 	(10, 'IT-BD-001', NULL, NULL, 'Servidor Base de Datos', 1, '2026-02-11 00:02:23', 4),
@@ -194,12 +192,13 @@ CREATE TABLE IF NOT EXISTS `comentario_archivos` (
   PRIMARY KEY (`id`),
   KEY `idx_comentario_id` (`comentario_id`),
   CONSTRAINT `comentario_archivos_ibfk_1` FOREIGN KEY (`comentario_id`) REFERENCES `ticket_comentarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.comentario_archivos: ~2 rows (aproximadamente)
 INSERT INTO `comentario_archivos` (`id`, `comentario_id`, `nombre_original`, `nombre_archivo`, `ruta`, `tamano`, `tipo_mime`, `created_at`) VALUES
 	(5, 41, 'evidencia_rechazo_1771092487863.png', '1771092492_rechazo_evidencia_rechazo_1771092487863.png', 'uploads/comentarios/TKN-IT-74/1771092492_rechazo_evidencia_rechazo_1771092487863.png', 295227, 'image/png', '2026-02-14 18:08:12'),
-	(6, 44, 'evidencia_rechazo_1771093009080.png', '1771093017_rechazo_evidencia_rechazo_1771093009080.png', 'uploads/comentarios/TKN-ST-107/1771093017_rechazo_evidencia_rechazo_1771093009080.png', 99124, 'image/png', '2026-02-14 18:16:57');
+	(6, 44, 'evidencia_rechazo_1771093009080.png', '1771093017_rechazo_evidencia_rechazo_1771093009080.png', 'uploads/comentarios/TKN-ST-107/1771093017_rechazo_evidencia_rechazo_1771093009080.png', 99124, 'image/png', '2026-02-14 18:16:57'),
+	(9, 85, 'reutech_v3.PNG', '1771972184_0_reutech_v3.PNG', 'uploads/comentarios/TKN-ST-112/1771972184_0_reutech_v3.PNG', 66550, 'image/png', '2026-02-24 22:29:44');
 
 -- Volcando estructura para tabla helpdesk_clonsa.comunicados
 CREATE TABLE IF NOT EXISTS `comunicados` (
@@ -221,10 +220,10 @@ CREATE TABLE IF NOT EXISTS `comunicados` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.comunicados: ~3 rows (aproximadamente)
 INSERT INTO `comunicados` (`id`, `titulo`, `contenido`, `tipo`, `icono`, `color`, `activo`, `fecha_publicacion`, `fecha_expiracion`, `creado_por`, `created_at`) VALUES
-	(1, 'Nueva actualización v2.5 disponible', 'Se ha lanzado la versión 2.5 del sistema con mejoras en el dashboard y corrección de errores. Por favor actualice su sistema.', 'actualizacion', 'mdi-update', '#4CAF50', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
-	(2, 'Mantenimiento programado', 'El sistema estará en mantenimiento el día 15 de febrero de 8:00 PM a 10:00 PM. Disculpe las molestias.', 'mantenimiento', 'mdi-wrench', '#FF9800', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
-	(3, 'Nuevas políticas de seguridad', 'Se han implementado nuevas políticas de seguridad. Por favor revise sus credenciales y actualice su contraseña si es necesario.', 'alerta', 'mdi-shield-check', '#E91E63', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
-	(4, 'Nuevo Actualizacion v2.6 Disponible', 'Se ha lanzado la versión 2.6 del sistema con mejoras en el dashboard y corrección de errores', 'actualizacion', 'mdi-update', '#4CAF50', 1, '2026-02-15 10:41:30', NULL, 1, '2026-02-15 15:41:30');
+	(1, 'Nueva actualizaciÃ³n v2.5 disponible', 'Se ha lanzado la versiÃ³n 2.5 del sistema con mejoras en el dashboard y correcciÃ³n de errores. Por favor actualice su sistema.', 'actualizacion', 'mdi-update', '#4CAF50', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
+	(2, 'Mantenimiento programado', 'El sistema estarÃ¡ en mantenimiento el dÃ­a 15 de febrero de 8:00 PM a 10:00 PM. Disculpe las molestias.', 'mantenimiento', 'mdi-wrench', '#FF9800', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
+	(3, 'Nuevas polÃ­ticas de seguridad', 'Se han implementado nuevas polÃ­ticas de seguridad. Por favor revise sus credenciales y actualice su contraseÃ±a si es necesario.', 'alerta', 'mdi-shield-check', '#E91E63', 1, '2026-02-01 08:04:58', NULL, 1, '2026-02-01 13:04:58'),
+	(4, 'Nuevo Actualizacion v2.6 Disponible', 'Se ha lanzado la versiÃ³n 2.6 del sistema con mejoras en el dashboard y correcciÃ³n de errores', 'actualizacion', 'mdi-update', '#4CAF50', 1, '2026-02-15 10:41:30', NULL, 1, '2026-02-15 15:41:30');
 
 -- Volcando estructura para tabla helpdesk_clonsa.departamentos
 CREATE TABLE IF NOT EXISTS `departamentos` (
@@ -243,8 +242,8 @@ CREATE TABLE IF NOT EXISTS `departamentos` (
 -- Volcando datos para la tabla helpdesk_clonsa.departamentos: ~4 rows (aproximadamente)
 INSERT INTO `departamentos` (`id`, `nombre`, `abreviatura`, `descripcion`, `jefe_id`, `activo`, `created_at`, `updated_at`) VALUES
 	(1, 'General', 'GN', 'Todos los departamentos', NULL, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02'),
-	(2, 'Soporte Técnico', 'ST', 'Atención técnica y mantenimiento de equipos', 3, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02'),
-	(3, 'Administración', 'AD', 'Gestión administrativa y recursos', 11, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02'),
+	(2, 'Soporte TÃ©cnico', 'ST', 'AtenciÃ³n tÃ©cnica y mantenimiento de equipos', 3, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02'),
+	(3, 'AdministraciÃ³n', 'AD', 'GestiÃ³n administrativa y recursos', 11, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02'),
 	(4, 'IT & Desarrollo', 'IT', 'Desarrollo de software y sistemas', 8, 1, '2026-01-25 22:02:52', '2026-02-01 13:04:02');
 
 -- Volcando estructura para tabla helpdesk_clonsa.equipos
@@ -261,10 +260,10 @@ CREATE TABLE IF NOT EXISTS `equipos` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.equipos: ~19 rows (aproximadamente)
 INSERT INTO `equipos` (`id`, `nombre`, `descripcion`, `activo`, `created_at`, `departamento_id`) VALUES
-	(1, 'Cámara', 'Cámara de seguridad', 1, '2026-01-23 16:13:59', 2),
+	(1, 'CÃ¡mara', 'CÃ¡mara de seguridad', 1, '2026-01-23 16:13:59', 2),
 	(2, 'Radar', 'Sistema de radar', 1, '2026-01-23 16:13:59', 2),
 	(3, 'Servidor', 'Servidor', 1, '2026-01-23 16:13:59', 2),
-	(4, 'Estación de Trabajo', 'PC', 1, '2026-01-23 16:13:59', 2),
+	(4, 'EstaciÃ³n de Trabajo', 'PC', 1, '2026-01-23 16:13:59', 2),
 	(5, 'Laptop', 'Laptop', 1, '2026-01-23 16:13:59', 2),
 	(6, 'Switch', 'Switch de red', 1, '2026-01-23 16:13:59', 2),
 	(7, 'Router', 'Router', 1, '2026-01-23 16:13:59', 2),
@@ -275,8 +274,8 @@ INSERT INTO `equipos` (`id`, `nombre`, `descripcion`, `activo`, `created_at`, `d
 	(12, 'Radar MSR237', 'Equipo Radar MSR237', 1, '2026-02-10 04:10:48', 2),
 	(13, 'Radar MSR103', 'Equipo Radar MSR103', 1, '2026-02-10 04:10:48', 2),
 	(14, 'Sistema Contable', 'Sistema de contabilidad', 1, '2026-02-11 00:02:23', 3),
-	(15, 'Sistema de Facturación', 'Sistema de facturación electrónica', 1, '2026-02-11 00:02:23', 3),
-	(16, 'Gestor Documental', 'Sistema de gestión documental', 1, '2026-02-11 00:02:23', 3),
+	(15, 'Sistema de FacturaciÃ³n', 'Sistema de facturaciÃ³n electrÃ³nica', 1, '2026-02-11 00:02:23', 3),
+	(16, 'Gestor Documental', 'Sistema de gestiÃ³n documental', 1, '2026-02-11 00:02:23', 3),
 	(17, 'Servidor Web', 'Servidor de aplicaciones web', 1, '2026-02-11 00:02:23', 4),
 	(18, 'Servidor BD', 'Servidor de base de datos', 1, '2026-02-11 00:02:23', 4),
 	(19, 'Sistema ERP', 'Sistema ERP corporativo', 1, '2026-02-11 00:02:23', 4);
@@ -295,8 +294,8 @@ CREATE TABLE IF NOT EXISTS `estados` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.estados: ~4 rows (aproximadamente)
 INSERT INTO `estados` (`id`, `nombre`, `descripcion`, `color`, `es_final`, `created_at`) VALUES
-	(1, 'Abierto', 'Ticket recién creado', '#fd7e14', 0, '2026-01-23 16:13:59'),
-	(2, 'En Atención', 'Ticket en atención', '#17a2b8', 0, '2026-01-23 16:13:59'),
+	(1, 'Abierto', 'Ticket reciÃ©n creado', '#fd7e14', 0, '2026-01-23 16:13:59'),
+	(2, 'En AtenciÃ³n', 'Ticket en atenciÃ³n', '#17a2b8', 0, '2026-01-23 16:13:59'),
 	(4, 'Resuelto', 'Ticket resuelto', '#28a745', 1, '2026-01-23 16:13:59'),
 	(5, 'Rechazado', 'Ticket cerrado', '#dc3545', 1, '2026-01-23 16:13:59');
 
@@ -315,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `historial` (
   KEY `idx_ticket` (`ticket_id`),
   CONSTRAINT `historial_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `historial_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=574 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=588 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.historial: ~472 rows (aproximadamente)
 INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modificado`, `valor_anterior`, `valor_nuevo`, `created_at`) VALUES
@@ -781,17 +780,17 @@ INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modif
 	(497, 287, 1, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-12 22:39:57'),
 	(498, 288, 8, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-12 22:39:57'),
 	(499, 289, 7, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-12 22:39:57'),
-	(501, 289, 7, 'Estado cambiado', 'estado', 'Rechazado', 'En Atención', '2026-02-12 22:43:27'),
+	(501, 289, 7, 'Estado cambiado', 'estado', 'Rechazado', 'En AtenciÃ³n', '2026-02-12 22:43:27'),
 	(502, 288, 8, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-12 22:59:50'),
 	(503, 288, 8, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:02:43'),
-	(504, 289, 7, 'Estado cambiado', 'estado', 'En Atención', 'Rechazado', '2026-02-12 23:03:09'),
+	(504, 289, 7, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Rechazado', '2026-02-12 23:03:09'),
 	(505, 289, 7, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-12 23:03:09'),
 	(506, 289, 7, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:03:18'),
 	(507, 288, 8, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-12 23:09:15'),
 	(508, 288, 8, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-12 23:09:15'),
-	(509, 288, 8, 'Estado cambiado', 'estado', 'Rechazado', 'En Atención', '2026-02-12 23:13:27'),
+	(509, 288, 8, 'Estado cambiado', 'estado', 'Rechazado', 'En AtenciÃ³n', '2026-02-12 23:13:27'),
 	(510, 288, 8, 'Progreso actualizado', 'progreso', '90%', '99%', '2026-02-12 23:13:27'),
-	(511, 288, 8, 'Estado cambiado', 'estado', 'En Atención', 'Rechazado', '2026-02-12 23:14:00'),
+	(511, 288, 8, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Rechazado', '2026-02-12 23:14:00'),
 	(512, 288, 8, 'Progreso actualizado', 'progreso', '99%', '100%', '2026-02-12 23:14:00'),
 	(513, 288, 8, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:14:14'),
 	(514, 287, 1, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-12 23:14:26'),
@@ -800,9 +799,9 @@ INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modif
 	(517, 286, 8, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:15:50'),
 	(518, 285, 1, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-12 23:18:51'),
 	(519, 285, 1, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:18:57'),
-	(520, 283, 3, 'Estado cambiado', 'estado', 'Abierto', 'En Atención', '2026-02-12 23:21:44'),
+	(520, 283, 3, 'Estado cambiado', 'estado', 'Abierto', 'En AtenciÃ³n', '2026-02-12 23:21:44'),
 	(521, 283, 3, 'Progreso actualizado', 'progreso', '0%', '10%', '2026-02-12 23:21:44'),
-	(522, 283, 3, 'Estado cambiado', 'estado', 'En Atención', 'Rechazado', '2026-02-12 23:22:10'),
+	(522, 283, 3, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Rechazado', '2026-02-12 23:22:10'),
 	(523, 283, 3, 'Progreso actualizado', 'progreso', '10%', '100%', '2026-02-12 23:22:10'),
 	(524, 283, 3, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-12 23:22:37'),
 	(525, 282, 3, 'Estado cambiado', 'estado', 'Abierto', 'Rechazado', '2026-02-14 17:19:55'),
@@ -824,15 +823,15 @@ INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modif
 	(545, 288, 8, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-14 18:22:55'),
 	(546, 287, 1, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-14 18:23:07'),
 	(547, 287, 1, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-14 18:23:07'),
-	(548, 285, 1, 'Estado cambiado', 'estado', 'Rechazado', 'En Atención', '2026-02-15 01:25:35'),
+	(548, 285, 1, 'Estado cambiado', 'estado', 'Rechazado', 'En AtenciÃ³n', '2026-02-15 01:25:35'),
 	(549, 285, 1, 'Progreso actualizado', 'progreso', '90%', '91%', '2026-02-15 01:25:35'),
-	(550, 285, 1, 'Estado cambiado', 'estado', 'En Atención', 'Resuelto', '2026-02-15 01:26:21'),
+	(550, 285, 1, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Resuelto', '2026-02-15 01:26:21'),
 	(551, 285, 1, 'Progreso actualizado', 'progreso', '91%', '100%', '2026-02-15 01:26:21'),
-	(552, 253, 9, 'Estado cambiado', 'estado', 'Rechazado', 'En Atención', '2026-02-15 01:34:48'),
+	(552, 253, 9, 'Estado cambiado', 'estado', 'Rechazado', 'En AtenciÃ³n', '2026-02-15 01:34:48'),
 	(553, 290, 1, 'Ticket creado', NULL, NULL, NULL, '2026-02-15 02:02:54'),
-	(554, 290, 1, 'Estado cambiado', 'estado', 'Abierto', 'En Atención', '2026-02-18 21:29:00'),
+	(554, 290, 1, 'Estado cambiado', 'estado', 'Abierto', 'En AtenciÃ³n', '2026-02-18 21:29:00'),
 	(555, 290, 1, 'Progreso actualizado', 'progreso', '0%', '40%', '2026-02-18 21:29:00'),
-	(556, 290, 1, 'Estado cambiado', 'estado', 'En Atención', 'Resuelto', '2026-02-18 21:29:13'),
+	(556, 290, 1, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Resuelto', '2026-02-18 21:29:13'),
 	(557, 290, 1, 'Progreso actualizado', 'progreso', '40%', '100%', '2026-02-18 21:29:13'),
 	(558, 290, 1, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-18 21:30:07'),
 	(559, 290, 1, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-18 21:30:07'),
@@ -840,16 +839,30 @@ INSERT INTO `historial` (`id`, `ticket_id`, `usuario_id`, `accion`, `campo_modif
 	(561, 290, 1, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-18 21:30:33'),
 	(562, 291, 3, 'Ticket creado', NULL, NULL, NULL, '2026-02-19 23:48:48'),
 	(563, 244, 3, 'Progreso actualizado', 'progreso', '50%', '60%', '2026-02-19 23:57:35'),
-	(564, 101, 6, 'Estado cambiado', 'estado', 'Rechazado', 'En Atención', '2026-02-20 00:02:00'),
+	(564, 101, 6, 'Estado cambiado', 'estado', 'Rechazado', 'En AtenciÃ³n', '2026-02-20 00:02:00'),
 	(565, 292, 3, 'Ticket creado', NULL, NULL, NULL, '2026-02-20 16:29:01'),
-	(566, 292, 10, 'Estado cambiado', 'estado', 'Abierto', 'En Atención', '2026-02-20 19:18:41'),
+	(566, 292, 10, 'Estado cambiado', 'estado', 'Abierto', 'En AtenciÃ³n', '2026-02-20 19:18:41'),
 	(567, 292, 10, 'Progreso actualizado', 'progreso', '0%', '50%', '2026-02-20 19:18:41'),
 	(568, 291, 5, 'Estado cambiado', 'estado', 'Abierto', 'Resuelto', '2026-02-20 19:18:58'),
 	(569, 291, 5, 'Progreso actualizado', 'progreso', '0%', '100%', '2026-02-20 19:18:58'),
 	(570, 291, 5, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-20 19:19:36'),
 	(571, 291, 5, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-20 19:19:36'),
 	(572, 291, 5, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-20 19:19:51'),
-	(573, 291, 5, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-20 19:19:51');
+	(573, 291, 5, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-20 19:19:51'),
+	(574, 293, 4, 'Ticket creado', NULL, NULL, NULL, '2026-02-24 22:27:50'),
+	(575, 293, 4, 'Estado cambiado', 'estado', 'Abierto', 'En AtenciÃ³n', '2026-02-24 22:30:33'),
+	(576, 293, 4, 'Progreso actualizado', 'progreso', '0%', '20%', '2026-02-24 22:30:33'),
+	(577, 293, 4, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Resuelto', '2026-02-24 22:31:11'),
+	(578, 293, 4, 'Progreso actualizado', 'progreso', '20%', '100%', '2026-02-24 22:31:11'),
+	(579, 293, 4, 'Estado cambiado', 'estado', 'Resuelto', 'Rechazado', '2026-02-24 22:31:47'),
+	(580, 293, 4, 'Progreso actualizado', 'progreso', '100%', '90%', '2026-02-24 22:31:47'),
+	(581, 293, 4, 'Estado cambiado', 'estado', 'Rechazado', 'Resuelto', '2026-02-24 22:32:25'),
+	(582, 293, 4, 'Progreso actualizado', 'progreso', '90%', '100%', '2026-02-24 22:32:25'),
+	(583, 294, 4, 'Ticket creado', NULL, NULL, NULL, '2026-02-24 22:33:58'),
+	(584, 294, 4, 'Estado cambiado', 'estado', 'Abierto', 'En AtenciÃ³n', '2026-02-24 22:34:11'),
+	(585, 294, 4, 'Progreso actualizado', 'progreso', '0%', '20%', '2026-02-24 22:34:11'),
+	(586, 294, 4, 'Estado cambiado', 'estado', 'En AtenciÃ³n', 'Resuelto', '2026-02-24 22:41:31'),
+	(587, 294, 4, 'Progreso actualizado', 'progreso', '20%', '100%', '2026-02-24 22:41:31');
 
 -- Volcando estructura para tabla helpdesk_clonsa.notificaciones
 CREATE TABLE IF NOT EXISTS `notificaciones` (
@@ -881,7 +894,7 @@ CREATE TABLE IF NOT EXISTS `notificaciones_leidas` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_notif` (`usuario_id`,`tipo`,`referencia_id`),
   CONSTRAINT `notificaciones_leidas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.notificaciones_leidas: ~8 rows (aproximadamente)
 INSERT INTO `notificaciones_leidas` (`id`, `usuario_id`, `tipo`, `referencia_id`, `leida_at`) VALUES
@@ -894,7 +907,8 @@ INSERT INTO `notificaciones_leidas` (`id`, `usuario_id`, `tipo`, `referencia_id`
 	(16, 1, 'ticket', 290, '2026-02-16 17:12:55'),
 	(17, 1, '', 288, '2026-02-16 22:19:35'),
 	(18, 3, 'ticket', 292, '2026-02-20 18:40:06'),
-	(19, 3, '', 84, '2026-02-20 18:40:17');
+	(19, 3, '', 84, '2026-02-20 18:40:17'),
+	(20, 3, '', 291, '2026-02-24 22:26:59');
 
 -- Volcando estructura para tabla helpdesk_clonsa.prioridades
 CREATE TABLE IF NOT EXISTS `prioridades` (
@@ -912,7 +926,7 @@ INSERT INTO `prioridades` (`id`, `nombre`, `nivel`, `color`, `created_at`) VALUE
 	(1, 'Baja', 1, '#28a745', '2026-01-23 16:13:59'),
 	(2, 'Media', 2, '#ffc107', '2026-01-23 16:13:59'),
 	(3, 'Alta', 3, '#fd7e14', '2026-01-23 16:13:59'),
-	(4, 'Crítica', 4, '#dc3545', '2026-01-23 16:13:59');
+	(4, 'CrÃ­tica', 4, '#dc3545', '2026-01-23 16:13:59');
 
 -- Volcando estructura para tabla helpdesk_clonsa.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -990,144 +1004,144 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   CONSTRAINT `tickets_ibfk_7` FOREIGN KEY (`actividad_id`) REFERENCES `actividades` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tickets_ibfk_8` FOREIGN KEY (`tipo_falla_id`) REFERENCES `tipos_falla` (`id`) ON DELETE SET NULL,
   CONSTRAINT `tickets_ibfk_9` FOREIGN KEY (`ubicacion_id`) REFERENCES `ubicaciones` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.tickets: ~237 rows (aproximadamente)
 INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion`, `usuario_id`, `area_id`, `prioridad_id`, `estado_id`, `asignado_a`, `canal_atencion_id`, `actividad_id`, `tipo_falla_id`, `ubicacion_id`, `equipo_id`, `codigo_equipo_id`, `progreso`, `pendiente_aprobacion`, `aprobado_por`, `fecha_aprobacion`, `fecha_limite`, `fecha_resolucion`, `created_at`, `updated_at`, `solicitante_nombre`, `solicitante_email`, `solicitante_telefono`) VALUES
-	(44, 2, 'TKT-2026-0001', 'Mantenimiento preventivo', 'Revisión mensual', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 14:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(45, 2, 'TKT-2026-0002', 'Actualización antivirus', 'Actualización', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-21 15:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(46, 2, 'TKT-2026-0003', 'Backup semanal', 'Verificación', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-22 13:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(44, 2, 'TKT-2026-0001', 'Mantenimiento preventivo', 'RevisiÃ³n mensual', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 14:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(45, 2, 'TKT-2026-0002', 'ActualizaciÃ³n antivirus', 'ActualizaciÃ³n', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-21 15:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(46, 2, 'TKT-2026-0003', 'Backup semanal', 'VerificaciÃ³n', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-22 13:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
 	(47, 2, 'TKT-2026-0004', 'Falla impresora', 'Papel atascado', 1, NULL, 1, 1, 1, 1, 2, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-19 19:20:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
 	(48, 2, 'TKT-2026-0005', 'PC no enciende', 'No responde', 1, NULL, 1, 1, 1, 1, 2, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-23 16:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
 	(49, 2, 'TKT-2026-0006', 'Teclado fallando', 'Teclas rotas', 1, NULL, 1, 1, 1, 1, 2, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-24 20:45:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(50, 2, 'TKT-2026-0007', 'Análisis rendimiento', 'Monitoreo', 1, NULL, 1, 1, 1, 1, 3, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-18 13:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(51, 2, 'TKT-2026-0008', 'Revisión logs', 'Análisis', 1, NULL, 1, 1, 1, 1, 3, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-25 14:15:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(52, 2, 'TKT-2026-0009', 'Config radar MSR', 'Instalación', 1, NULL, 1, 1, 1, 1, 4, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-26 12:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(53, 4, 'TKT-2026-0010', 'Actualización MSR', 'Upgrade v3.2', 8, NULL, 1, 1, 1, 1, 4, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 15:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(50, 2, 'TKT-2026-0007', 'AnÃ¡lisis rendimiento', 'Monitoreo', 1, NULL, 1, 1, 1, 1, 3, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-18 13:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(51, 2, 'TKT-2026-0008', 'RevisiÃ³n logs', 'AnÃ¡lisis', 1, NULL, 1, 1, 1, 1, 3, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-25 14:15:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(52, 2, 'TKT-2026-0009', 'Config radar MSR', 'InstalaciÃ³n', 1, NULL, 1, 1, 1, 1, 4, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-26 12:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(53, 4, 'TKT-2026-0010', 'ActualizaciÃ³n MSR', 'Upgrade v3.2', 8, NULL, 1, 1, 1, 1, 4, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 15:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
 	(54, 4, 'TKT-2026-0011', 'Bug en MSR', 'Error reporte', 9, NULL, 1, 1, 1, 1, 4, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-22 18:30:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
 	(55, 4, 'TKT-2026-0012', 'Soporte Lima', 'Config VPN', 10, NULL, 1, 1, 1, 1, 5, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-19 16:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(56, 4, 'TKT-2026-0013', 'Instalación Office', 'Office 365', 8, NULL, 1, 1, 1, 1, 5, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-21 14:30:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(57, 4, 'TKT-2026-0014', 'Migración servidor', 'Santiago', 9, NULL, 1, 1, 1, 1, 6, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-23 13:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(56, 4, 'TKT-2026-0013', 'InstalaciÃ³n Office', 'Office 365', 8, NULL, 1, 1, 1, 1, 5, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-21 14:30:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(57, 4, 'TKT-2026-0014', 'MigraciÃ³n servidor', 'Santiago', 9, NULL, 1, 1, 1, 1, 6, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-23 13:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
 	(58, 4, 'TKT-2026-0015', 'Soporte Chile', 'Conectividad', 10, NULL, 1, 1, 1, 1, 6, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-24 15:15:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(59, 4, 'TKT-2026-0016', 'Desarrollo', 'Facturación', 8, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-18 19:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(60, 4, 'TKT-2026-0017', 'Integración API', 'Proveedor', 9, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-25 16:30:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(61, 2, 'TKT-2026-0018', 'Mantenimiento UPS', 'Revisión', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-17 12:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(62, 2, 'TKT-2026-0019', 'Reparación switch', 'Puertos', 1, NULL, 1, 1, 1, 1, 2, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 21:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
-	(63, 4, 'TKT-2026-0020', 'Deploy', 'Producción', 10, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-26 17:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(64, 1, 'TKT-2026-0021', 'Gestión Documental', 'Organizar documentación', 3, NULL, 2, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 17:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(65, 1, 'TKT-2026-0022', 'Compra Suministros', 'Adquisición material', 4, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 22:00:00', '2026-01-17 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(66, 1, 'TKT-2026-0023', 'Coordinación Evento', 'Organizar reunión', 5, NULL, 1, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 21:00:00', '2026-01-18 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(67, 1, 'TKT-2026-0024', 'Actualización Políticas', 'Revisar manual', 6, NULL, 2, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 20:00:00', '2026-01-19 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(68, 1, 'TKT-2026-0025', 'Gestión Contratos', 'Renovación contratos', 7, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 19:30:00', '2026-01-20 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(69, 1, 'TKT-2026-0026', 'Auditoría Interna', 'Preparar documentación', 3, NULL, 1, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-21 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(70, 1, 'TKT-2026-0027', 'Planificación Presupuesto', 'Elaborar presupuesto', 4, NULL, 1, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 21:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(71, 1, 'TKT-2026-0028', 'Gestión Licencias', 'Renovar licencias', 5, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 19:00:00', '2026-01-23 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(72, 1, 'TKT-2026-0029', 'Coordinación Capacitación', 'Organizar programa', 6, NULL, 2, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:45:00', '2026-01-24 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(73, 1, 'TKT-2026-0030', 'Gestión Seguros', 'Renovación pólizas', 7, NULL, 2, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 18:30:00', '2026-01-25 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(74, 1, 'TKT-2026-0031', 'Actualización Base Datos', 'Depurar información', 3, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 20:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(75, 1, 'TKT-2026-0032', 'Coordinación Logística', 'Gestionar calendario', 4, NULL, 2, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 18:15:00', '2026-01-27 13:45:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(76, 1, 'TKT-2026-0033', 'Gestión Archivo', 'Digitalizar documentos', 5, NULL, 2, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 21:30:00', '2026-01-28 14:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(77, 1, 'TKT-2026-0034', 'Actualización Directorio', 'Actualizar extensiones', 6, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-28 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(78, 1, 'TKT-2026-0035', 'Coordinación Viajes', 'Gestionar itinerarios', 7, NULL, 2, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:00:00', '2026-01-29 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(79, 1, 'TKT-2026-0036', 'Gestión Correspondencia', 'Atender requerimientos', 3, NULL, 3, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:45:00', '2026-01-29 18:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(80, 1, 'TKT-2026-0037', 'Actualización Organigrama', 'Actualizar estructura', 4, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:30:00', '2026-01-30 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(81, 1, 'TKT-2026-0038', 'Relaciones Públicas', 'Gestionar comunicados', 5, NULL, 2, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(82, 2, 'TKT-2026-0039', 'Mant. Preventivo Radar', 'Revisión mensual', 4, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 19:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(83, 2, 'TKT-2026-0040', 'Mant. Correctivo Radar', 'Reparación sensor', 5, NULL, 3, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 23:30:00', '2026-01-17 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(84, 2, 'TKT-2026-0041', 'Mant. Preventivo CCTV', 'Limpieza cámaras', 6, NULL, 2, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 17:30:00', '2026-01-18 13:30:00', '2026-02-19 23:55:51', '', '', ''),
-	(85, 2, 'TKT-2026-0042', 'Mant. Predictivo Equipos', 'Análisis vibraciones', 7, NULL, 2, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 22:00:00', '2026-01-18 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(59, 4, 'TKT-2026-0016', 'Desarrollo', 'FacturaciÃ³n', 8, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-18 19:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(60, 4, 'TKT-2026-0017', 'IntegraciÃ³n API', 'Proveedor', 9, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-25 16:30:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(61, 2, 'TKT-2026-0018', 'Mantenimiento UPS', 'RevisiÃ³n', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-17 12:30:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(62, 2, 'TKT-2026-0019', 'ReparaciÃ³n switch', 'Puertos', 1, NULL, 1, 1, 1, 1, 2, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-20 21:00:00', '2026-01-27 23:13:27', NULL, NULL, NULL),
+	(63, 4, 'TKT-2026-0020', 'Deploy', 'ProducciÃ³n', 10, NULL, 1, 1, 1, 1, 7, 1, 1, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-01-26 17:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
+	(64, 1, 'TKT-2026-0021', 'GestiÃ³n Documental', 'Organizar documentaciÃ³n', 3, NULL, 2, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 17:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(65, 1, 'TKT-2026-0022', 'Compra Suministros', 'AdquisiciÃ³n material', 4, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 22:00:00', '2026-01-17 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(66, 1, 'TKT-2026-0023', 'CoordinaciÃ³n Evento', 'Organizar reuniÃ³n', 5, NULL, 1, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 21:00:00', '2026-01-18 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(67, 1, 'TKT-2026-0024', 'ActualizaciÃ³n PolÃ­ticas', 'Revisar manual', 6, NULL, 2, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 20:00:00', '2026-01-19 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(68, 1, 'TKT-2026-0025', 'GestiÃ³n Contratos', 'RenovaciÃ³n contratos', 7, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 19:30:00', '2026-01-20 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(69, 1, 'TKT-2026-0026', 'AuditorÃ­a Interna', 'Preparar documentaciÃ³n', 3, NULL, 1, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-21 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(70, 1, 'TKT-2026-0027', 'PlanificaciÃ³n Presupuesto', 'Elaborar presupuesto', 4, NULL, 1, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 21:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(71, 1, 'TKT-2026-0028', 'GestiÃ³n Licencias', 'Renovar licencias', 5, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 19:00:00', '2026-01-23 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(72, 1, 'TKT-2026-0029', 'CoordinaciÃ³n CapacitaciÃ³n', 'Organizar programa', 6, NULL, 2, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:45:00', '2026-01-24 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(73, 1, 'TKT-2026-0030', 'GestiÃ³n Seguros', 'RenovaciÃ³n pÃ³lizas', 7, NULL, 2, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 18:30:00', '2026-01-25 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(74, 1, 'TKT-2026-0031', 'ActualizaciÃ³n Base Datos', 'Depurar informaciÃ³n', 3, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 20:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(75, 1, 'TKT-2026-0032', 'CoordinaciÃ³n LogÃ­stica', 'Gestionar calendario', 4, NULL, 2, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 18:15:00', '2026-01-27 13:45:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(76, 1, 'TKT-2026-0033', 'GestiÃ³n Archivo', 'Digitalizar documentos', 5, NULL, 2, 5, 1, 1, 7, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 21:30:00', '2026-01-28 14:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(77, 1, 'TKT-2026-0034', 'ActualizaciÃ³n Directorio', 'Actualizar extensiones', 6, NULL, 2, 5, 1, 2, 7, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-28 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(78, 1, 'TKT-2026-0035', 'CoordinaciÃ³n Viajes', 'Gestionar itinerarios', 7, NULL, 2, 5, 1, 3, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:00:00', '2026-01-29 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(79, 1, 'TKT-2026-0036', 'GestiÃ³n Correspondencia', 'Atender requerimientos', 3, NULL, 3, 5, 1, 1, 7, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:45:00', '2026-01-29 18:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(80, 1, 'TKT-2026-0037', 'ActualizaciÃ³n Organigrama', 'Actualizar estructura', 4, NULL, 2, 5, 1, 2, 7, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:30:00', '2026-01-30 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(81, 1, 'TKT-2026-0038', 'Relaciones PÃºblicas', 'Gestionar comunicados', 5, NULL, 2, 5, 1, 3, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(82, 2, 'TKT-2026-0039', 'Mant. Preventivo Radar', 'RevisiÃ³n mensual', 4, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 19:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(83, 2, 'TKT-2026-0040', 'Mant. Correctivo Radar', 'ReparaciÃ³n sensor', 5, NULL, 3, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 23:30:00', '2026-01-17 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(84, 2, 'TKT-2026-0041', 'Mant. Preventivo CCTV', 'Limpieza cÃ¡maras', 6, NULL, 2, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 17:30:00', '2026-01-18 13:30:00', '2026-02-19 23:55:51', '', '', ''),
+	(85, 2, 'TKT-2026-0042', 'Mant. Predictivo Equipos', 'AnÃ¡lisis vibraciones', 7, NULL, 2, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 22:00:00', '2026-01-18 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(86, 2, 'TKT-2026-0043', 'Mant. Correctivo PLC', 'Reparar controlador', 4, NULL, 3, 5, 3, 2, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 20:00:00', '2026-01-19 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(87, 2, 'TKT-2026-0044', 'Mant. Preventivo Compresor', 'Cambio filtros', 5, NULL, 2, 5, 3, 3, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 17:45:00', '2026-01-20 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(88, 2, 'TKT-2026-0045', 'Mant. Correctivo Motor', 'Reparar bobinado', 6, NULL, 3, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 23:00:00', '2026-01-20 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(89, 2, 'TKT-2026-0046', 'Mant. Preventivo UPS', 'Prueba baterías', 7, NULL, 2, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 18:00:00', '2026-01-21 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(90, 2, 'TKT-2026-0047', 'Mant. Predictivo Bomba', 'Análisis temperatura', 4, NULL, 2, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 17:00:00', '2026-01-22 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(89, 2, 'TKT-2026-0046', 'Mant. Preventivo UPS', 'Prueba baterÃ­as', 7, NULL, 2, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 18:00:00', '2026-01-21 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(90, 2, 'TKT-2026-0047', 'Mant. Predictivo Bomba', 'AnÃ¡lisis temperatura', 4, NULL, 2, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 17:00:00', '2026-01-22 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(91, 2, 'TKT-2026-0048', 'Mant. Correctivo Variador', 'Reemplazar tarjeta', 5, NULL, 3, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:30:00', '2026-01-22 19:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(92, 2, 'TKT-2026-0049', 'Mant. Preventivo Generador', 'Cambio aceite', 6, NULL, 2, 5, 3, 2, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:15:00', '2026-01-23 13:45:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(93, 2, 'TKT-2026-0050', 'Mant. Correctivo Sensor', 'Reemplazar sensor', 7, NULL, 3, 5, 3, 3, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 16:30:00', '2026-01-24 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(94, 2, 'TKT-2026-0051', 'Mant. Preventivo Panel', 'Medición parámetros', 4, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 22:00:00', '2026-01-24 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(95, 2, 'TKT-2026-0052', 'Mant. Predictivo Transform', 'Termografía', 5, NULL, 2, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 19:00:00', '2026-01-25 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(94, 2, 'TKT-2026-0051', 'Mant. Preventivo Panel', 'MediciÃ³n parÃ¡metros', 4, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 22:00:00', '2026-01-24 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(95, 2, 'TKT-2026-0052', 'Mant. Predictivo Transform', 'TermografÃ­a', 5, NULL, 2, 5, 3, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 19:00:00', '2026-01-25 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(96, 2, 'TKT-2026-0053', 'Mant. Correctivo Aire', 'Reparar clima', 6, NULL, 3, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 17:45:00', '2026-01-26 14:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(97, 2, 'TKT-2026-0054', 'Mant. Preventivo Extintores', 'Recarga', 7, NULL, 2, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 21:30:00', '2026-01-26 19:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(98, 2, 'TKT-2026-0055', 'Mant. Correctivo Montacargas', 'Reparar hidráulico', 4, NULL, 3, 5, 3, 2, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 18:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(99, 2, 'TKT-2026-0056', 'Mant. Preventivo Grúa', 'Inspección', 5, NULL, 2, 5, 3, 3, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 21:00:00', '2026-01-28 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(100, 2, 'TKT-2026-0057', 'Mant. Predictivo Rodamiento', 'Análisis', 6, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:15:00', '2026-01-29 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(101, 2, 'TKT-2026-0058', 'Mant. Correctivo Válvula', 'Reemplazar', 7, NULL, 3, 2, 6, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:30:00', '2026-01-29 19:00:00', '2026-02-20 00:02:00', NULL, NULL, NULL),
+	(98, 2, 'TKT-2026-0055', 'Mant. Correctivo Montacargas', 'Reparar hidrÃ¡ulico', 4, NULL, 3, 5, 3, 2, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 18:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(99, 2, 'TKT-2026-0056', 'Mant. Preventivo GrÃºa', 'InspecciÃ³n', 5, NULL, 2, 5, 3, 3, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 21:00:00', '2026-01-28 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(100, 2, 'TKT-2026-0057', 'Mant. Predictivo Rodamiento', 'AnÃ¡lisis', 6, NULL, 2, 5, 3, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:15:00', '2026-01-29 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(101, 2, 'TKT-2026-0058', 'Mant. Correctivo VÃ¡lvula', 'Reemplazar', 7, NULL, 3, 2, 6, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:30:00', '2026-01-29 19:00:00', '2026-02-20 00:02:00', NULL, NULL, NULL),
 	(102, 2, 'TKT-2026-0059', 'Mant. Preventivo Cinta', 'Ajuste', 4, NULL, 2, 5, 3, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:30:00', '2026-01-30 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(103, 2, 'TKT-2026-0060', 'Mant. Predictivo Motor', 'Termografía', 5, NULL, 2, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(103, 2, 'TKT-2026-0060', 'Mant. Predictivo Motor', 'TermografÃ­a', 5, NULL, 2, 5, 3, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(104, 2, 'TKT-2026-0061', 'Mant. Prev. Excavadora', 'Servicio 500h', 6, NULL, 2, 5, 4, 1, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 22:00:00', '2026-01-17 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(105, 2, 'TKT-2026-0062', 'Mant. Corr. Bomba', 'Reparar sello', 7, NULL, 3, 5, 4, 2, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 18:30:00', '2026-01-18 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(106, 2, 'TKT-2026-0063', 'Mant. Prev. Camión', 'Cambio aceite', 4, NULL, 2, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 17:00:00', '2026-01-19 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(107, 2, 'TKT-2026-0064', 'Mant. Pred. Rodillo', 'Medición', 5, NULL, 2, 5, 4, 1, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 19:00:00', '2026-01-20 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(106, 2, 'TKT-2026-0063', 'Mant. Prev. CamiÃ³n', 'Cambio aceite', 4, NULL, 2, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 17:00:00', '2026-01-19 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(107, 2, 'TKT-2026-0064', 'Mant. Pred. Rodillo', 'MediciÃ³n', 5, NULL, 2, 5, 4, 1, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 19:00:00', '2026-01-20 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(108, 2, 'TKT-2026-0065', 'Mant. Corr. Retroexc', 'Reparar cilindro', 6, NULL, 3, 5, 4, 2, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 20:00:00', '2026-01-21 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(109, 2, 'TKT-2026-0066', 'Mant. Prev. Motoniveladora', 'Lubricación', 7, NULL, 2, 5, 4, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 18:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(109, 2, 'TKT-2026-0066', 'Mant. Prev. Motoniveladora', 'LubricaciÃ³n', 7, NULL, 2, 5, 4, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 18:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(110, 2, 'TKT-2026-0067', 'Mant. Corr. Tractor', 'Reemplazar zapatas', 4, NULL, 3, 5, 4, 1, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 21:00:00', '2026-01-23 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(111, 2, 'TKT-2026-0068', 'Mant. Prev. Cargador', 'Inspección', 5, NULL, 2, 5, 4, 2, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:30:00', '2026-01-24 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(112, 2, 'TKT-2026-0069', 'Mant. Pred. Martillo', 'Análisis presión', 6, NULL, 2, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 18:45:00', '2026-01-25 14:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(111, 2, 'TKT-2026-0068', 'Mant. Prev. Cargador', 'InspecciÃ³n', 5, NULL, 2, 5, 4, 2, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:30:00', '2026-01-24 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(112, 2, 'TKT-2026-0069', 'Mant. Pred. Martillo', 'AnÃ¡lisis presiÃ³n', 6, NULL, 2, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 18:45:00', '2026-01-25 14:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(113, 2, 'TKT-2026-0070', 'Mant. Corr. Perforadora', 'Reparar', 7, NULL, 3, 5, 4, 1, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 19:00:00', '2026-01-26 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(114, 2, 'TKT-2026-0071', 'Mant. Prev. Pala', 'Cambio filtros', 4, NULL, 2, 5, 4, 2, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 18:00:00', '2026-01-27 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(115, 2, 'TKT-2026-0072', 'Mant. Corr. Cisterna', 'Reparar bomba', 5, NULL, 3, 5, 4, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 18:30:00', '2026-01-28 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(116, 2, 'TKT-2026-0073', 'Mant. Prev. Minicargador', 'Servicio 250h', 6, NULL, 2, 5, 4, 1, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 19:15:00', '2026-01-29 13:45:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(117, 2, 'TKT-2026-0074', 'Mant. Pred. Vibro', 'Análisis', 7, NULL, 2, 5, 4, 2, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 22:30:00', '2026-01-29 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(117, 2, 'TKT-2026-0074', 'Mant. Pred. Vibro', 'AnÃ¡lisis', 7, NULL, 2, 5, 4, 2, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 22:30:00', '2026-01-29 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(118, 2, 'TKT-2026-0075', 'Mant. Corr. Mezcladora', 'Reemplazar', 4, NULL, 3, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:00:00', '2026-01-30 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(119, 2, 'TKT-2026-0076', 'Mant. Prev. Chancadora', 'Inspección', 5, NULL, 2, 5, 4, 1, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 18:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(119, 2, 'TKT-2026-0076', 'Mant. Prev. Chancadora', 'InspecciÃ³n', 5, NULL, 2, 5, 4, 1, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 18:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(120, 2, 'TKT-2026-0077', 'Mant. Prev. Fajas', 'Ajuste', 6, NULL, 2, 5, 5, 1, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 19:00:00', '2026-01-17 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(121, 2, 'TKT-2026-0078', 'Mant. Corr. Zarandas', 'Reemplazar', 7, NULL, 3, 5, 5, 2, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 18:00:00', '2026-01-19 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(122, 2, 'TKT-2026-0079', 'Mant. Prev. Molino', 'Cambio', 4, NULL, 2, 5, 5, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-21 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(123, 2, 'TKT-2026-0080', 'Mant. Pred. Separador', 'Medición', 5, NULL, 2, 5, 5, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:00:00', '2026-01-23 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(123, 2, 'TKT-2026-0080', 'Mant. Pred. Separador', 'MediciÃ³n', 5, NULL, 2, 5, 5, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:00:00', '2026-01-23 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(124, 2, 'TKT-2026-0081', 'Mant. Corr. Bomba Lodos', 'Reparar', 6, NULL, 3, 5, 5, 2, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 20:00:00', '2026-01-24 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(125, 2, 'TKT-2026-0082', 'Mant. Prev. Filtro', 'Inspección', 7, NULL, 2, 5, 5, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 17:30:00', '2026-01-25 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(125, 2, 'TKT-2026-0082', 'Mant. Prev. Filtro', 'InspecciÃ³n', 7, NULL, 2, 5, 5, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 17:30:00', '2026-01-25 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(126, 2, 'TKT-2026-0083', 'Mant. Corr. Espesador', 'Reparar', 4, NULL, 3, 5, 5, 1, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 19:00:00', '2026-01-26 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(127, 2, 'TKT-2026-0084', 'Mant. Prev. Ciclones', 'Reemplazo', 5, NULL, 2, 5, 5, 2, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 19:00:00', '2026-01-27 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(128, 2, 'TKT-2026-0085', 'Mant. Pred. Reductor', 'Análisis', 6, NULL, 2, 5, 5, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 17:15:00', '2026-01-28 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(129, 2, 'TKT-2026-0086', 'Mant. Corr. Válvula', 'Reemplazar', 7, NULL, 3, 5, 5, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:00:00', '2026-01-29 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(128, 2, 'TKT-2026-0085', 'Mant. Pred. Reductor', 'AnÃ¡lisis', 6, NULL, 2, 5, 5, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 17:15:00', '2026-01-28 13:15:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(129, 2, 'TKT-2026-0086', 'Mant. Corr. VÃ¡lvula', 'Reemplazar', 7, NULL, 3, 5, 5, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 17:00:00', '2026-01-29 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(130, 2, 'TKT-2026-0087', 'Mant. Prev. Agitador', 'Balanceo', 4, NULL, 2, 5, 5, 2, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 18:00:00', '2026-01-30 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(131, 2, 'TKT-2026-0088', 'Mant. Pred. Motor AT', 'Termografía', 5, NULL, 2, 5, 5, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 19:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(131, 2, 'TKT-2026-0088', 'Mant. Pred. Motor AT', 'TermografÃ­a', 5, NULL, 2, 5, 5, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:30:00', '2026-01-30 19:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(132, 2, 'TKT-2026-0089', 'Mant. Prev. Ventiladores', 'Limpieza', 7, NULL, 2, 5, 6, 1, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 17:00:00', '2026-01-18 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(133, 2, 'TKT-2026-0090', 'Mant. Corr. Sensor', 'Calibrar', 4, NULL, 3, 5, 6, 2, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 18:00:00', '2026-01-20 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(134, 2, 'TKT-2026-0091', 'Mant. Prev. Neumático', 'Revisión', 5, NULL, 2, 5, 6, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 19:00:00', '2026-01-22 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(135, 2, 'TKT-2026-0092', 'Mant. Pred. Eje', 'Medición', 6, NULL, 2, 5, 6, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 18:00:00', '2026-01-24 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(134, 2, 'TKT-2026-0091', 'Mant. Prev. NeumÃ¡tico', 'RevisiÃ³n', 5, NULL, 2, 5, 6, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 19:00:00', '2026-01-22 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(135, 2, 'TKT-2026-0092', 'Mant. Pred. Eje', 'MediciÃ³n', 6, NULL, 2, 5, 6, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 18:00:00', '2026-01-24 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(136, 2, 'TKT-2026-0093', 'Mant. Corr. Switch', 'Reemplazar', 7, NULL, 3, 5, 6, 2, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 19:00:00', '2026-01-25 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(137, 2, 'TKT-2026-0094', 'Mant. Prev. Iluminación', 'Cambio', 4, NULL, 2, 5, 6, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 17:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(137, 2, 'TKT-2026-0094', 'Mant. Prev. IluminaciÃ³n', 'Cambio', 4, NULL, 2, 5, 6, 3, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 17:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(138, 2, 'TKT-2026-0095', 'Mant. Corr. Tablero', 'Reparar', 5, NULL, 3, 5, 6, 1, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 18:30:00', '2026-01-28 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(139, 2, 'TKT-2026-0096', 'Mant. Prev. Detección', 'Prueba', 6, NULL, 2, 5, 6, 2, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 19:00:00', '2026-01-29 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(140, 2, 'TKT-2026-0097', 'Mant. Pred. Acople', 'Análisis', 7, NULL, 2, 5, 6, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:30:00', '2026-01-30 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(139, 2, 'TKT-2026-0096', 'Mant. Prev. DetecciÃ³n', 'Prueba', 6, NULL, 2, 5, 6, 2, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 19:00:00', '2026-01-29 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(140, 2, 'TKT-2026-0097', 'Mant. Pred. Acople', 'AnÃ¡lisis', 7, NULL, 2, 5, 6, 3, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:30:00', '2026-01-30 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(141, 2, 'TKT-2026-0098', 'Mant. Corr. Encoder', 'Reemplazar', 4, NULL, 3, 5, 6, 1, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(142, 2, 'TKT-2026-0099', 'Mant. Prev. Seguridad', 'Prueba', 5, NULL, 2, 5, 7, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 17:00:00', '2026-01-19 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(143, 2, 'TKT-2026-0100', 'Mant. Corr. Barrera', 'Reparar', 6, NULL, 3, 5, 7, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 18:00:00', '2026-01-21 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(144, 2, 'TKT-2026-0101', 'Mant. Prev. Pulsadores', 'Verificar', 7, NULL, 2, 5, 7, 3, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 19:00:00', '2026-01-23 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(145, 2, 'TKT-2026-0102', 'Mant. Pred. Frenos', 'Análisis', 4, NULL, 2, 5, 7, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 17:00:00', '2026-01-25 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(145, 2, 'TKT-2026-0102', 'Mant. Pred. Frenos', 'AnÃ¡lisis', 4, NULL, 2, 5, 7, 1, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 17:00:00', '2026-01-25 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(146, 2, 'TKT-2026-0103', 'Mant. Corr. Interlock', 'Reparar', 5, NULL, 3, 5, 7, 2, 3, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 19:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(147, 2, 'TKT-2026-0104', 'Mant. Prev. Sirenas', 'Prueba', 6, NULL, 2, 5, 7, 3, 1, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 17:30:00', '2026-01-28 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(148, 2, 'TKT-2026-0105', 'Mant. Corr. Relay', 'Reemplazar', 7, NULL, 3, 5, 7, 1, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 18:00:00', '2026-01-29 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(149, 2, 'TKT-2026-0106', 'Mant. Prev. Señalización', 'Verificar', 4, NULL, 2, 5, 7, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 19:00:00', '2026-01-30 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(150, 3, 'TKT-2026-0107', 'Procesamiento Nómina', 'Calcular', 11, NULL, 1, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 21:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(151, 3, 'TKT-2026-0108', 'Declaración PDT', 'SUNAT', 12, NULL, 1, 5, 11, 2, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 19:00:00', '2026-01-18 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(152, 3, 'TKT-2026-0109', 'Proceso Selección', 'Reclutamiento', 13, NULL, 2, 5, 11, 3, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-19 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(153, 3, 'TKT-2026-0110', 'Evaluación', 'Procesar', 11, NULL, 2, 5, 11, 1, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 21:00:00', '2026-01-20 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(154, 3, 'TKT-2026-0111', 'Actualización Legajos', 'Digitalizar', 12, NULL, 2, 5, 11, 2, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 20:00:00', '2026-01-22 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(155, 3, 'TKT-2026-0112', 'Liquidación', 'Calcular CTS', 13, NULL, 1, 5, 11, 3, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 19:00:00', '2026-01-23 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(156, 3, 'TKT-2026-0113', 'Inducción', 'Capacitación', 11, NULL, 2, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 18:30:00', '2026-01-24 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(157, 3, 'TKT-2026-0114', 'Renovación', 'Gestionar', 12, NULL, 2, 5, 11, 2, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 20:00:00', '2026-01-25 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(149, 2, 'TKT-2026-0106', 'Mant. Prev. SeÃ±alizaciÃ³n', 'Verificar', 4, NULL, 2, 5, 7, 2, 3, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 19:00:00', '2026-01-30 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(150, 3, 'TKT-2026-0107', 'Procesamiento NÃ³mina', 'Calcular', 11, NULL, 1, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 21:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(151, 3, 'TKT-2026-0108', 'DeclaraciÃ³n PDT', 'SUNAT', 12, NULL, 1, 5, 11, 2, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 19:00:00', '2026-01-18 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(152, 3, 'TKT-2026-0109', 'Proceso SelecciÃ³n', 'Reclutamiento', 13, NULL, 2, 5, 11, 3, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-19 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(153, 3, 'TKT-2026-0110', 'EvaluaciÃ³n', 'Procesar', 11, NULL, 2, 5, 11, 1, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 21:00:00', '2026-01-20 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(154, 3, 'TKT-2026-0111', 'ActualizaciÃ³n Legajos', 'Digitalizar', 12, NULL, 2, 5, 11, 2, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 20:00:00', '2026-01-22 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(155, 3, 'TKT-2026-0112', 'LiquidaciÃ³n', 'Calcular CTS', 13, NULL, 1, 5, 11, 3, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 19:00:00', '2026-01-23 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(156, 3, 'TKT-2026-0113', 'InducciÃ³n', 'CapacitaciÃ³n', 11, NULL, 2, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 18:30:00', '2026-01-24 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(157, 3, 'TKT-2026-0114', 'RenovaciÃ³n', 'Gestionar', 12, NULL, 2, 5, 11, 2, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 20:00:00', '2026-01-25 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(158, 3, 'TKT-2026-0115', 'Proceso Vacaciones', 'Aprobar', 13, NULL, 2, 5, 11, 3, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 17:30:00', '2026-01-26 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(159, 3, 'TKT-2026-0116', 'Gestión Seguros', 'Renovar', 11, NULL, 2, 5, 11, 1, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 19:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(160, 3, 'TKT-2026-0117', 'Capacitación SST', 'Organizar', 12, NULL, 2, 5, 11, 2, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 20:30:00', '2026-01-28 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(159, 3, 'TKT-2026-0116', 'GestiÃ³n Seguros', 'Renovar', 11, NULL, 2, 5, 11, 1, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 19:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(160, 3, 'TKT-2026-0117', 'CapacitaciÃ³n SST', 'Organizar', 12, NULL, 2, 5, 11, 2, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 20:30:00', '2026-01-28 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(161, 3, 'TKT-2026-0118', 'Proceso Cese', 'Gestionar', 13, NULL, 2, 5, 11, 3, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 18:00:00', '2026-01-29 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(162, 3, 'TKT-2026-0119', 'Actualización MOF', 'Revisar', 11, NULL, 2, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(163, 3, 'TKT-2026-0120', 'Compra Equipos', 'Adquisición', 12, NULL, 2, 5, 12, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 22:00:00', '2026-01-18 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(164, 3, 'TKT-2026-0121', 'Cotización', 'Proformas', 13, NULL, 2, 5, 12, 2, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 19:00:00', '2026-01-19 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(162, 3, 'TKT-2026-0119', 'ActualizaciÃ³n MOF', 'Revisar', 11, NULL, 2, 5, 11, 1, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(163, 3, 'TKT-2026-0120', 'Compra Equipos', 'AdquisiciÃ³n', 12, NULL, 2, 5, 12, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 22:00:00', '2026-01-18 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(164, 3, 'TKT-2026-0121', 'CotizaciÃ³n', 'Proformas', 13, NULL, 2, 5, 12, 2, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 19:00:00', '2026-01-19 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(165, 3, 'TKT-2026-0122', 'Orden Compra', 'Emitir', 11, NULL, 2, 5, 12, 3, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 20:00:00', '2026-01-21 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(166, 3, 'TKT-2026-0123', 'Evaluación', 'Calificar', 12, NULL, 2, 5, 12, 1, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:30:00', '2026-01-23 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(167, 3, 'TKT-2026-0124', 'Gestión Stock', 'Inventario', 13, NULL, 2, 5, 12, 2, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 21:00:00', '2026-01-24 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(166, 3, 'TKT-2026-0123', 'EvaluaciÃ³n', 'Calificar', 12, NULL, 2, 5, 12, 1, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:30:00', '2026-01-23 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(167, 3, 'TKT-2026-0124', 'GestiÃ³n Stock', 'Inventario', 13, NULL, 2, 5, 12, 2, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 21:00:00', '2026-01-24 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(168, 3, 'TKT-2026-0125', 'Compra Repuestos', 'Emergencia', 11, NULL, 3, 5, 12, 3, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 17:00:00', '2026-01-26 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(169, 3, 'TKT-2026-0126', 'Negociación', 'Renovar', 12, NULL, 2, 5, 12, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-27 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(169, 3, 'TKT-2026-0126', 'NegociaciÃ³n', 'Renovar', 12, NULL, 2, 5, 12, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-27 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(170, 3, 'TKT-2026-0127', 'Control Calidad', 'Inspeccionar', 13, NULL, 2, 5, 12, 2, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 18:00:00', '2026-01-29 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(171, 3, 'TKT-2026-0128', 'Actualización', 'Revisar', 11, NULL, 2, 5, 12, 3, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 20:30:00', '2026-01-30 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(172, 3, 'TKT-2026-0129', 'Facturación', 'Emitir', 12, NULL, 1, 5, 13, 1, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 20:00:00', '2026-01-17 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(171, 3, 'TKT-2026-0128', 'ActualizaciÃ³n', 'Revisar', 11, NULL, 2, 5, 12, 3, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 20:30:00', '2026-01-30 15:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(172, 3, 'TKT-2026-0129', 'FacturaciÃ³n', 'Emitir', 12, NULL, 1, 5, 13, 1, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 20:00:00', '2026-01-17 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(173, 3, 'TKT-2026-0130', 'Libro Ventas', 'Actualizar', 13, NULL, 2, 5, 13, 2, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 18:00:00', '2026-01-20 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(174, 3, 'TKT-2026-0131', 'Conciliación', 'Cuadrar', 11, NULL, 2, 5, 13, 3, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 19:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(175, 3, 'TKT-2026-0132', 'Declaración IGV', 'PDT 621', 12, NULL, 1, 5, 13, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:00:00', '2026-01-24 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(176, 3, 'TKT-2026-0133', 'Análisis Cuentas', 'Reporte', 13, NULL, 2, 5, 13, 2, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 20:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(177, 3, 'TKT-2026-0134', 'Provisión', 'Registrar', 11, NULL, 2, 5, 13, 3, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 19:00:00', '2026-01-28 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(174, 3, 'TKT-2026-0131', 'ConciliaciÃ³n', 'Cuadrar', 11, NULL, 2, 5, 13, 3, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 19:00:00', '2026-01-22 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(175, 3, 'TKT-2026-0132', 'DeclaraciÃ³n IGV', 'PDT 621', 12, NULL, 1, 5, 13, 1, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 17:00:00', '2026-01-24 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(176, 3, 'TKT-2026-0133', 'AnÃ¡lisis Cuentas', 'Reporte', 13, NULL, 2, 5, 13, 2, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 20:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(177, 3, 'TKT-2026-0134', 'ProvisiÃ³n', 'Registrar', 11, NULL, 2, 5, 13, 3, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 19:00:00', '2026-01-28 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(178, 3, 'TKT-2026-0135', 'Balance', 'Elaborar', 12, NULL, 1, 5, 13, 1, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(179, 4, 'TKT-2026-0136', 'Desarrollo Dashboard', 'Panel', 8, NULL, 2, 5, 8, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 22:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(180, 4, 'TKT-2026-0137', 'Software Radar', 'Actualizar', 9, NULL, 1, 5, 8, 2, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-17 22:00:00', '2026-01-17 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
@@ -1140,37 +1154,37 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(187, 4, 'TKT-2026-0144', 'Soporte MySQL', 'Optimizar', 10, NULL, 2, 5, 8, 3, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 20:00:00', '2026-01-24 14:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(188, 4, 'TKT-2026-0145', 'Desarrollo API', 'Crear', 8, NULL, 2, 5, 8, 1, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 22:00:00', '2026-01-25 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(189, 4, 'TKT-2026-0146', 'Config VPN', 'Acceso', 9, NULL, 3, 5, 8, 2, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 18:00:00', '2026-01-26 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(190, 4, 'TKT-2026-0147', 'Optimización', 'Mejorar', 10, NULL, 1, 5, 8, 3, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 21:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(191, 4, 'TKT-2026-0148', 'Desarrollo Asistencia', 'Biométrico', 8, NULL, 2, 5, 8, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 22:00:00', '2026-01-28 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(190, 4, 'TKT-2026-0147', 'OptimizaciÃ³n', 'Mejorar', 10, NULL, 1, 5, 8, 3, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 21:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(191, 4, 'TKT-2026-0148', 'Desarrollo Asistencia', 'BiomÃ©trico', 8, NULL, 2, 5, 8, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 22:00:00', '2026-01-28 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(192, 4, 'TKT-2026-0149', 'Soporte AD', 'Resolver', 9, NULL, 3, 5, 8, 2, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 21:30:00', '2026-01-28 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(193, 4, 'TKT-2026-0150', 'CI/CD', 'Pipeline', 10, NULL, 2, 5, 8, 3, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 22:00:00', '2026-01-29 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(194, 4, 'TKT-2026-0151', 'Desarrollo BI', 'Tablero', 8, NULL, 2, 5, 8, 1, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(195, 4, 'TKT-2026-0152', 'Interfaz', 'Rediseñar', 9, NULL, 2, 5, 8, 2, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 20:00:00', '2026-01-30 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(195, 4, 'TKT-2026-0152', 'Interfaz', 'RediseÃ±ar', 9, NULL, 2, 5, 8, 2, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 20:00:00', '2026-01-30 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(196, 4, 'TKT-2026-0153', 'Firewall', 'Seguridad', 10, NULL, 3, 5, 8, 3, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 19:00:00', '2026-01-30 16:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(197, 4, 'TKT-2026-0154', 'Reportes', 'Generador', 8, NULL, 2, 5, 8, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 23:00:00', '2026-01-30 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(198, 4, 'TKT-2026-0155', 'Inventario', 'Control', 9, NULL, 2, 5, 9, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 22:00:00', '2026-01-17 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(199, 4, 'TKT-2026-0156', 'Soporte Red', 'VLAN', 10, NULL, 3, 5, 9, 2, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-18 19:00:00', '2026-01-18 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(200, 4, 'TKT-2026-0157', 'App Móvil', 'Android', 8, NULL, 2, 5, 9, 3, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-20 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(200, 4, 'TKT-2026-0157', 'App MÃ³vil', 'Android', 8, NULL, 2, 5, 9, 3, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 22:00:00', '2026-01-20 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(201, 4, 'TKT-2026-0158', 'ERP', 'Resolver', 9, NULL, 3, 5, 9, 1, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-21 19:00:00', '2026-01-21 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(202, 4, 'TKT-2026-0159', 'Backup', 'Resolver', 10, NULL, 3, 5, 9, 2, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 18:00:00', '2026-01-23 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(203, 4, 'TKT-2026-0160', 'Nómina', 'Módulo', 8, NULL, 2, 5, 9, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 22:00:00', '2026-01-24 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(203, 4, 'TKT-2026-0160', 'NÃ³mina', 'MÃ³dulo', 8, NULL, 2, 5, 9, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 22:00:00', '2026-01-24 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(204, 4, 'TKT-2026-0161', 'WiFi', 'Ampliar', 9, NULL, 3, 5, 9, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 19:00:00', '2026-01-25 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(205, 4, 'TKT-2026-0162', 'Portal Web', 'Panel', 10, NULL, 2, 5, 9, 2, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-27 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(206, 4, 'TKT-2026-0163', 'Ubuntu', 'Actualizar', 8, NULL, 2, 5, 9, 3, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 17:00:00', '2026-01-28 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(207, 4, 'TKT-2026-0164', 'SCADA', 'Monitoreo', 9, NULL, 2, 5, 9, 1, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-29 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(208, 4, 'TKT-2026-0165', 'Docker', 'Memoria', 10, NULL, 3, 5, 9, 2, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:00:00', '2026-01-29 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(209, 4, 'TKT-2026-0166', 'Git', 'Gitea', 8, NULL, 2, 5, 9, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 17:00:00', '2026-01-30 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(210, 4, 'TKT-2026-0167', 'Facturación', 'Electrónica', 9, NULL, 2, 5, 9, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(210, 4, 'TKT-2026-0167', 'FacturaciÃ³n', 'ElectrÃ³nica', 9, NULL, 2, 5, 9, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(211, 4, 'TKT-2026-0168', 'DNS', 'Configurar', 10, NULL, 3, 5, 9, 2, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(212, 4, 'TKT-2026-0169', 'GraphQL', 'API', 8, NULL, 2, 5, 9, 3, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 23:30:00', '2026-01-30 20:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(213, 4, 'TKT-2026-0170', 'Helpdesk', 'Sistema', 9, NULL, 1, 5, 10, 1, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-20 22:00:00', '2026-01-17 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(214, 4, 'TKT-2026-0171', 'Nginx', 'Servidor', 10, NULL, 2, 5, 10, 2, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-19 19:00:00', '2026-01-19 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(215, 4, 'TKT-2026-0172', 'WhatsApp', 'Integración', 8, NULL, 2, 5, 10, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 22:00:00', '2026-01-21 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(215, 4, 'TKT-2026-0172', 'WhatsApp', 'IntegraciÃ³n', 8, NULL, 2, 5, 10, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-23 22:00:00', '2026-01-21 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(216, 4, 'TKT-2026-0173', 'Zabbix', 'Alertas', 9, NULL, 2, 5, 10, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-22 20:00:00', '2026-01-22 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(217, 4, 'TKT-2026-0174', 'Backoffice', 'Panel', 10, NULL, 2, 5, 10, 2, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-26 22:00:00', '2026-01-24 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(218, 4, 'TKT-2026-0175', 'SSL', 'Renovar', 8, NULL, 3, 5, 10, 3, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 16:00:00', '2026-01-25 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(219, 4, 'TKT-2026-0176', 'Push', 'Notificaciones', 9, NULL, 2, 5, 10, 1, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 22:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(220, 4, 'TKT-2026-0177', 'Redis', 'Caché', 10, NULL, 2, 5, 10, 2, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 19:00:00', '2026-01-28 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(220, 4, 'TKT-2026-0177', 'Redis', 'CachÃ©', 10, NULL, 2, 5, 10, 2, 5, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 19:00:00', '2026-01-28 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(221, 4, 'TKT-2026-0178', 'OAuth', 'Login', 8, NULL, 2, 5, 10, 3, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-29 21:30:00', '2026-01-29 13:30:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(222, 4, 'TKT-2026-0179', 'K8s', 'Cluster', 9, NULL, 2, 5, 10, 1, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(223, 4, 'TKT-2026-0180', 'Excel', 'Reportes', 10, NULL, 2, 5, 10, 2, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-30 23:00:00', '2026-01-30 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
@@ -1179,18 +1193,18 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(226, 2, 'TKT-2026-0183', 'Mant. Compresor', 'Cambio filtros', 6, NULL, 2, 5, 4, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 21:00:00', '2026-01-24 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(227, 4, 'TKT-2026-0184', 'Desarrollo API', 'Crear endpoints', 8, NULL, 2, 5, 8, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 22:00:00', '2026-01-24 16:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(228, 4, 'TKT-2026-0185', 'Soporte MySQL', 'Optimizar', 9, NULL, 2, 5, 8, 2, 7, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 23:00:00', '2026-01-24 17:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(229, 3, 'TKT-2026-0186', 'Gestión Nómina', 'Calcular', 13, NULL, 1, 5, 11, 3, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 22:00:00', '2026-01-24 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(230, 3, 'TKT-2026-0187', 'Compra Equipos', 'Adquisición', 11, NULL, 2, 5, 12, 1, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 23:00:00', '2026-01-24 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(231, 3, 'TKT-2026-0188', 'Facturación', 'Emitir', 12, NULL, 1, 5, 13, 2, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 00:00:00', '2026-01-24 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(232, 2, 'TKT-2026-0189', 'Mant. UPS', 'Prueba baterías', 7, NULL, 2, 5, 5, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 01:00:00', '2026-01-24 21:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(229, 3, 'TKT-2026-0186', 'GestiÃ³n NÃ³mina', 'Calcular', 13, NULL, 1, 5, 11, 3, 9, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 22:00:00', '2026-01-24 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(230, 3, 'TKT-2026-0187', 'Compra Equipos', 'AdquisiciÃ³n', 11, NULL, 2, 5, 12, 1, 8, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-24 23:00:00', '2026-01-24 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(231, 3, 'TKT-2026-0188', 'FacturaciÃ³n', 'Emitir', 12, NULL, 1, 5, 13, 2, 9, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 00:00:00', '2026-01-24 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(232, 2, 'TKT-2026-0189', 'Mant. UPS', 'Prueba baterÃ­as', 7, NULL, 2, 5, 5, 3, 2, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 01:00:00', '2026-01-24 21:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(233, 4, 'TKT-2026-0190', 'Config VPN', 'Acceso remoto', 10, NULL, 3, 5, 9, 1, 6, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-25 02:00:00', '2026-01-24 22:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(234, 2, 'TKT-2026-0191', 'Mant. Motor', 'Reparar', 4, NULL, 3, 5, 3, 2, 1, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 19:00:00', '2026-01-27 13:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(235, 2, 'TKT-2026-0192', 'Mant. Válvula', 'Reemplazar', 5, NULL, 3, 5, 4, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 20:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(235, 2, 'TKT-2026-0192', 'Mant. VÃ¡lvula', 'Reemplazar', 5, NULL, 3, 5, 4, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 20:00:00', '2026-01-27 14:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(236, 4, 'TKT-2026-0193', 'Desarrollo BI', 'Tablero', 8, NULL, 2, 5, 8, 1, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 21:00:00', '2026-01-27 15:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(237, 4, 'TKT-2026-0194', 'Soporte Red', 'VLAN', 9, NULL, 3, 5, 9, 2, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 22:00:00', '2026-01-27 16:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(238, 3, 'TKT-2026-0195', 'Proceso Selección', 'Reclutamiento', 13, NULL, 2, 5, 11, 3, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 23:00:00', '2026-01-27 17:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(239, 3, 'TKT-2026-0196', 'Cotización', 'Proformas', 11, NULL, 2, 5, 12, 1, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 00:00:00', '2026-01-27 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
-	(240, 3, 'TKT-2026-0197', 'Conciliación', 'Cuadrar cuentas', 12, NULL, 2, 5, 13, 2, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 01:00:00', '2026-01-27 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(238, 3, 'TKT-2026-0195', 'Proceso SelecciÃ³n', 'Reclutamiento', 13, NULL, 2, 5, 11, 3, 8, 5, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-27 23:00:00', '2026-01-27 17:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(239, 3, 'TKT-2026-0196', 'CotizaciÃ³n', 'Proformas', 11, NULL, 2, 5, 12, 1, 9, 6, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 00:00:00', '2026-01-27 18:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
+	(240, 3, 'TKT-2026-0197', 'ConciliaciÃ³n', 'Cuadrar cuentas', 12, NULL, 2, 5, 13, 2, 8, 1, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 01:00:00', '2026-01-27 19:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(241, 2, 'TKT-2026-0198', 'Mant. Generador', 'Cambio aceite', 6, NULL, 2, 5, 5, 3, 2, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 02:00:00', '2026-01-27 20:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(242, 4, 'TKT-2026-0199', 'Desarrollo Portal', 'Panel', 10, NULL, 2, 5, 10, 1, 6, 3, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 03:00:00', '2026-01-27 21:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
 	(243, 4, 'TKT-2026-0200', 'Helpdesk', 'Sistema', 8, NULL, 1, 5, 10, 2, 7, 4, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-28 04:00:00', '2026-01-27 22:00:00', '2026-02-12 22:39:57', NULL, NULL, NULL),
@@ -1198,10 +1212,10 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(245, 2, 'TKT-2026-0202', 'Mant. Sensor', 'Reemplazar', 5, NULL, 3, 2, 4, 1, 3, 6, NULL, NULL, NULL, 50, 0, NULL, NULL, NULL, '2026-01-30 18:00:00', '2026-01-30 14:00:00', '2026-01-31 22:23:44', NULL, NULL, NULL),
 	(246, 4, 'TKT-2026-0203', 'Desarrollo Reportes', 'Generador', 9, NULL, 2, 2, 8, 2, 7, 1, NULL, NULL, NULL, 50, 0, NULL, NULL, NULL, '2026-01-30 19:00:00', '2026-01-30 15:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
 	(247, 4, 'TKT-2026-0204', 'Soporte Docker', 'Memoria', 10, NULL, 3, 2, 9, 3, 5, 2, NULL, NULL, NULL, 50, 0, NULL, NULL, NULL, '2026-01-30 20:00:00', '2026-01-30 16:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
-	(248, 3, 'TKT-2026-0205', 'Actualización MOF', 'Revisar', 13, NULL, 2, 2, 11, 1, 9, 3, NULL, NULL, NULL, 30, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 17:00:00', '2026-02-12 22:10:16', NULL, NULL, NULL),
-	(249, 3, 'TKT-2026-0206', 'Actualización', 'Revisar', 11, NULL, 2, 2, 12, 2, 8, 4, NULL, NULL, NULL, 30, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 18:00:00', '2026-02-12 22:10:16', NULL, NULL, NULL),
+	(248, 3, 'TKT-2026-0205', 'ActualizaciÃ³n MOF', 'Revisar', 13, NULL, 2, 2, 11, 1, 9, 3, NULL, NULL, NULL, 30, 0, NULL, NULL, NULL, '2026-01-30 21:00:00', '2026-01-30 17:00:00', '2026-02-12 22:10:16', NULL, NULL, NULL),
+	(249, 3, 'TKT-2026-0206', 'ActualizaciÃ³n', 'Revisar', 11, NULL, 2, 2, 12, 2, 8, 4, NULL, NULL, NULL, 30, 0, NULL, NULL, NULL, '2026-01-30 22:00:00', '2026-01-30 18:00:00', '2026-02-12 22:10:16', NULL, NULL, NULL),
 	(250, 3, 'TKT-2026-0207', 'Balance', 'Elaborar', 12, NULL, 1, 4, 13, 3, 9, 5, NULL, NULL, NULL, 100, 0, NULL, NULL, NULL, '2026-01-30 23:00:00', '2026-01-30 19:00:00', '2026-02-01 21:50:53', NULL, NULL, NULL),
-	(251, 2, 'TKT-2026-0208', 'Mant. Señalización', 'Verificar', 6, NULL, 2, 4, 7, 1, 3, 6, NULL, NULL, NULL, 100, 0, NULL, NULL, NULL, '2026-01-31 00:00:00', '2026-01-30 20:00:00', '2026-01-31 22:23:44', NULL, NULL, NULL),
+	(251, 2, 'TKT-2026-0208', 'Mant. SeÃ±alizaciÃ³n', 'Verificar', 6, NULL, 2, 4, 7, 1, 3, 6, NULL, NULL, NULL, 100, 0, NULL, NULL, NULL, '2026-01-31 00:00:00', '2026-01-30 20:00:00', '2026-01-31 22:23:44', NULL, NULL, NULL),
 	(252, 4, 'TKT-2026-0209', 'Desarrollo Excel', 'Reportes', 8, NULL, 2, 4, 10, 2, 7, 1, NULL, NULL, NULL, 100, 0, NULL, NULL, NULL, '2026-01-31 01:00:00', '2026-01-30 21:00:00', '2026-02-02 04:07:57', NULL, NULL, NULL),
 	(253, 4, 'TKT-2026-0210', 'Config K8s', 'Cluster', 9, NULL, 2, 2, 9, 3, 5, 2, NULL, NULL, NULL, 90, 0, NULL, NULL, NULL, '2026-01-31 02:00:00', '2026-01-30 22:00:00', '2026-02-15 01:34:48', '', '', ''),
 	(254, 4, 'TKT-2026-0211', 'Prueba Software Radar MSR - Jack 1', 'Ticket de prueba', 8, NULL, 2, 4, 8, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '2026-01-25 17:00:00', '2026-01-25 15:00:00', '2026-02-01 03:23:12', NULL, NULL, NULL),
@@ -1222,7 +1236,7 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(269, 2, 'TKT-2026-0226', 'Software Radar MSR - Daniel 1', 'Ticket de prueba', 6, NULL, 2, 4, 6, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '2026-01-25 17:00:00', '2026-01-25 15:00:00', '2026-02-01 03:31:48', NULL, NULL, NULL),
 	(270, 2, 'TKT-2026-0227', 'Software Radar MSR - Daniel 2', 'Ticket de prueba', 6, NULL, 2, 5, 6, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '2026-01-26 18:00:00', '2026-01-26 16:00:00', '2026-02-01 03:31:48', NULL, NULL, NULL),
 	(271, 2, 'TKT-2026-0228', 'Software Radar MSR - Luis 1', 'Ticket de prueba', 7, NULL, 2, 4, 7, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '2026-01-27 19:00:00', '2026-01-27 17:00:00', '2026-02-01 03:31:48', NULL, NULL, NULL),
-	(272, 2, 'TKN-ST-102', 'Prueba nuevo formato código', 'Ticket de prueba para validar el nuevo formato TKN-XX-##', 1, NULL, 2, 1, 4, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-02-01 13:09:16', '2026-02-18 21:32:54', NULL, NULL, NULL),
+	(272, 2, 'TKN-ST-102', 'Prueba nuevo formato cÃ³digo', 'Ticket de prueba para validar el nuevo formato TKN-XX-##', 1, NULL, 2, 1, 4, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, '2026-02-01 13:09:16', '2026-02-18 21:32:54', NULL, NULL, NULL),
 	(281, 2, 'TKN-ST-103', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 1, NULL, 2, 4, 1, 3, 7, 3, 3, 8, 2, 100, 0, 1, '2026-02-14 13:16:40', NULL, '2026-02-14 18:16:32', '2026-02-10 16:23:35', '2026-02-14 18:16:40', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
 	(282, 2, 'TKN-ST-104', 'Problemas con Radar MSR237', 'clonsa_ssoma@clonsa.com', 1, NULL, 3, 4, 3, 2, 4, 1, 5, 4, 2, 100, 0, 1, '2026-02-14 13:03:07', NULL, '2026-02-14 17:28:20', '2026-02-10 16:35:02', '2026-02-14 18:03:07', 'Alex L', 'jtunoquesa@unprg.edu.pe', '9212546263'),
 	(283, 2, 'TKN-ST-105', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 1, NULL, 2, 4, 3, 2, 12, 3, 9, 1, 4, 100, 0, 1, '2026-02-12 18:22:52', NULL, '2026-02-12 23:22:37', '2026-02-11 00:29:24', '2026-02-12 23:22:52', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
@@ -1233,7 +1247,9 @@ INSERT INTO `tickets` (`id`, `departamento_id`, `codigo`, `titulo`, `descripcion
 	(289, 2, 'TKN-ST-108', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 1, NULL, 2, 4, 7, 2, 11, 3, 8, 5, 1, 100, 0, 1, '2026-02-12 18:07:48', NULL, '2026-02-12 23:03:18', '2026-02-12 22:12:54', '2026-02-12 23:07:48', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
 	(290, 2, 'TKN-ST-109', 'Ticket de prueba Codex 20260214_210254', 'Ticket creado de prueba para validacion visual en modulo.', 1, NULL, 2, 4, 1, 1, 1, NULL, NULL, NULL, NULL, 100, 0, 1, '2026-02-18 16:30:41', NULL, '2026-02-18 21:30:33', '2026-02-15 02:02:54', '2026-02-18 21:30:41', NULL, NULL, NULL),
 	(291, 2, 'TKN-ST-110', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 4, 5, 4, 11, 3, 4, 5, 5, 100, 0, 1, '2026-02-20 14:19:59', NULL, '2026-02-20 19:19:51', '2026-02-19 23:48:48', '2026-02-20 19:19:59', 'Alex L.', 'jtunoquesa@unprg.edu.pe', '9212546263'),
-	(292, 2, 'TKN-ST-111', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 2, 4, 1, 4, 5, 8, 2, 1, 50, 0, NULL, NULL, NULL, NULL, '2026-02-20 16:29:01', '2026-02-20 20:13:10', '', '', '');
+	(292, 2, 'TKN-ST-111', 'Problemas con Radar MSR237', 'Problemas con Radar MSR237', 3, NULL, 3, 2, 4, 1, 4, 5, 8, 2, 1, 50, 0, NULL, NULL, NULL, NULL, '2026-02-20 16:29:01', '2026-02-20 20:13:10', '', '', ''),
+	(293, 2, 'TKN-ST-112', 'ReparaciÃ³n de generador 237 ', 'ReparaciÃ³n de generador 237 ', 4, NULL, 3, 4, 4, 1, 10, 1, 5, 12, 3, 100, 0, 3, '2026-02-24 17:32:48', NULL, '2026-02-24 22:32:25', '2026-02-24 22:27:50', '2026-02-24 22:32:48', 'fELPU', 'FELPU@CLONSA.COM', '907289148'),
+	(294, 2, 'TKN-ST-113', 'ReparaciÃ³n de generador 237 ', 'ReparaciÃ³n de generador 237 ', 4, NULL, 3, 4, 4, 1, 11, 1, 5, 12, 3, 100, 0, 3, '2026-02-24 17:41:42', NULL, '2026-02-24 22:41:31', '2026-02-24 22:33:58', '2026-02-24 22:41:42', 'fELPU', 'FELPU@CLONSA.COM', '907289148');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_archivos
 CREATE TABLE IF NOT EXISTS `ticket_archivos` (
@@ -1251,19 +1267,21 @@ CREATE TABLE IF NOT EXISTS `ticket_archivos` (
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `ticket_archivos_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_archivos_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_archivos: ~9 rows (aproximadamente)
 INSERT INTO `ticket_archivos` (`id`, `ticket_id`, `nombre_original`, `nombre_archivo`, `ruta`, `tamano`, `tipo_mime`, `usuario_id`, `created_at`) VALUES
-	(10, 281, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770740615_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-103/1770740615_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:23:35'),
-	(11, 281, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770740615_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-103/1770740615_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:23:35'),
-	(12, 282, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770741302_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-104/1770741302_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:35:02'),
-	(13, 282, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770741302_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-104/1770741302_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:35:02'),
-	(15, 283, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770769764_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-105/1770769764_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:29:24'),
-	(18, 285, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
-	(19, 285, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
-	(20, 288, 'Requerimientos Técnicos - MSR Connect 2025 Rev06.pdf', '1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-IT-75/1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 01:15:39'),
-	(21, 289, 'me.txt', '1770934374_0_me.txt', 'uploads/tickets/TKN-ST-108/1770934374_0_me.txt', 0, 'text/plain', 1, '2026-02-12 22:12:54');
+	(10, 281, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770740615_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-103/1770740615_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:23:35'),
+	(11, 281, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770740615_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-103/1770740615_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:23:35'),
+	(12, 282, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770741302_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-104/1770741302_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:35:02'),
+	(13, 282, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770741302_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-104/1770741302_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-10 16:35:02'),
+	(15, 283, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770769764_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-105/1770769764_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:29:24'),
+	(18, 285, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
+	(19, 285, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-ST-107/1770771034_1_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 00:50:34'),
+	(20, 288, 'Requerimientos TÃ©cnicos - MSR Connect 2025 Rev06.pdf', '1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 'uploads/tickets/TKN-IT-75/1770772539_0_Requerimientos_T__cnicos_-_MSR_Connect_2025_Rev06.pdf', 1341830, 'application/pdf', 1, '2026-02-11 01:15:39'),
+	(21, 289, 'me.txt', '1770934374_0_me.txt', 'uploads/tickets/TKN-ST-108/1770934374_0_me.txt', 0, 'text/plain', 1, '2026-02-12 22:12:54'),
+	(22, 293, 'WhatsApp Image 2026-02-20 at 10.55.30 AM.jpeg', '1771972070_0_WhatsApp_Image_2026-02-20_at_10.55.30_AM.jpeg', 'uploads/tickets/TKN-ST-112/1771972070_0_WhatsApp_Image_2026-02-20_at_10.55.30_AM.jpeg', 364296, 'image/jpeg', 4, '2026-02-24 22:27:50'),
+	(23, 294, 'WhatsApp Image 2026-02-20 at 4.24.16 PM.jpeg', '1771972438_0_WhatsApp_Image_2026-02-20_at_4.24.16_PM.jpeg', 'uploads/tickets/TKN-ST-113/1771972438_0_WhatsApp_Image_2026-02-20_at_4.24.16_PM.jpeg', 57806, 'image/jpeg', 4, '2026-02-24 22:33:58');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_comentarios
 CREATE TABLE IF NOT EXISTS `ticket_comentarios` (
@@ -1280,65 +1298,76 @@ CREATE TABLE IF NOT EXISTS `ticket_comentarios` (
   KEY `idx_created_at` (`created_at`),
   CONSTRAINT `ticket_comentarios_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_comentarios_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla helpdesk_clonsa.ticket_comentarios: ~53 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk_clonsa.ticket_comentarios: ~60 rows (aproximadamente)
 INSERT INTO `ticket_comentarios` (`id`, `ticket_id`, `usuario_id`, `mensaje`, `tipo`, `created_at`, `updated_at`) VALUES
-	(24, 289, 1, '✅ **TICKET APROBADO**\nAprobado. Sin Observaciones', 'nota_interna', '2026-02-12 23:07:48', '2026-02-12 23:07:48'),
+	(24, 289, 1, 'âœ… **TICKET APROBADO**\nAprobado. Sin Observaciones', 'nota_interna', '2026-02-12 23:07:48', '2026-02-12 23:07:48'),
 	(26, 283, 1, 'h', 'comentario', '2026-02-12 23:21:32', '2026-02-12 23:21:32'),
 	(28, 283, 1, 'hhjj', 'comentario', '2026-02-12 23:22:01', '2026-02-12 23:22:01'),
 	(29, 283, 1, 'iyt5t', 'comentario', '2026-02-12 23:22:04', '2026-02-12 23:22:04'),
 	(30, 283, 1, 'tyu', 'comentario', '2026-02-12 23:22:05', '2026-02-12 23:22:05'),
 	(31, 283, 1, 'uuu', 'comentario', '2026-02-12 23:22:06', '2026-02-12 23:22:06'),
-	(32, 283, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-12 23:22:52', '2026-02-12 23:22:52'),
+	(32, 283, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-12 23:22:52', '2026-02-12 23:22:52'),
 	(33, 282, 1, 'TEST1', 'comentario', '2026-02-14 17:19:38', '2026-02-14 17:19:38'),
 	(35, 282, 1, 'TEST2', 'comentario', '2026-02-14 17:19:45', '2026-02-14 17:19:45'),
 	(36, 282, 1, 'TEST3', 'comentario', '2026-02-14 17:19:49', '2026-02-14 17:19:49'),
-	(37, 282, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** Observacion de solución', 'nota_interna', '2026-02-14 17:21:38', '2026-02-14 17:21:38'),
-	(38, 288, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** Rechazado', 'nota_interna', '2026-02-14 17:40:30', '2026-02-14 17:40:30'),
-	(39, 282, 1, '✅ **TICKET APROBADO**\nTE', 'nota_interna', '2026-02-14 18:03:07', '2026-02-14 18:03:07'),
-	(41, 287, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** 1234', 'nota_interna', '2026-02-14 18:08:12', '2026-02-14 18:08:12'),
-	(42, 286, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-14 18:16:23', '2026-02-14 18:16:23'),
-	(43, 281, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-14 18:16:40', '2026-02-14 18:16:40'),
-	(44, 285, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** 1', 'nota_interna', '2026-02-14 18:16:57', '2026-02-14 18:16:57'),
+	(37, 282, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** Observacion de soluciÃ³n', 'nota_interna', '2026-02-14 17:21:38', '2026-02-14 17:21:38'),
+	(38, 288, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** Rechazado', 'nota_interna', '2026-02-14 17:40:30', '2026-02-14 17:40:30'),
+	(39, 282, 1, 'âœ… **TICKET APROBADO**\nTE', 'nota_interna', '2026-02-14 18:03:07', '2026-02-14 18:03:07'),
+	(41, 287, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** 1234', 'nota_interna', '2026-02-14 18:08:12', '2026-02-14 18:08:12'),
+	(42, 286, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-14 18:16:23', '2026-02-14 18:16:23'),
+	(43, 281, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-14 18:16:40', '2026-02-14 18:16:40'),
+	(44, 285, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** 1', 'nota_interna', '2026-02-14 18:16:57', '2026-02-14 18:16:57'),
 	(45, 272, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nMotivo: Vacaciones', 'nota_interna', '2026-02-14 18:33:40', '2026-02-14 18:33:40'),
 	(46, 253, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.', 'nota_interna', '2026-02-14 18:37:21', '2026-02-14 18:37:21'),
 	(47, 272, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.', 'nota_interna', '2026-02-14 18:42:19', '2026-02-14 18:42:19'),
-	(49, 288, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:22:46', '2026-02-15 01:22:46'),
-	(50, 287, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:24:48', '2026-02-15 01:24:48'),
-	(51, 285, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:26:30', '2026-02-15 01:26:30'),
-	(52, 253, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Jack Tuñoque S.\nA: Carlos Medina', 'nota_interna', '2026-02-15 01:32:36', '2026-02-15 01:32:36'),
+	(49, 288, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:22:46', '2026-02-15 01:22:46'),
+	(50, 287, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:24:48', '2026-02-15 01:24:48'),
+	(51, 285, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-15 01:26:30', '2026-02-15 01:26:30'),
+	(52, 253, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Jack TuÃ±oque S.\nA: Carlos Medina', 'nota_interna', '2026-02-15 01:32:36', '2026-02-15 01:32:36'),
 	(53, 253, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Carlos Medina\nA: Richard Arias', 'nota_interna', '2026-02-15 01:34:48', '2026-02-15 01:34:48'),
 	(54, 290, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Administrador General\nMotivo: Transferencia de prueba para validar modulo Asignados a Mi', 'nota_interna', '2026-02-15 02:04:09', '2026-02-15 02:04:09'),
 	(55, 290, 1, 'AVANCE 1# Se reviso el radar msr237', 'comentario', '2026-02-18 21:28:52', '2026-02-18 21:28:52'),
-	(56, 290, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** porque', 'nota_interna', '2026-02-18 21:30:07', '2026-02-18 21:30:07'),
+	(56, 290, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** porque', 'nota_interna', '2026-02-18 21:30:07', '2026-02-18 21:30:07'),
 	(57, 290, 1, 'nuevamente solucionado', 'comentario', '2026-02-18 21:30:30', '2026-02-18 21:30:30'),
-	(58, 290, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-18 21:30:41', '2026-02-18 21:30:41'),
-	(59, 272, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: Iván Rodriguez\nMotivo: prueba', 'nota_interna', '2026-02-18 21:32:54', '2026-02-18 21:32:54'),
+	(58, 290, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-18 21:30:41', '2026-02-18 21:30:41'),
+	(59, 272, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: IvÃ¡n Rodriguez\nMotivo: prueba', 'nota_interna', '2026-02-18 21:32:54', '2026-02-18 21:32:54'),
 	(60, 244, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Fernando Quispe', 'nota_interna', '2026-02-20 00:01:22', '2026-02-20 00:01:22'),
 	(61, 101, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Daniel Lazarte', 'nota_interna', '2026-02-20 00:02:00', '2026-02-20 00:02:00'),
-	(62, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 00:07:20', '2026-02-20 00:07:20'),
+	(62, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: IvÃ¡n Rodriguez', 'nota_interna', '2026-02-20 00:07:20', '2026-02-20 00:07:20'),
 	(63, 291, 4, 'SOLICITUD DE TRANSFERENCIA\nUsuario solicita transferir ticket a otro responsable.', 'nota_interna', '2026-02-20 00:08:49', '2026-02-20 00:08:49'),
 	(64, 291, 3, 'SOLICITUD DE TRANSFERENCIA RECHAZADA\nSolicitud rechazada por Jefe/Administrador.', 'nota_interna', '2026-02-20 13:47:58', '2026-02-20 13:47:58'),
-	(65, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Fernando Quispe', 'nota_interna', '2026-02-20 13:51:08', '2026-02-20 13:51:08'),
+	(65, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: IvÃ¡n Rodriguez\nA: Fernando Quispe', 'nota_interna', '2026-02-20 13:51:08', '2026-02-20 13:51:08'),
 	(66, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: Daniel Lazarte', 'nota_interna', '2026-02-20 14:38:16', '2026-02-20 14:38:16'),
 	(67, 291, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Daniel Lazarte\nA: Fernando Quispe', 'nota_interna', '2026-02-20 14:38:23', '2026-02-20 14:38:23'),
 	(68, 292, 4, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-111 al responsable "Carlos Medina".', 'nota_interna', '2026-02-20 16:41:43', '2026-02-20 16:41:43'),
-	(69, 292, 8, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Carlos Medina', 'nota_interna', '2026-02-20 16:43:14', '2026-02-20 16:43:14'),
+	(69, 292, 8, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: IvÃ¡n Rodriguez\nA: Carlos Medina', 'nota_interna', '2026-02-20 16:43:14', '2026-02-20 16:43:14'),
 	(70, 292, 1, 'Test1', 'comentario', '2026-02-20 19:18:30', '2026-02-20 19:18:30'),
-	(71, 291, 1, '❌ **TICKET RECHAZADO**\n**Motivo:** Test', 'nota_interna', '2026-02-20 19:19:36', '2026-02-20 19:19:36'),
-	(72, 291, 1, '✅ **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-20 19:19:59', '2026-02-20 19:19:59'),
+	(71, 291, 1, 'âŒ **TICKET RECHAZADO**\n**Motivo:** Test', 'nota_interna', '2026-02-20 19:19:36', '2026-02-20 19:19:36'),
+	(72, 291, 1, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-20 19:19:59', '2026-02-20 19:19:59'),
 	(73, 292, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Carlos Medina\nA: Fernando Quispe', 'nota_interna', '2026-02-20 19:20:44', '2026-02-20 19:20:44'),
-	(74, 292, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 19:30:52', '2026-02-20 19:30:52'),
-	(75, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Luis Ruiz', 'nota_interna', '2026-02-20 19:56:32', '2026-02-20 19:56:32'),
+	(74, 292, 1, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Fernando Quispe\nA: IvÃ¡n Rodriguez', 'nota_interna', '2026-02-20 19:30:52', '2026-02-20 19:30:52'),
+	(75, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: IvÃ¡n Rodriguez\nA: Luis Ruiz', 'nota_interna', '2026-02-20 19:56:32', '2026-02-20 19:56:32'),
 	(76, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Luis Ruiz\nA: Fernando Quispe', 'nota_interna', '2026-02-20 19:56:41', '2026-02-20 19:56:41'),
 	(77, 292, 5, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-111 al responsable "Daniel Lazarte".', 'nota_interna', '2026-02-20 19:57:16', '2026-02-20 19:57:16'),
 	(78, 292, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: Fernando Quispe\nA: Daniel Lazarte', 'nota_interna', '2026-02-20 19:57:26', '2026-02-20 19:57:26'),
 	(79, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Daniel Lazarte\nA: Luis Ruiz', 'nota_interna', '2026-02-20 20:09:51', '2026-02-20 20:09:51'),
-	(80, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Luis Ruiz\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 20:10:11', '2026-02-20 20:10:11'),
+	(80, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Luis Ruiz\nA: IvÃ¡n Rodriguez', 'nota_interna', '2026-02-20 20:10:11', '2026-02-20 20:10:11'),
 	(81, 292, 4, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-111 al responsable "Amador Contreras L.".', 'nota_interna', '2026-02-20 20:10:32', '2026-02-20 20:10:32'),
-	(82, 292, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: Iván Rodriguez\nA: Amador Contreras L.', 'nota_interna', '2026-02-20 20:10:41', '2026-02-20 20:10:41'),
-	(83, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: Iván Rodriguez', 'nota_interna', '2026-02-20 20:13:10', '2026-02-20 20:13:10');
+	(82, 292, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: IvÃ¡n Rodriguez\nA: Amador Contreras L.', 'nota_interna', '2026-02-20 20:10:41', '2026-02-20 20:10:41'),
+	(83, 292, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Amador Contreras L.\nA: IvÃ¡n Rodriguez', 'nota_interna', '2026-02-20 20:13:10', '2026-02-20 20:13:10'),
+	(85, 293, 4, 'revisiÃ³n de generador', 'comentario', '2026-02-24 22:29:44', '2026-02-24 22:29:44'),
+	(86, 293, 3, 'Hola Carlitos', 'comentario', '2026-02-24 22:30:08', '2026-02-24 22:30:08'),
+	(87, 293, 4, 'solucionado', 'comentario', '2026-02-24 22:31:06', '2026-02-24 22:31:06'),
+	(88, 293, 3, 'âŒ **TICKET RECHAZADO**\n**Motivo:** Especial', 'nota_interna', '2026-02-24 22:31:47', '2026-02-24 22:31:47'),
+	(89, 293, 4, 'solucionado x2', 'comentario', '2026-02-24 22:32:19', '2026-02-24 22:32:19'),
+	(90, 293, 3, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-24 22:32:48', '2026-02-24 22:32:48'),
+	(91, 294, 4, 'avanzando', 'comentario', '2026-02-24 22:34:16', '2026-02-24 22:34:16'),
+	(92, 294, 4, 'SOLICITUD DE TRANSFERENCIA\nEstimado Amador Contreras L., se solicita transferir el ticket TKN-ST-113 al responsable "Daniel Lazarte".', 'nota_interna', '2026-02-24 22:38:52', '2026-02-24 22:38:52'),
+	(93, 294, 3, 'TICKET TRANSFERIDO\nTransferencia aprobada por Jefe/Administrador.\nDe: IvÃ¡n Rodriguez\nA: Daniel Lazarte', 'nota_interna', '2026-02-24 22:39:34', '2026-02-24 22:39:34'),
+	(94, 294, 3, 'TICKET TRANSFERIDO\nTransferencia directa ejecutada por Jefe/Administrador.\nDe: Daniel Lazarte\nA: IvÃ¡n Rodriguez', 'nota_interna', '2026-02-24 22:41:19', '2026-02-24 22:41:19'),
+	(95, 294, 3, 'âœ… **TICKET APROBADO**\nEl cierre del ticket ha sido aprobado.', 'nota_interna', '2026-02-24 22:41:42', '2026-02-24 22:41:42');
 
 -- Volcando estructura para tabla helpdesk_clonsa.ticket_contadores
 CREATE TABLE IF NOT EXISTS `ticket_contadores` (
@@ -1354,7 +1383,7 @@ CREATE TABLE IF NOT EXISTS `ticket_contadores` (
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_contadores: ~4 rows (aproximadamente)
 INSERT INTO `ticket_contadores` (`id`, `departamento_id`, `ultimo_numero`, `prefijo`) VALUES
 	(1, 1, 18, 'TKN'),
-	(2, 2, 111, 'TKN'),
+	(2, 2, 113, 'TKN'),
 	(3, 4, 75, 'TKN'),
 	(4, 3, 39, 'TKN');
 
@@ -1376,7 +1405,7 @@ CREATE TABLE IF NOT EXISTS `ticket_transferencias` (
   KEY `idx_solicitado_por` (`solicitado_por`),
   KEY `idx_usuario_destino` (`usuario_destino`),
   KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.ticket_transferencias: ~24 rows (aproximadamente)
 INSERT INTO `ticket_transferencias` (`id`, `ticket_id`, `usuario_origen`, `usuario_destino`, `solicitado_por`, `motivo`, `estado`, `aprobado_por`, `comentario_aprobacion`, `created_at`, `updated_at`) VALUES
@@ -1403,7 +1432,9 @@ INSERT INTO `ticket_transferencias` (`id`, `ticket_id`, `usuario_origen`, `usuar
 	(21, 292, 6, 7, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:09:51', '2026-02-20 20:09:51'),
 	(22, 292, 7, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:10:11', '2026-02-20 20:10:11'),
 	(23, 292, 4, 3, 4, NULL, 'aprobada', 3, 'Solicitud aprobada', '2026-02-20 20:10:32', '2026-02-20 20:10:41'),
-	(24, 292, 3, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:13:10', '2026-02-20 20:13:10');
+	(24, 292, 3, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-20 20:13:10', '2026-02-20 20:13:10'),
+	(25, 294, 4, 6, 4, NULL, 'aprobada', 3, 'Solicitud aprobada', '2026-02-24 22:38:52', '2026-02-24 22:39:34'),
+	(26, 294, 6, 4, 3, NULL, 'aprobada', 3, 'Transferencia directa de Jefe/Administrador', '2026-02-24 22:41:19', '2026-02-24 22:41:19');
 
 -- Volcando estructura para tabla helpdesk_clonsa.tipos_falla
 CREATE TABLE IF NOT EXISTS `tipos_falla` (
@@ -1420,18 +1451,18 @@ CREATE TABLE IF NOT EXISTS `tipos_falla` (
 
 -- Volcando datos para la tabla helpdesk_clonsa.tipos_falla: ~12 rows (aproximadamente)
 INSERT INTO `tipos_falla` (`id`, `nombre`, `descripcion`, `icono`, `activo`, `created_at`, `departamento_id`) VALUES
-	(1, 'Hardware', 'Fallas físicas', 'mdi-memory', 1, '2026-01-23 16:13:59', 2),
+	(1, 'Hardware', 'Fallas fÃ­sicas', 'mdi-memory', 1, '2026-01-23 16:13:59', 2),
 	(2, 'Software', 'Fallas de software', 'mdi-application', 1, '2026-01-23 16:13:59', 2),
-	(3, 'Energía', 'Problemas eléctricos', 'mdi-flash', 1, '2026-01-23 16:13:59', 2),
-	(4, 'Comunicación', 'Problemas de red', 'mdi-wifi-off', 1, '2026-01-23 16:13:59', 2),
-	(5, 'Configuración', 'Errores de config', 'mdi-cog', 1, '2026-01-23 16:13:59', 2),
+	(3, 'EnergÃ­a', 'Problemas elÃ©ctricos', 'mdi-flash', 1, '2026-01-23 16:13:59', 2),
+	(4, 'ComunicaciÃ³n', 'Problemas de red', 'mdi-wifi-off', 1, '2026-01-23 16:13:59', 2),
+	(5, 'ConfiguraciÃ³n', 'Errores de config', 'mdi-cog', 1, '2026-01-23 16:13:59', 2),
 	(6, 'Usuario', 'Error de usuario', 'mdi-account-alert', 1, '2026-01-23 16:13:59', 2),
 	(7, 'Bug de Sistema', 'Error o bug en el sistema', NULL, 1, '2026-02-11 00:02:23', 4),
-	(8, 'Error de Integración', 'Falla en integración de sistemas', NULL, 1, '2026-02-11 00:02:23', 4),
+	(8, 'Error de IntegraciÃ³n', 'Falla en integraciÃ³n de sistemas', NULL, 1, '2026-02-11 00:02:23', 4),
 	(9, 'Problema de Red', 'Problemas de conectividad de red', NULL, 1, '2026-02-11 00:02:23', 4),
-	(10, 'Error de Facturación', 'Error en proceso de facturación', NULL, 1, '2026-02-11 00:02:23', 3),
+	(10, 'Error de FacturaciÃ³n', 'Error en proceso de facturaciÃ³n', NULL, 1, '2026-02-11 00:02:23', 3),
 	(11, 'Documento Extraviado', 'Documento perdido o extraviado', NULL, 1, '2026-02-11 00:02:23', 3),
-	(12, 'Error de Registro', 'Error en registro de información', NULL, 1, '2026-02-11 00:02:23', 3);
+	(12, 'Error de Registro', 'Error en registro de informaciÃ³n', NULL, 1, '2026-02-11 00:02:23', 3);
 
 -- Volcando estructura para tabla helpdesk_clonsa.ubicaciones
 CREATE TABLE IF NOT EXISTS `ubicaciones` (
@@ -1450,14 +1481,14 @@ INSERT INTO `ubicaciones` (`id`, `nombre`, `descripcion`, `activo`, `created_at`
 	(1, 'UM Bambas', 'Unidad Minera Las Bambas', 1, '2026-01-23 16:13:59', 2),
 	(2, 'UM Yanacocha', 'Unidad Minera Yanacocha', 1, '2026-01-23 16:13:59', 2),
 	(3, 'Oficina Principal', 'Oficina central', 1, '2026-01-23 16:13:59', 2),
-	(4, 'Almacén', 'Almacén', 1, '2026-01-23 16:13:59', 2),
+	(4, 'AlmacÃ©n', 'AlmacÃ©n', 1, '2026-01-23 16:13:59', 2),
 	(5, 'Cuajone', 'Unidad Minera Cuajone', 1, '2026-02-10 04:10:47', 2),
 	(6, 'Chinalco', 'Unidad Minera Chinalco', 1, '2026-02-10 04:10:47', 2),
 	(7, 'Yanacocha', 'Unidad Minera Yanacocha', 1, '2026-02-10 04:10:47', 2),
 	(8, 'Coimolache', 'Unidad Minera Coimolache', 1, '2026-02-10 04:10:47', 2),
 	(9, 'Antapaccay', 'Unidad Minera Antapaccay', 1, '2026-02-10 04:10:47', 2),
 	(10, 'Oficina Central Lima', 'Oficina principal en Lima', 1, '2026-02-11 00:02:23', 3),
-	(11, 'Oficina Contabilidad', 'Área de contabilidad', 1, '2026-02-11 00:02:23', 3),
+	(11, 'Oficina Contabilidad', 'Ãrea de contabilidad', 1, '2026-02-11 00:02:23', 3),
 	(12, 'Archivo Central', 'Archivo de documentos', 1, '2026-02-11 00:02:23', 3),
 	(13, 'Data Center Principal', 'Centro de datos principal', 1, '2026-02-11 00:02:23', 4),
 	(14, 'Oficina IT Lima', 'Oficina de IT en Lima', 1, '2026-02-11 00:02:23', 4),
@@ -1480,6 +1511,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `reset_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `recibir_notificaciones_email` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
@@ -1494,22 +1526,22 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla helpdesk_clonsa.usuarios: ~15 rows (aproximadamente)
-INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `nombre_completo`, `telefono`, `rol_id`, `departamento_id`, `area_id`, `avatar`, `activo`, `ultimo_acceso`, `reset_token`, `reset_token_expires`, `created_at`) VALUES
-	(1, 'admin', 'admin@clonsa.pe', '$2y$12$3QqyOXkbm1KfUMH6rnIkgOw9pvFtQZ9DUqm3.GbY2DQhFSjBr3tGm', 'Administrador General', NULL, 1, 1, NULL, 'default-avatar.png', 1, '2026-02-20 19:30:19', '748592', '2026-01-23 21:16:36', '2026-01-23 16:13:59'),
-	(3, 'acontreras', 'acontreras@clonsa.com', '$2y$12$b77o8VBYZ0.PmC84/wqdC.3686u8IkEuu1J88pPXVle/zi6qm88kq', 'Amador Contreras L.', NULL, 2, 2, NULL, 'default-avatar.png', 1, '2026-02-20 21:15:03', NULL, NULL, '2026-01-25 23:18:44'),
-	(4, 'irodriguez', 'irodriguez@clonsa.com', '$2y$12$NSSbSR7xfJ0v5/Jk51RaH.J63zlU1O5JlCZoJf7RsnVW0OuDYiQ7S', 'Iván Rodriguez', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-22 03:00:09', NULL, NULL, '2026-01-25 23:18:44'),
-	(5, 'fquispe', 'fquispe@clonsa.com', '$2y$12$U4MJ3K.BPfEOmB5nEhPSWeDSEEioQtRwE.yOdhqJG.qd9VhFlCIOm', 'Fernando Quispe', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-20 19:56:59', NULL, NULL, '2026-01-25 23:18:44'),
-	(6, 'dlazarte', 'dlazarte@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Daniel Lazarte', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:40', NULL, NULL, '2026-01-25 23:18:44'),
-	(7, 'lruiz', 'lruiz@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Luis Ruiz', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:55:41', NULL, NULL, '2026-01-25 23:18:44'),
-	(8, 'jtunoque', 'jtunoque@clonsa.com', '$2y$12$X01EUax9uIpWJpnOgZeFvOK4mR94Urszi40GDh3/3SRrG/XYn8tjW', 'Jack Tuñoque S.', NULL, 2, 4, NULL, 'default-avatar.png', 1, '2026-02-20 16:42:52', NULL, NULL, '2026-01-25 23:18:44'),
-	(9, 'rarias', 'rarias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Richard Arias', NULL, 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(10, 'cmedina', 'cmedina@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Carlos Medina', NULL, 3, 4, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:19', NULL, NULL, '2026-01-25 23:18:44'),
-	(11, 'ejimenez', 'ejimenez@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Enzo Jimenez', NULL, 2, 3, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:28', NULL, NULL, '2026-01-25 23:18:44'),
-	(12, 'garias', 'garias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Geraldine Arias', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(13, 'jagreda', 'jagreda@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Jesus Agreda', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44'),
-	(14, 'prueba', 'admin@clonsa.com', '$2y$12$VFMtPRWfTKHpiHQSITLhTuRHJR3EHt4fPhJs9lWGo7.fQeZ4ohaHu', 'Prueba Dev', '989225914', 3, NULL, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:21:18'),
-	(15, 'admin1', 'jtunoquesa@unprg.edu.pe', '$2y$12$dfoP6uLkgGAjWFh67.6r7ufjtOC5PN8V2.epu8rPmLzRGq7HOuEcy', 'admin1', '989225914', 3, 2, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:23:36'),
-	(16, 'admin123456', 'admin@gmail.com', '$2y$12$2YKMrsi.Wl3BzB7QTnDzceTapaDp7K.faoA5GsebXJswYoddKbl3u', 'admin123456', '987564123', 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:32:40');
+INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `nombre_completo`, `telefono`, `rol_id`, `departamento_id`, `area_id`, `avatar`, `activo`, `ultimo_acceso`, `reset_token`, `reset_token_expires`, `created_at`, `recibir_notificaciones_email`) VALUES
+	(1, 'admin', 'admin@clonsa.pe', '$2y$12$3QqyOXkbm1KfUMH6rnIkgOw9pvFtQZ9DUqm3.GbY2DQhFSjBr3tGm', 'Administrador General', NULL, 1, 1, NULL, 'default-avatar.png', 1, '2026-02-26 17:10:39', '748592', '2026-01-23 21:16:36', '2026-01-23 16:13:59', 1),
+	(3, 'acontreras', 'acontreras@clonsa.com', '$2y$12$b77o8VBYZ0.PmC84/wqdC.3686u8IkEuu1J88pPXVle/zi6qm88kq', 'Amador Contreras L.', NULL, 2, 2, NULL, 'default-avatar.png', 1, '2026-02-24 22:50:39', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(4, 'irodriguez', 'irodriguez@clonsa.com', '$2y$12$NSSbSR7xfJ0v5/Jk51RaH.J63zlU1O5JlCZoJf7RsnVW0OuDYiQ7S', 'IvÃ¡n Rodriguez', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-26 17:10:19', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(5, 'fquispe', 'fquispe@clonsa.com', '$2y$12$U4MJ3K.BPfEOmB5nEhPSWeDSEEioQtRwE.yOdhqJG.qd9VhFlCIOm', 'Fernando Quispe', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-02-20 19:56:59', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(6, 'dlazarte', 'dlazarte@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Daniel Lazarte', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:40', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(7, 'lruiz', 'lruiz@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Luis Ruiz', NULL, 3, 2, NULL, 'default-avatar.png', 1, '2026-01-25 23:55:41', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(8, 'jtunoque', 'jtunoque@clonsa.com', '$2y$12$X01EUax9uIpWJpnOgZeFvOK4mR94Urszi40GDh3/3SRrG/XYn8tjW', 'Jack TuÃ±oque S.', NULL, 2, 4, NULL, 'default-avatar.png', 1, '2026-02-20 16:42:52', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(9, 'rarias', 'rarias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Richard Arias', NULL, 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(10, 'cmedina', 'cmedina@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Carlos Medina', NULL, 3, 4, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:19', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(11, 'ejimenez', 'ejimenez@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Enzo Jimenez', NULL, 2, 3, NULL, 'default-avatar.png', 1, '2026-01-25 23:35:28', NULL, NULL, '2026-01-25 23:18:44', 1),
+	(12, 'garias', 'garias@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Geraldine Arias', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(13, 'jagreda', 'jagreda@clonsa.com', '$2y$12$t/z4.pC8wl3ApKuXERP8DeSXzTpl2d39oK2oqGEbJpEodBIUY18ze', 'Jesus Agreda', NULL, 3, 3, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-01-25 23:18:44', 1),
+	(14, 'prueba', 'admin@clonsa.com', '$2y$12$VFMtPRWfTKHpiHQSITLhTuRHJR3EHt4fPhJs9lWGo7.fQeZ4ohaHu', 'Prueba Dev', '989225914', 3, NULL, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:21:18', 1),
+	(15, 'admin1', 'jtunoquesa@unprg.edu.pe', '$2y$12$dfoP6uLkgGAjWFh67.6r7ufjtOC5PN8V2.epu8rPmLzRGq7HOuEcy', 'admin1', '989225914', 3, 2, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:23:36', 1),
+	(16, 'admin123456', 'admin@gmail.com', '$2y$12$2YKMrsi.Wl3BzB7QTnDzceTapaDp7K.faoA5GsebXJswYoddKbl3u', 'admin123456', '987564123', 3, 4, NULL, 'default-avatar.png', 1, NULL, NULL, NULL, '2026-02-15 03:32:40', 1);
 
 -- Volcando estructura para vista helpdesk_clonsa.vista_tickets
 -- Creando tabla temporal para superar errores de dependencia de VIEW

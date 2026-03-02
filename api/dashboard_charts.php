@@ -40,7 +40,7 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
         $fechaDesde = $desde->format('Y-m-d 00:00:00');
         $fechaHasta = $hasta->format('Y-m-d 23:59:59');
     } else {
-        $fechaDesde = (new DateTime())->modify('-7 days')->format('Y-m-d 00:00:00');
+        $fechaDesde = (new DateTime())->modify('-6 days')->format('Y-m-d 00:00:00');
         $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
     }
 } else {
@@ -58,7 +58,7 @@ if ($periodo === 'personalizado' && $fecha_desde && $fecha_hasta) {
         case 'semana':
         default:
             // Últimos 7 días
-            $fechaDesde = (new DateTime())->modify('-7 days')->format('Y-m-d 00:00:00');
+            $fechaDesde = (new DateTime())->modify('-6 days')->format('Y-m-d 00:00:00');
             $fechaHasta = (new DateTime())->format('Y-m-d 23:59:59');
             break;
     }
@@ -175,16 +175,51 @@ $grupos = $labelsYGrupos['grupos'];
 $actividades_ids = [];
 $actividades_info = [];
 $tipo_grafico = 'fijo'; // Siempre usar leyenda fija (sin dropdown)
+$usarSerieMantenimiento = false;
 
-if ($departamento_id === 'all' || $departamento_id == 2) {
-    // ✅ GENERAL Y SOPORTE TÉCNICO: 3 actividades de mantenimiento
-    $actividades_ids = [1, 2, 3];
+if ($departamento_id === 'all' || (string)$departamento_id === '2') {
+    // ✅ GENERAL y SOPORTE TÉCNICO: series fijas de mantenimiento
+    $usarSerieMantenimiento = true;
     $actividades_info = [
-        ['id' => 1, 'nombre' => 'Mantto Preventivo', 'color' => '#1F3BB3'],
-        ['id' => 2, 'nombre' => 'Mantto Correctivo', 'color' => '#4CAF50'],
-        ['id' => 3, 'nombre' => 'Mantto Predictivo', 'color' => '#FF9800']
+        [
+            'id' => 'mantto_preventivo',
+            'nombre' => 'Mantto Preventivo',
+            'color' => '#1F3BB3',
+            'pattern' => '%preventiv%',
+            'fallback_id' => 1,
+            'ids' => []
+        ],
+        [
+            'id' => 'mantto_correctivo',
+            'nombre' => 'Mantto Correctivo',
+            'color' => '#4CAF50',
+            'pattern' => '%correctiv%',
+            'fallback_id' => 2,
+            'ids' => []
+        ],
+        [
+            'id' => 'mantto_predictivo',
+            'nombre' => 'Mantto Predictivo',
+            'color' => '#FF9800',
+            'pattern' => '%predictiv%',
+            'fallback_id' => 3,
+            'ids' => []
+        ]
     ];
 
+    // Resolver IDs reales por nombre para no depender de IDs fijos entre entornos
+    $stmtActByName = $db->prepare("SELECT id FROM actividades WHERE LOWER(nombre) LIKE :pattern");
+    foreach ($actividades_info as $idx => $serie) {
+        $stmtActByName->execute([':pattern' => strtolower($serie['pattern'])]);
+        $idsEncontrados = $stmtActByName->fetchAll(PDO::FETCH_COLUMN);
+        $idsEncontrados = array_values(array_unique(array_map('intval', $idsEncontrados)));
+
+        if (empty($idsEncontrados) && !empty($serie['fallback_id'])) {
+            $idsEncontrados = [(int)$serie['fallback_id']];
+        }
+
+        $actividades_info[$idx]['ids'] = $idsEncontrados;
+    }
 } else {
     // ✅ OTROS DEPARTAMENTOS: Obtener actividades dinámicamente
     $sqlAct = "SELECT actividad_id FROM actividades_departamentos WHERE departamento_id = :dept_id";
@@ -230,19 +265,37 @@ foreach ($actividades_info as $actividad) {
     
     foreach ($grupos as $grupo) {
         $whereTemp = array_merge($whereConditions, [
-            "t.created_at BETWEEN :grupo_desde AND :grupo_hasta",
-            "t.actividad_id = :actividad_id"
+            "t.created_at BETWEEN :grupo_desde AND :grupo_hasta"
         ]);
-        
+
         $paramsTemp = array_merge($params, [
             ':grupo_desde' => $grupo['desde'],
-            ':grupo_hasta' => $grupo['hasta'],
-            ':actividad_id' => $actividad['id']
+            ':grupo_hasta' => $grupo['hasta']
         ]);
-        
+
+        if ($usarSerieMantenimiento) {
+            $idsSerie = $actividad['ids'] ?? [];
+            if (empty($idsSerie)) {
+                $datos[] = 0;
+                continue;
+            }
+
+            $idsPlaceholders = [];
+            foreach ($idsSerie as $idPos => $idValor) {
+                $ph = ':actividad_id_' . $idPos;
+                $idsPlaceholders[] = $ph;
+                $paramsTemp[$ph] = (int)$idValor;
+            }
+            $whereTemp[] = "t.actividad_id IN (" . implode(',', $idsPlaceholders) . ")";
+        } else {
+            $whereTemp[] = "t.actividad_id = :actividad_id";
+            $paramsTemp[':actividad_id'] = $actividad['id'];
+        }
+
         $whereClause = implode(' AND ', $whereTemp);
-        
+
         $query = "SELECT COUNT(*) as total FROM tickets t WHERE $whereClause";
+
         $stmt = $db->prepare($query);
         $stmt->execute($paramsTemp);
         $datos[] = (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];

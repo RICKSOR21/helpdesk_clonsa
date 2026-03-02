@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
 
@@ -20,38 +20,56 @@ if (!isset($_SESSION['last_activity'])) {
 }
 
 require_once 'config/config.php';
-$db = getDBConnection();
+$db = null;
+$dashboard_bootstrap_error = '';
 
 $user_name = $_SESSION['user_name'] ?? 'Usuario';
 $user_rol = $_SESSION['user_rol'] ?? 'Usuario';
 
-// Estadísticas
-$stmt = $db->query("SELECT COUNT(*) as total FROM tickets");
-$total_tickets = $stmt->fetch()['total'];
+// Valores por defecto para evitar pantalla blanca si falla alguna consulta
+$total_tickets = 0;
+$tickets_abiertos = 0;
+$tickets_cerrados = 0;
+$tickets_en_progreso = 0;
+$tiempo_promedio = 0;
+$canal_mas_usado = null;
+$top_resueltos = [];
+$top_rapidos = [];
+$tickets_recientes = [];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id IN (1,2,3)");
-$tickets_abiertos = $stmt->fetch()['total'];
+try {
+    $db = getDBConnection();
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id = 5");
-$tickets_cerrados = $stmt->fetch()['total'];
+    $stmt = $db->query("SELECT COUNT(*) as total FROM tickets");
+    $total_tickets = (int) ($stmt->fetch()['total'] ?? 0);
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id = 2");
-$tickets_en_progreso = $stmt->fetch()['total'];
+    $stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id IN (1,2,3)");
+    $tickets_abiertos = (int) ($stmt->fetch()['total'] ?? 0);
 
-$stmt = $db->query("SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, fecha_resolucion)) as promedio FROM tickets WHERE fecha_resolucion IS NOT NULL");
-$tiempo_promedio = round($stmt->fetch()['promedio'] ?? 0, 1);
+    $stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id = 5");
+    $tickets_cerrados = (int) ($stmt->fetch()['total'] ?? 0);
 
-$stmt = $db->query("SELECT ca.nombre, COUNT(t.id) as total FROM canales_atencion ca LEFT JOIN tickets t ON ca.id = t.canal_atencion_id GROUP BY ca.id ORDER BY total DESC LIMIT 1");
-$canal_mas_usado = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT COUNT(*) as total FROM tickets WHERE estado_id = 2");
+    $tickets_en_progreso = (int) ($stmt->fetch()['total'] ?? 0);
 
-$stmt = $db->query("SELECT u.nombre_completo, COUNT(t.id) as resueltos FROM usuarios u INNER JOIN tickets t ON u.id = t.asignado_a WHERE t.estado_id = 5 GROUP BY u.id ORDER BY resueltos DESC LIMIT 5");
-$top_resueltos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, fecha_resolucion)) as promedio FROM tickets WHERE fecha_resolucion IS NOT NULL");
+    $tiempo_promedio = round((float) ($stmt->fetch()['promedio'] ?? 0), 1);
 
-$stmt = $db->query("SELECT u.nombre_completo, AVG(TIMESTAMPDIFF(HOUR, t.created_at, t.fecha_resolucion)) as promedio_horas FROM usuarios u INNER JOIN tickets t ON u.id = t.asignado_a WHERE t.fecha_resolucion IS NOT NULL GROUP BY u.id HAVING COUNT(t.id) >= 1 ORDER BY promedio_horas ASC LIMIT 5");
-$top_rapidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT ca.nombre, COUNT(t.id) as total FROM canales_atencion ca LEFT JOIN tickets t ON ca.id = t.canal_atencion_id GROUP BY ca.id ORDER BY total DESC LIMIT 1");
+    $canal_mas_usado = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-$stmt = $db->query("SELECT t.codigo, t.titulo, t.progreso, u.nombre_completo as creador, e.nombre as estado, e.color as estado_color, t.created_at FROM tickets t INNER JOIN usuarios u ON t.usuario_id = u.id INNER JOIN estados e ON t.estado_id = e.id ORDER BY t.created_at DESC LIMIT 10");
-$tickets_recientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT u.nombre_completo, COUNT(t.id) as resueltos FROM usuarios u INNER JOIN tickets t ON u.id = t.asignado_a WHERE t.estado_id = 5 GROUP BY u.id ORDER BY resueltos DESC LIMIT 5");
+    $top_resueltos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $stmt = $db->query("SELECT u.nombre_completo, AVG(TIMESTAMPDIFF(HOUR, t.created_at, t.fecha_resolucion)) as promedio_horas FROM usuarios u INNER JOIN tickets t ON u.id = t.asignado_a WHERE t.fecha_resolucion IS NOT NULL GROUP BY u.id HAVING COUNT(t.id) >= 1 ORDER BY promedio_horas ASC LIMIT 5");
+    $top_rapidos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $stmt = $db->query("SELECT t.codigo, t.titulo, t.progreso, u.nombre_completo as creador, e.nombre as estado, e.color as estado_color, t.created_at FROM tickets t INNER JOIN usuarios u ON t.usuario_id = u.id INNER JOIN estados e ON t.estado_id = e.id ORDER BY t.created_at DESC LIMIT 10");
+    $tickets_recientes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+    $dashboard_bootstrap_error = 'Error al cargar datos del dashboard.';
+    error_log('dashboard bootstrap error: ' . $e->getMessage());
+}
 
 // Configuración de timeout desde config.php
 $SESSION_TIMEOUT_JS = defined('SESSION_TIMEOUT') ? SESSION_TIMEOUT : 120;
@@ -127,12 +145,16 @@ $fecha_actual = date('d/m/Y');
           $departamento_nombre = 'General';
 
           // Obtener nombre del departamento del usuario
-          if ($departamento_usuario) {
-              $stmt = $db->prepare("SELECT nombre FROM departamentos WHERE id = ?");
-              $stmt->execute([$departamento_usuario]);
-              $dept = $stmt->fetch(PDO::FETCH_ASSOC);
-              if ($dept) {
-                  $departamento_nombre = $dept['nombre'];
+          if ($departamento_usuario && $db instanceof PDO) {
+              try {
+                  $stmt = $db->prepare("SELECT nombre FROM departamentos WHERE id = ?");
+                  $stmt->execute([$departamento_usuario]);
+                  $dept = $stmt->fetch(PDO::FETCH_ASSOC);
+                  if ($dept) {
+                      $departamento_nombre = $dept['nombre'];
+                  }
+              } catch (Throwable $e) {
+                  error_log('dashboard departamento error: ' . $e->getMessage());
               }
           }
 
@@ -593,6 +615,15 @@ $fecha_actual = date('d/m/Y');
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
+          <?php if ($dashboard_bootstrap_error !== ''): ?>
+          <div class="row">
+            <div class="col-12">
+              <div class="alert alert-warning" role="alert">
+                <?= htmlspecialchars($dashboard_bootstrap_error, ENT_QUOTES, 'UTF-8') ?>
+              </div>
+            </div>
+          </div>
+          <?php endif; ?>
           <div class="row">
             <div class="col-sm-12">
               <div class="home-tab">

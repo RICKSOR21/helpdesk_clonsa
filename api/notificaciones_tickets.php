@@ -41,6 +41,15 @@ function tiempo_relativo($dateString) {
     return 'Hace ' . $diff->days . ' dias';
 }
 
+function add_notificacion_item(array &$notificaciones, int &$total_no_leidos, array $item): void {
+    $leido = (bool)($item['leido'] ?? false);
+    if (!$leido) {
+        $total_no_leidos++;
+    }
+    $item['leido'] = $leido;
+    $notificaciones[] = $item;
+}
+
 // 1) Tickets creados recientemente
 $sql_nuevos = "SELECT
     t.id,
@@ -72,10 +81,7 @@ $sql_nuevos .= " ORDER BY t.created_at DESC LIMIT 30";
 $stmt = $db->prepare($sql_nuevos);
 $stmt->execute($paramsNuevos);
 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
-    $leido = (bool)$ticket['leido'];
-    if (!$leido) $total_no_leidos++;
-
-    $notificaciones[] = [
+    add_notificacion_item($notificaciones, $total_no_leidos, [
         'id' => $ticket['id'],
         'tipo' => 'nuevo',
         'tipo_notificacion' => 'ticket',
@@ -84,27 +90,30 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
         'mensaje' => 'Creado por ' . $ticket['creador'],
         'tiempo' => tiempo_relativo($ticket['fecha_evento']),
         'fecha_evento' => $ticket['fecha_evento'],
-        'leido' => $leido
-    ];
+        'leido' => $ticket['leido']
+    ]);
 }
 
 // 2) Tickets asignados al usuario actual
 $sql_asignados = "SELECT
     t.id,
     t.codigo,
-    t.updated_at as fecha_evento,
+    COALESCE(t.updated_at, t.created_at) as fecha_evento,
+    uc.nombre_completo as creador_nombre,
     ua.nombre_completo as asignado_nombre,
     CASE WHEN nl.id IS NOT NULL THEN 1 ELSE 0 END as leido
 FROM tickets t
+LEFT JOIN usuarios uc ON uc.id = t.usuario_id
 LEFT JOIN usuarios ua ON ua.id = t.asignado_a
 LEFT JOIN notificaciones_leidas nl
-    ON nl.tipo = 'ticket_asignado'
-   AND nl.referencia_id = t.id
+    ON nl.referencia_id = t.id
    AND nl.usuario_id = :user_id_join
+   AND (nl.tipo = 'ticket_asignado' OR nl.tipo = 'ticket')
 WHERE t.asignado_a = :user_id_asignado
-  AND t.updated_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-  AND (t.updated_at > t.created_at OR t.usuario_id <> :user_id_2)
-ORDER BY t.updated_at DESC
+  AND t.asignado_a IS NOT NULL
+  AND COALESCE(t.updated_at, t.created_at) >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+  AND t.usuario_id <> :user_id_2
+ORDER BY COALESCE(t.updated_at, t.created_at) DESC
 LIMIT 30";
 
 $stmt = $db->prepare($sql_asignados);
@@ -114,20 +123,57 @@ $stmt->execute([
     ':user_id_2' => $user_id
 ]);
 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
-    $leido = (bool)$ticket['leido'];
-    if (!$leido) $total_no_leidos++;
-
-    $notificaciones[] = [
+    add_notificacion_item($notificaciones, $total_no_leidos, [
         'id' => $ticket['id'],
         'tipo' => 'asignado',
         'tipo_notificacion' => 'ticket_asignado',
         'codigo' => $ticket['codigo'],
         'titulo' => 'Ticket Asignado ' . $ticket['codigo'],
-        'mensaje' => 'Asignado a ' . ($ticket['asignado_nombre'] ?: 'ti'),
+        'mensaje' => 'Asignado por ' . ($ticket['creador_nombre'] ?: 'Usuario'),
         'tiempo' => tiempo_relativo($ticket['fecha_evento']),
         'fecha_evento' => $ticket['fecha_evento'],
-        'leido' => $leido
-    ];
+        'leido' => $ticket['leido']
+    ]);
+}
+
+// 2.1) Tickets que yo cree y asigne a otro (confirmacion para creador)
+$sql_asignados_creador = "SELECT
+    t.id,
+    t.codigo,
+    COALESCE(t.updated_at, t.created_at) as fecha_evento,
+    ua.nombre_completo as asignado_nombre,
+    CASE WHEN nl.id IS NOT NULL THEN 1 ELSE 0 END as leido
+FROM tickets t
+LEFT JOIN usuarios ua ON ua.id = t.asignado_a
+LEFT JOIN notificaciones_leidas nl
+    ON nl.referencia_id = t.id
+   AND nl.usuario_id = :user_id_join
+   AND (nl.tipo = 'ticket_asignado' OR nl.tipo = 'ticket')
+WHERE t.usuario_id = :user_id_creador
+  AND t.asignado_a IS NOT NULL
+  AND t.asignado_a <> :user_id_self
+  AND COALESCE(t.updated_at, t.created_at) >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+ORDER BY COALESCE(t.updated_at, t.created_at) DESC
+LIMIT 30";
+
+$stmt = $db->prepare($sql_asignados_creador);
+$stmt->execute([
+    ':user_id_join' => $user_id,
+    ':user_id_creador' => $user_id,
+    ':user_id_self' => $user_id
+]);
+foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
+    add_notificacion_item($notificaciones, $total_no_leidos, [
+        'id' => $ticket['id'],
+        'tipo' => 'asignado',
+        'tipo_notificacion' => 'ticket_asignado',
+        'codigo' => $ticket['codigo'],
+        'titulo' => 'Ticket Asignado ' . $ticket['codigo'],
+        'mensaje' => 'Asignaste a ' . ($ticket['asignado_nombre'] ?: 'usuario'),
+        'tiempo' => tiempo_relativo($ticket['fecha_evento']),
+        'fecha_evento' => $ticket['fecha_evento'],
+        'leido' => $ticket['leido']
+    ]);
 }
 
 // 3) Tickets aprobados (verificados por Jefe/Admin)
@@ -140,9 +186,9 @@ $sql_aprobados = "SELECT
 FROM tickets t
 LEFT JOIN usuarios ua ON ua.id = t.aprobado_por
 LEFT JOIN notificaciones_leidas nl
-    ON nl.tipo = 'ticket_aprobado'
-   AND nl.referencia_id = t.id
+    ON nl.referencia_id = t.id
    AND nl.usuario_id = :user_id
+   AND (nl.tipo = 'ticket_aprobado' OR nl.tipo = 'ticket')
 WHERE t.fecha_aprobacion IS NOT NULL
   AND t.fecha_aprobacion >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
 
@@ -160,10 +206,7 @@ $sql_aprobados .= " ORDER BY t.fecha_aprobacion DESC LIMIT 30";
 $stmt = $db->prepare($sql_aprobados);
 $stmt->execute($paramsAprob);
 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
-    $leido = (bool)$ticket['leido'];
-    if (!$leido) $total_no_leidos++;
-
-    $notificaciones[] = [
+    add_notificacion_item($notificaciones, $total_no_leidos, [
         'id' => $ticket['id'],
         'tipo' => 'aprobado',
         'tipo_notificacion' => 'ticket_aprobado',
@@ -172,8 +215,8 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
         'mensaje' => 'Verificado por ' . ($ticket['aprobado_por_nombre'] ?: 'Jefe/Admin'),
         'tiempo' => tiempo_relativo($ticket['fecha_evento']),
         'fecha_evento' => $ticket['fecha_evento'],
-        'leido' => $leido
-    ];
+        'leido' => $ticket['leido']
+    ]);
 }
 
 // 4) Tickets rechazados (nota de rechazo)
@@ -188,9 +231,12 @@ FROM ticket_comentarios c
 INNER JOIN tickets t ON t.id = c.ticket_id
 LEFT JOIN usuarios ur ON ur.id = c.usuario_id
 LEFT JOIN notificaciones_leidas nl
-    ON nl.tipo = 'ticket_rechazado'
-   AND nl.referencia_id = c.id
-   AND nl.usuario_id = :user_id
+    ON nl.usuario_id = :user_id
+   AND (
+        (nl.tipo = 'ticket_rechazado' AND nl.referencia_id = c.id)
+        OR
+        (nl.tipo = 'ticket' AND (nl.referencia_id = c.id OR nl.referencia_id = t.id))
+   )
 WHERE c.tipo = 'nota_interna'
   AND c.mensaje LIKE '%TICKET RECHAZADO%'
   AND c.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
@@ -209,10 +255,7 @@ $sql_rechazados .= " ORDER BY c.created_at DESC LIMIT 30";
 $stmt = $db->prepare($sql_rechazados);
 $stmt->execute($paramsRech);
 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
-    $leido = (bool)$ticket['leido'];
-    if (!$leido) $total_no_leidos++;
-
-    $notificaciones[] = [
+    add_notificacion_item($notificaciones, $total_no_leidos, [
         'id' => $ticket['ticket_id'],
         'referencia_evento' => $ticket['evento_id'],
         'tipo' => 'rechazado',
@@ -222,13 +265,25 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $ticket) {
         'mensaje' => 'Rechazado por ' . ($ticket['rechazado_por_nombre'] ?: 'Jefe/Admin'),
         'tiempo' => tiempo_relativo($ticket['fecha_evento']),
         'fecha_evento' => $ticket['fecha_evento'],
-        'leido' => $leido
-    ];
+        'leido' => $ticket['leido']
+    ]);
 }
 
 usort($notificaciones, function($a, $b) {
     return strtotime($b['fecha_evento']) <=> strtotime($a['fecha_evento']);
 });
+
+$notificaciones = array_values(array_reduce($notificaciones, function($carry, $item) {
+    $key = ($item['tipo_notificacion'] ?? 'ticket') . '-' . ($item['referencia_evento'] ?? $item['id']) . '-u' . ($item['mensaje'] ?? '');
+    if (!isset($carry[$key])) {
+        $carry[$key] = $item;
+    }
+    return $carry;
+}, []));
+
+$total_no_leidos = count(array_filter($notificaciones, function($item) {
+    return empty($item['leido']);
+}));
 
 $notificaciones = array_slice($notificaciones, 0, $limit);
 

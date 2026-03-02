@@ -115,8 +115,10 @@ try {
     // Headers del correo
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=utf-8\r\n";
-    $headers .= "From: Helpdesk Clonsa <noreply@clonsa.pe>\r\n";
-    $headers .= "Reply-To: soporte@clonsa.pe\r\n";
+    $fromEmail = defined('SMTP_FROM') ? SMTP_FROM : 'helpdesk@clonsaingenieria.com';
+    $fromName = defined('SMTP_FROM_NAME') ? SMTP_FROM_NAME : 'Helpdesk Clonsa Ingenieria';
+    $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
+    $headers .= "Reply-To: {$fromEmail}\r\n";
     
     // Enviar correo
     if (mail($to, $subject, $message, $headers)) {

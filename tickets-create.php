@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
 require_once 'config/config.php';
@@ -41,9 +41,16 @@ if ($departamento_usuario) {
 }
 
 $puede_ver_todos = ($user_rol === 'Administrador' || $user_rol === 'Admin');
+$departamentos_disponibles = [];
+
+if ($puede_ver_todos) {
+    $stmt = $db->query("SELECT id, nombre, abreviatura FROM departamentos WHERE activo = 1 ORDER BY nombre");
+    $departamentos_disponibles = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+}
 
 // Obtener proximo numero de ticket para preview
 $nextTicketPreview = 'TKN-XX-###';
+$previewData = null;
 try {
     $stmt = $db->prepare("SELECT d.abreviatura, COALESCE(tc.ultimo_numero, 0) + 1 as next_num
                           FROM departamentos d
@@ -211,6 +218,46 @@ try {
     .ticket-preview-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
     .ticket-preview-code { font-size: 20px; font-weight: 700; color: #1F3BB3; font-family: 'Courier New', monospace; }
     .ticket-preview-note { font-size: 11px; color: #999; margin-top: 8px; font-style: italic; }
+    .jobcard-option-card {
+      border: 1px solid #e8edf7;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+    .jobcard-option-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .jobcard-option-logo {
+      width: 150px;
+      height: auto;
+      max-height: 46px;
+      object-fit: contain;
+    }
+    .jobcard-option-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1F3BB3;
+      cursor: pointer;
+    }
+    .jobcard-option-toggle input {
+      cursor: pointer;
+    }
+    .jobcard-body {
+      margin-top: 12px;
+      display: none;
+    }
+    .jobcard-body.enabled {
+      display: block;
+    }
   </style>
 </head>
 <body class="authenticated">
@@ -496,12 +543,44 @@ try {
                   <div class="form-section-title"><i class="mdi mdi-account-group"></i>Asignacion</div>
                   <div class="form-group mb-3">
                     <label><i class="mdi mdi-office-building text-primary"></i>Departamento</label>
+                    <?php if ($puede_ver_todos): ?>
+                    <select class="form-control" id="departamento_id" name="departamento_id" required>
+                      <option value="">Seleccione departamento</option>
+                      <?php foreach ($departamentos_disponibles as $dep): ?>
+                      <option value="<?php echo (int)$dep['id']; ?>"
+                              data-abrev="<?php echo htmlspecialchars($dep['abreviatura'] ?? 'GN'); ?>"
+                              <?php echo ((int)$dep['id'] === (int)$departamento_usuario) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($dep['nombre']); ?>
+                      </option>
+                      <?php endforeach; ?>
+                    </select>
+                    <?php else: ?>
                     <input type="text" class="form-control" value="<?php echo htmlspecialchars($departamento_nombre); ?>" readonly style="background:#f8f9fa; cursor:default;">
                     <input type="hidden" id="departamento_id" name="departamento_id" value="<?php echo intval($departamento_usuario); ?>">
+                    <?php endif; ?>
                   </div>
                   <div class="form-group mb-3">
                     <label><i class="mdi mdi-account text-success"></i>Asignar a</label>
                     <select class="form-control" id="asignado_a" name="asignado_a"><option value="">Sin asignar</option></select>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title"><i class="mdi mdi-clipboard-text"></i>Jobcard Reutech (Opcional)</div>
+                  <div class="jobcard-option-card">
+                    <div class="jobcard-option-head">
+                      <img src="assets/images/imagen_reutech.png" alt="Reutech" class="jobcard-option-logo">
+                      <label class="jobcard-option-toggle" for="jobcard_enabled">
+                        <input type="checkbox" id="jobcard_enabled" name="jobcard_enabled" value="1">
+                        Habilitar Jobcard Asociada
+                      </label>
+                    </div>
+                    <div id="jobcardBody" class="jobcard-body">
+                      <div class="form-group mb-0">
+                        <label><i class="mdi mdi-card-text-outline text-primary"></i>Jobcard Asociada</label>
+                        <input type="text" class="form-control" id="jobcard_asociada" name="jobcard_asociada" placeholder="Ingrese codigo o referencia de jobcard" disabled>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -626,6 +705,7 @@ try {
     const SESSION_POPUP_TIMEOUT = <?php echo $SESSION_POPUP_TIMEOUT_JS; ?>;
     window.CURRENT_USER_ID = <?php echo intval($user_id); ?>;
     window.USER_ROL = '<?php echo addslashes($user_rol); ?>';
+    window.CAN_SELECT_ANY_DEPT = <?php echo $puede_ver_todos ? 'true' : 'false'; ?>;
   </script>
   <script src="assets/js/session-manager.js"></script>
   <script src="assets/js/notificaciones.js?v=<?php echo time(); ?>"></script>
@@ -641,7 +721,8 @@ try {
     const modalError = new bootstrap.Modal(document.getElementById('modalError'));
 
     $(document).ready(function() {
-      const deptId = <?php echo intval($departamento_usuario); ?>;
+      const deptSelect = $('#departamento_id');
+      const initialDeptId = parseInt(deptSelect.val(), 10) || 0;
 
       loadCatalogos();
       setupFileUpload();
@@ -659,9 +740,30 @@ try {
       });
 
       // Cargar automáticamente con el departamento del usuario
-      if(deptId) {
-        loadUsuariosDepartamento(deptId);
-        loadCatalogosporDepartamento(deptId);
+      if(initialDeptId) {
+        loadUsuariosDepartamento(initialDeptId);
+        loadCatalogosporDepartamento(initialDeptId);
+        updateTicketPreview(initialDeptId);
+      }
+
+      $('#jobcard_enabled').on('change', function() {
+        const enabled = $(this).is(':checked');
+        $('#jobcardBody').toggleClass('enabled', enabled);
+        $('#jobcard_asociada').prop('disabled', !enabled);
+        $('#jobcard_asociada').prop('required', enabled);
+        if(!enabled) {
+          $('#jobcard_asociada').val('');
+        }
+      });
+      $('#jobcard_enabled').trigger('change');
+
+      if(window.CAN_SELECT_ANY_DEPT) {
+        deptSelect.on('change', function() {
+          const selectedDeptId = parseInt($(this).val(), 10) || 0;
+          loadUsuariosDepartamento(selectedDeptId);
+          loadCatalogosporDepartamento(selectedDeptId);
+          updateTicketPreview(selectedDeptId);
+        });
       }
 
       // Evitar doble envío
@@ -730,9 +832,15 @@ try {
         if(window.USER_ROL === 'Usuario') {
           // Usuario normal: auto-seleccionar su nombre y deshabilitar
           if(r.success && r.data.length > 0) {
-            var u = r.data[0];
-            $('#asignado_a').html(`<option value="${u.id}">${u.nombre_completo}</option>`);
-            $('#asignado_a').val(u.id).prop('disabled', true);
+            const miUsuario = r.data.find(function(u) {
+              return parseInt(u.id, 10) === parseInt(window.CURRENT_USER_ID, 10);
+            });
+            if(miUsuario) {
+              $('#asignado_a').html(`<option value="${miUsuario.id}">${miUsuario.nombre_completo}</option>`);
+              $('#asignado_a').val(miUsuario.id).prop('disabled', true);
+            } else {
+              $('#asignado_a').html('<option value="">Sin asignar</option>').prop('disabled', true);
+            }
           }
         } else {
           $('#asignado_a').html('<option value="">Sin asignar</option>');
@@ -752,8 +860,14 @@ try {
         $('#ticketPreviewCode').text('<?php echo $nextTicketPreview; ?>');
         return;
       }
-      const selected = $('#departamento_id option:selected');
-      const abrev = selected.data('abrev') || 'GN';
+      let abrev = 'GN';
+      const deptSelect = $('#departamento_id');
+      if(deptSelect.is('select')) {
+        const selected = deptSelect.find('option:selected');
+        abrev = selected.data('abrev') || 'GN';
+      } else {
+        abrev = '<?php echo addslashes($previewData['abreviatura'] ?? 'GN'); ?>';
+      }
       $.get('api/catalogos.php?tipo=next_ticket_number&departamento_id=' + deptId, function(r) {
         if(r.success && r.next_number) {
           const num = r.next_number < 100 ? String(r.next_number).padStart(2, '0') : r.next_number;
@@ -821,11 +935,26 @@ try {
         $('#asignado_a, #departamento_id').prop('disabled', true);
       }
 
-      // Eliminar archivos del FormData (vienen del input) para evitar duplicados
-      formData.delete('archivos[]');
+      const hasFiles = uploadedFiles.length > 0;
+      let ajaxData;
+      let ajaxProcessData;
+      let ajaxContentType;
 
-      // Agregar solo los archivos del array uploadedFiles
-      uploadedFiles.forEach((file) => { formData.append('archivos[]', file); });
+      if(hasFiles) {
+        // Eliminar archivos del FormData (vienen del input) para evitar duplicados
+        formData.delete('archivos[]');
+        // Agregar solo los archivos del array uploadedFiles
+        uploadedFiles.forEach((file) => { formData.append('archivos[]', file); });
+        ajaxData = formData;
+        ajaxProcessData = false;
+        ajaxContentType = false;
+      } else {
+        // En hosting algunos WAF bloquean multipart sin archivos.
+        // Si no hay adjuntos, enviamos urlencoded normal.
+        ajaxData = $('#ticketForm').serialize();
+        ajaxProcessData = true;
+        ajaxContentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+      }
 
       // Mostrar modal de proceso
       modalProceso.show();
@@ -836,9 +965,11 @@ try {
       $.ajax({
         url: 'api/tickets.php?action=crear',
         method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
+        dataType: 'json',
+        timeout: 120000,
+        data: ajaxData,
+        processData: ajaxProcessData,
+        contentType: ajaxContentType,
         xhr: function() {
           const xhr = new window.XMLHttpRequest();
           xhr.upload.addEventListener('progress', function(e) {
@@ -868,7 +999,35 @@ try {
         },
         error: function(xhr, status, error) {
           modalProceso.hide();
-          $('#errorMessage').text('Error de conexion. Por favor intente nuevamente.');
+          let msg = 'Error de conexion. Por favor intente nuevamente.';
+
+          if(status === 'timeout') {
+            msg = 'Tiempo de espera agotado. Verifique su conexion o el servidor.';
+          } else if(xhr && xhr.responseJSON && xhr.responseJSON.message) {
+            msg = xhr.responseJSON.message;
+          } else if(xhr && typeof xhr.responseText === 'string' && xhr.responseText.trim() !== '') {
+            try {
+              const parsed = JSON.parse(xhr.responseText);
+              if(parsed && parsed.message) {
+                msg = parsed.message;
+              } else {
+                msg = `Error del servidor (${xhr.status || 500})`;
+              }
+            } catch(e) {
+              msg = `Error del servidor (${xhr.status || 500} ${xhr.statusText || status || ''})`.trim();
+            }
+          }
+
+          if(window.console) {
+            console.error('[tickets-create] Error AJAX crear ticket:', {
+              status: xhr ? xhr.status : null,
+              textStatus: status,
+              errorThrown: error,
+              responseText: xhr ? xhr.responseText : null
+            });
+          }
+
+          $('#errorMessage').text(msg);
           setTimeout(() => modalError.show(), 300);
           $('.btn-submit').prop('disabled', false);
           isSubmitting = false;

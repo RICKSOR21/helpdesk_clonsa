@@ -1,5 +1,25 @@
 <?php
-header('Content-Type: application/json');
+ob_start();
+ini_set('display_errors', '0');
+header('Content-Type: application/json; charset=utf-8');
+
+register_shutdown_function(function () {
+    $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+    $error = error_get_last();
+    if ($error && in_array($error['type'], $fatalTypes, true)) {
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+        }
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error fatal en el servidor al procesar el ticket'
+        ], JSON_UNESCAPED_UNICODE);
+    }
+});
 require_once '../config/session.php';
 session_start();
 
@@ -52,6 +72,28 @@ function get_user_display_name($db, $user_id, $fallback = 'Usuario') {
         return $row['nombre_completo'];
     }
     return $fallback;
+}
+
+function column_exists(PDO $db, string $table, string $column): bool {
+    static $cache = [];
+    $key = $table . '.' . $column;
+    if (array_key_exists($key, $cache)) {
+        return $cache[$key];
+    }
+    $stmt = $db->prepare("
+        SELECT COUNT(*) AS c
+        FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = :table
+          AND COLUMN_NAME = :column
+    ");
+    $stmt->execute([
+        ':table' => $table,
+        ':column' => $column
+    ]);
+    $exists = ((int)$stmt->fetchColumn() > 0);
+    $cache[$key] = $exists;
+    return $exists;
 }
 
 try {
@@ -199,14 +241,103 @@ try {
             $equipo_id = !empty($_POST['equipo_id']) ? $_POST['equipo_id'] : null;
             $codigo_equipo_id = !empty($_POST['codigo_equipo_id']) ? $_POST['codigo_equipo_id'] : null;
             $prioridad_id = !empty($_POST['prioridad_id']) ? $_POST['prioridad_id'] : 2;
-            $departamento_id = !empty($_POST['departamento_id']) ? $_POST['departamento_id'] : null;
-            $asignado_a = !empty($_POST['asignado_a']) ? $_POST['asignado_a'] : null;
+            $departamento_id = !empty($_POST['departamento_id']) ? (int)$_POST['departamento_id'] : 0;
+            $asignado_a = !empty($_POST['asignado_a']) ? (int)$_POST['asignado_a'] : null;
             $solicitante_nombre = $_POST['solicitante_nombre'] ?? null;
             $solicitante_email = $_POST['solicitante_email'] ?? null;
             $solicitante_telefono = $_POST['solicitante_telefono'] ?? null;
+            $jobcard_enabled = isset($_POST['jobcard_enabled']) && (string)$_POST['jobcard_enabled'] === '1';
+            $jobcard_asociada_raw = isset($_POST['jobcard_asociada']) ? trim((string)$_POST['jobcard_asociada']) : '';
+            $jobcard_asociada = $jobcard_enabled ? $jobcard_asociada_raw : null;
+            $user_rol = $_SESSION['user_rol'] ?? 'Usuario';
+            $departamento_sesion = (int)($_SESSION['departamento_id'] ?? 0);
+            $es_admin = ($user_rol === 'Administrador' || $user_rol === 'Admin');
 
             if(empty($titulo) || empty($descripcion)) {
                 $response['message'] = 'Titulo y descripcion son requeridos';
+                break;
+            }
+
+            if($jobcard_enabled && $jobcard_asociada === '') {
+                $response['message'] = 'Debe ingresar la Jobcard Asociada';
+                break;
+            }
+
+            if($jobcard_asociada !== null) {
+                $jobcardLength = function_exists('mb_strlen')
+                    ? mb_strlen($jobcard_asociada, 'UTF-8')
+                    : strlen($jobcard_asociada);
+                if($jobcardLength > 255) {
+                    $response['message'] = 'La Jobcard Asociada no puede exceder 255 caracteres';
+                    break;
+                }
+            }
+
+            // Solo Administrador puede seleccionar cualquier departamento.
+            // Jefe/Usuario siempre se mantienen en su departamento de sesión.
+            if(!$es_admin) {
+                $departamento_id = $departamento_sesion;
+            }
+
+            if($departamento_id <= 0) {
+                $response['message'] = 'Departamento invalido';
+                break;
+            }
+
+            // Usuario normal solo puede asignarse a sí mismo.
+            if($user_rol === 'Usuario') {
+                $asignado_a = (int)$user_id;
+            }
+
+            // Validar departamento (soporta esquema con/sin columna activo)
+            $departamentoTieneActivo = column_exists($db, 'departamentos', 'activo');
+            $sqlDept = "SELECT id FROM departamentos WHERE id = :id";
+            if ($departamentoTieneActivo) {
+                $sqlDept .= " AND activo = 1";
+            }
+            $sqlDept .= " LIMIT 1";
+            $stmtDept = $db->prepare($sqlDept);
+            $stmtDept->execute([':id' => $departamento_id]);
+            if(!$stmtDept->fetch(PDO::FETCH_ASSOC)) {
+                $response['message'] = 'El departamento seleccionado no esta disponible';
+                break;
+            }
+
+            // Validar usuario asignado (si existe) contra departamento seleccionado
+            if(!empty($asignado_a)) {
+                $usuarioTieneActivo = column_exists($db, 'usuarios', 'activo');
+                $usuarioTieneDepto = column_exists($db, 'usuarios', 'departamento_id');
+
+                $cols = ['id'];
+                if ($usuarioTieneActivo) {
+                    $cols[] = 'activo';
+                }
+                if ($usuarioTieneDepto) {
+                    $cols[] = 'departamento_id';
+                }
+                $stmtUsr = $db->prepare("SELECT " . implode(', ', $cols) . " FROM usuarios WHERE id = :id LIMIT 1");
+                $stmtUsr->execute([':id' => $asignado_a]);
+                $usuarioAsignado = $stmtUsr->fetch(PDO::FETCH_ASSOC);
+
+                if(!$usuarioAsignado) {
+                    $response['message'] = 'El usuario asignado no es valido';
+                    break;
+                }
+
+                if($usuarioTieneActivo && (int)$usuarioAsignado['activo'] !== 1) {
+                    $response['message'] = 'El usuario asignado no esta activo';
+                    break;
+                }
+
+                if($usuarioTieneDepto && (int)$usuarioAsignado['departamento_id'] !== (int)$departamento_id) {
+                    $response['message'] = 'El usuario asignado no pertenece al departamento seleccionado';
+                    break;
+                }
+            }
+
+            $ticketsHasJobcard = column_exists($db, 'tickets', 'jobcard_asociada');
+            if($jobcard_enabled && !$ticketsHasJobcard) {
+                $response['message'] = 'La base de datos no tiene el campo jobcard_asociada. Ejecute: bd/add_jobcard_asociada_tickets.sql';
                 break;
             }
 
@@ -214,31 +345,60 @@ try {
             $db->beginTransaction();
 
             try {
-                $query = "INSERT INTO tickets (titulo, descripcion, usuario_id, departamento_id, prioridad_id,
-                          canal_atencion_id, actividad_id, tipo_falla_id, ubicacion_id, equipo_id, codigo_equipo_id,
-                          asignado_a, solicitante_nombre, solicitante_email, solicitante_telefono)
-                          VALUES (:titulo, :descripcion, :usuario_id, :departamento_id, :prioridad_id,
-                          :canal_id, :actividad_id, :tipo_falla_id, :ubicacion_id, :equipo_id, :codigo_equipo_id,
-                          :asignado_a, :solicitante_nombre, :solicitante_email, :solicitante_telefono)";
+                $insertCols = [
+                    'titulo',
+                    'descripcion',
+                    'usuario_id',
+                    'departamento_id',
+                    'prioridad_id',
+                    'canal_atencion_id',
+                    'actividad_id',
+                    'tipo_falla_id',
+                    'ubicacion_id',
+                    'equipo_id',
+                    'codigo_equipo_id',
+                    'asignado_a'
+                ];
+                $insertData = [
+                    ':titulo' => $titulo,
+                    ':descripcion' => $descripcion,
+                    ':usuario_id' => $user_id,
+                    ':departamento_id' => $departamento_id,
+                    ':prioridad_id' => $prioridad_id,
+                    ':canal_atencion_id' => $canal_id,
+                    ':actividad_id' => $actividad_id,
+                    ':tipo_falla_id' => $tipo_falla_id,
+                    ':ubicacion_id' => $ubicacion_id,
+                    ':equipo_id' => $equipo_id,
+                    ':codigo_equipo_id' => $codigo_equipo_id,
+                    ':asignado_a' => $asignado_a,
+                ];
+
+                if (column_exists($db, 'tickets', 'solicitante_nombre')) {
+                    $insertCols[] = 'solicitante_nombre';
+                    $insertData[':solicitante_nombre'] = $solicitante_nombre;
+                }
+                if (column_exists($db, 'tickets', 'solicitante_email')) {
+                    $insertCols[] = 'solicitante_email';
+                    $insertData[':solicitante_email'] = $solicitante_email;
+                }
+                if (column_exists($db, 'tickets', 'solicitante_telefono')) {
+                    $insertCols[] = 'solicitante_telefono';
+                    $insertData[':solicitante_telefono'] = $solicitante_telefono;
+                }
+                if ($ticketsHasJobcard) {
+                    $insertCols[] = 'jobcard_asociada';
+                    $insertData[':jobcard_asociada'] = $jobcard_asociada;
+                }
+
+                $insertParams = array_map(function($c) {
+                    return ':' . $c;
+                }, $insertCols);
+                $query = "INSERT INTO tickets (" . implode(', ', $insertCols) . ")
+                          VALUES (" . implode(', ', $insertParams) . ")";
 
                 $stmt = $db->prepare($query);
-                $stmt->bindParam(':titulo', $titulo);
-                $stmt->bindParam(':descripcion', $descripcion);
-                $stmt->bindParam(':usuario_id', $user_id);
-                $stmt->bindParam(':departamento_id', $departamento_id);
-                $stmt->bindParam(':prioridad_id', $prioridad_id);
-                $stmt->bindParam(':canal_id', $canal_id);
-                $stmt->bindParam(':actividad_id', $actividad_id);
-                $stmt->bindParam(':tipo_falla_id', $tipo_falla_id);
-                $stmt->bindParam(':ubicacion_id', $ubicacion_id);
-                $stmt->bindParam(':equipo_id', $equipo_id);
-                $stmt->bindParam(':codigo_equipo_id', $codigo_equipo_id);
-                $stmt->bindParam(':asignado_a', $asignado_a);
-                $stmt->bindParam(':solicitante_nombre', $solicitante_nombre);
-                $stmt->bindParam(':solicitante_email', $solicitante_email);
-                $stmt->bindParam(':solicitante_telefono', $solicitante_telefono);
-
-                $stmt->execute();
+                $stmt->execute($insertData);
                 $ticket_id = $db->lastInsertId();
 
                 // Obtener codigo del ticket
@@ -246,7 +406,8 @@ try {
                 $stmt = $db->prepare($query);
                 $stmt->bindParam(':id', $ticket_id);
                 $stmt->execute();
-                $codigo = $stmt->fetch(PDO::FETCH_ASSOC)['codigo'];
+                $codigoRow = $stmt->fetch(PDO::FETCH_ASSOC);
+                $codigo = $codigoRow['codigo'] ?? ('TK-' . $ticket_id);
 
                 // Procesar archivos adjuntos
                 $archivos_subidos = [];
@@ -303,13 +464,22 @@ try {
 
                 $db->commit();
 
-                // Notificar por correo
-                EmailHelper::notifyTicketEvent('ticket_creado', [
-                    'ticket_id'   => $ticket_id,
-                    'codigo'      => $codigo,
-                    'titulo'      => $titulo,
-                    'descripcion' => $descripcion,
-                ], $user_id, $db);
+                // Notificar por correo sin bloquear la creación del ticket.
+                // Si el correo falla, se registra en logs pero la operación principal se mantiene exitosa.
+                try {
+                    $esAsignacionInicial = !empty($asignado_a) && ((int)$asignado_a > 0) && ((int)$asignado_a !== (int)$user_id);
+                    $eventoCorreo = $esAsignacionInicial ? 'ticket_asignado' : 'ticket_creado';
+
+                    EmailHelper::notifyTicketEvent($eventoCorreo, [
+                        'ticket_id'   => $ticket_id,
+                        'codigo'      => $codigo,
+                        'titulo'      => $titulo,
+                        'descripcion' => $descripcion,
+                        'asignado_nombre' => !empty($asignado_a) ? get_user_display_name($db, (int)$asignado_a, '') : '',
+                    ], $user_id, $db);
+                } catch (Throwable $mailEx) {
+                    error_log('[tickets.php][crear] Ticket creado, pero fallo notificacion email: ' . $mailEx->getMessage());
+                }
 
                 $response['success'] = true;
                 $response['message'] = 'Ticket creado exitosamente';
@@ -317,8 +487,11 @@ try {
                 $response['ticket_id'] = $ticket_id;
                 $response['archivos'] = $archivos_subidos;
 
-            } catch(Exception $e) {
-                $db->rollBack();
+            } catch(Throwable $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                error_log('[tickets.php][crear] Error creando ticket: ' . $e->getMessage());
                 $response['message'] = 'Error al crear ticket: ' . $e->getMessage();
             }
             break;
@@ -694,7 +867,7 @@ try {
             }
 
             // Verificar que el ticket existe
-            $stmt = $db->prepare("SELECT id, estado_id, pendiente_aprobacion FROM tickets WHERE codigo = ?");
+            $stmt = $db->prepare("SELECT id, usuario_id, asignado_a, estado_id, pendiente_aprobacion FROM tickets WHERE codigo = ?");
             $stmt->execute([$codigo]);
             $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -735,11 +908,16 @@ try {
                 $stmt->execute();
                 $db->commit();
 
+                $resuelto_por_id = !empty($ticket['asignado_a']) ? (int)$ticket['asignado_a'] : (int)$ticket['usuario_id'];
+                $resuelto_por = get_user_display_name($db, $resuelto_por_id, 'Usuario');
+
                 // Notificar aprobacion
                 EmailHelper::notifyTicketEvent('ticket_aprobado', [
-                    'ticket_id'  => $ticket['id'],
-                    'codigo'     => $codigo,
-                    'comentario' => $comentario,
+                    'ticket_id'      => $ticket['id'],
+                    'codigo'         => $codigo,
+                    'comentario'     => $comentario,
+                    'resuelto_por'   => $resuelto_por,
+                    'completado_por' => $resuelto_por,
                 ], $user_id, $db);
 
                 $response['success'] = true;
@@ -873,6 +1051,13 @@ try {
                     'codigo'    => $codigo,
                     'motivo'    => $comentario,
                 ], $user_id, $db);
+
+                // Confirmacion al usuario que rechazo (Jefe/Admin)
+                EmailHelper::notifyTicketEventToUsers('ticket_rechazado_por_ti', [
+                    'ticket_id' => $ticket['id'],
+                    'codigo'    => $codigo,
+                    'motivo'    => $comentario,
+                ], $user_id, $db, [(int)$user_id], true);
 
                 $response['success'] = true;
                 $response['message'] = 'Cierre rechazado. El ticket vuelve a En Atención con 90%.';
@@ -1326,10 +1511,10 @@ try {
                 break;
             }
 
-            $stmt = $db->prepare("SELECT tt.*, t.codigo, t.estado_id,
-                                         uo.nombre_completo as usuario_origen_nombre,
-                                         ud.nombre_completo as usuario_destino_nombre
-                                  FROM ticket_transferencias tt
+            $stmt = $db->prepare("SELECT tt.*, t.codigo, t.titulo, t.descripcion, t.estado_id, t.departamento_id,
+                                          uo.nombre_completo as usuario_origen_nombre,
+                                          ud.nombre_completo as usuario_destino_nombre
+                                   FROM ticket_transferencias tt
                                   INNER JOIN tickets t ON t.id = tt.ticket_id
                                   LEFT JOIN usuarios uo ON uo.id = tt.usuario_origen
                                   LEFT JOIN usuarios ud ON ud.id = tt.usuario_destino
@@ -1403,14 +1588,75 @@ try {
 
                 $db->commit();
 
-                // Notificar respuesta a transferencia
-                $emailEvent = ($decision === 'aprobar') ? 'transferencia_aprobada' : 'transferencia_rechazada';
-                EmailHelper::notifyTicketEvent($emailEvent, [
-                    'ticket_id'      => $transfer['ticket_id'],
+                // Notificaciones por rol para evitar mensajes ambiguos
+                $origenNombre = $transfer['usuario_origen_nombre'] ?: get_user_display_name($db, $transfer['usuario_origen'] ?? 0, 'Sin asignar');
+                $destinoNombre = $transfer['usuario_destino_nombre'] ?: get_user_display_name($db, $transfer['usuario_destino'], 'Usuario destino');
+                $baseMailData = [
+                    'ticket_id'      => (int)$transfer['ticket_id'],
                     'codigo'         => $transfer['codigo'],
-                    'destino_nombre' => $transfer['usuario_destino_nombre'] ?? '',
+                    'titulo'         => $transfer['titulo'] ?? '',
+                    'descripcion'    => $transfer['descripcion'] ?? '',
+                    'origen_nombre'  => $origenNombre,
+                    'destino_nombre' => $destinoNombre,
+                    'asignado_nombre'=> $destinoNombre,
                     'comentario'     => $comentario,
-                ], $user_id, $db);
+                ];
+
+                // 1) Solicitante/origen: recibe "Transferencia Aprobada/Rechazada"
+                $usuariosSolicitud = array_values(array_unique(array_filter([
+                    (int)($transfer['solicitado_por'] ?? 0),
+                    (int)($transfer['usuario_origen'] ?? 0),
+                ], function($id) {
+                    return $id > 0;
+                })));
+
+                // 2) Destino: en aprobacion recibe "Ticket Asignado" (no "Transferencia Aprobada")
+                if ($decision === 'aprobar') {
+                    if (!empty($usuariosSolicitud)) {
+                        EmailHelper::notifyTicketEventToUsers('transferencia_aprobada', $baseMailData, $user_id, $db, $usuariosSolicitud);
+                    }
+                    EmailHelper::notifyTicketEventToUsers('ticket_asignado', $baseMailData, $user_id, $db, [(int)$transfer['usuario_destino']]);
+                } else {
+                    if (!empty($usuariosSolicitud)) {
+                        EmailHelper::notifyTicketEventToUsers('transferencia_rechazada', $baseMailData, $user_id, $db, $usuariosSolicitud);
+                    }
+                    // Confirmacion al aprobador/rechazador (jefe/admin)
+                    EmailHelper::notifyTicketEventToUsers('transferencia_rechazada_por_ti', $baseMailData, $user_id, $db, [(int)$user_id], true);
+                }
+
+                // 3) Supervisores (jefe + admins): correo de control de transferencia
+                $supervisorIds = [];
+                if (!empty($transfer['departamento_id'])) {
+                    $stmtJefe = $db->prepare("SELECT jefe_id FROM departamentos WHERE id = :id AND activo = 1 AND jefe_id IS NOT NULL");
+                    $stmtJefe->execute([':id' => (int)$transfer['departamento_id']]);
+                    $jefeId = (int)($stmtJefe->fetchColumn() ?: 0);
+                    if ($jefeId > 0) {
+                        $supervisorIds[] = $jefeId;
+                    }
+                }
+
+                $stmtAdmins = $db->prepare("SELECT u.id
+                                            FROM usuarios u
+                                            INNER JOIN roles r ON r.id = u.rol_id
+                                            WHERE (r.nombre = 'Administrador' OR r.nombre = 'Admin')
+                                              AND u.activo = 1");
+                $stmtAdmins->execute();
+                $adminIds = array_map('intval', $stmtAdmins->fetchAll(PDO::FETCH_COLUMN));
+                $supervisorIds = array_values(array_unique(array_merge($supervisorIds, $adminIds)));
+
+                // Evitar duplicar correos en usuarios que ya recibieron por solicitud/destino
+                $alreadyNotified = array_values(array_unique(array_merge(
+                    $usuariosSolicitud,
+                    ($decision === 'aprobar') ? [(int)$transfer['usuario_destino']] : []
+                )));
+                $supervisorIds = array_values(array_filter($supervisorIds, function($id) use ($alreadyNotified) {
+                    return !in_array((int)$id, $alreadyNotified, true);
+                }));
+
+                if (!empty($supervisorIds)) {
+                    $eventoSupervisor = ($decision === 'aprobar') ? 'transferencia_aprobada' : 'transferencia_rechazada';
+                    EmailHelper::notifyTicketEventToUsers($eventoSupervisor, $baseMailData, $user_id, $db, $supervisorIds);
+                }
 
             } catch(Exception $e) {
                 $db->rollBack();
@@ -1598,10 +1844,15 @@ try {
         default:
             $response['message'] = 'Acción no válida';
     }
-} catch(Exception $e) {
+} catch(Throwable $e) {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
-echo json_encode($response);
-?>
+$buffer = ob_get_clean();
+if (trim((string)$buffer) !== '') {
+    error_log('[api/tickets.php] Salida inesperada antes del JSON: ' . substr(trim($buffer), 0, 1000));
+}
 
+echo json_encode($response, JSON_UNESCAPED_UNICODE);
+exit;
+?>

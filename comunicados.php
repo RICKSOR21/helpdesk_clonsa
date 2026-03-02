@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/session.php';
 session_start();
 require_once 'config/config.php';
@@ -205,6 +205,13 @@ unset($cm);
     .notif-time { font-size: 10px; color: #1F3BB3; display: flex; align-items: center; gap: 2px; margin-top: 1px; }
 
     .notif-card { background:#fff; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,.05); }
+    .com-history-wrap {
+      overflow-x: hidden !important;
+    }
+    .notif-table {
+      table-layout: fixed;
+      width: 100%;
+    }
     .notif-table thead th {
       font-size: 12px;
       text-transform: uppercase;
@@ -212,7 +219,8 @@ unset($cm);
       border-bottom: 1px solid #e5e7eb;
       padding: 12px 10px;
       font-weight: 700;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
     }
     .notif-table thead th:first-child,
     .notif-table tbody td:first-child {
@@ -222,6 +230,16 @@ unset($cm);
       padding-left: 0;
       padding-right: 0;
     }
+    .notif-table thead th:nth-child(2),
+    .notif-table tbody td:nth-child(2) { width: 300px; }
+    .notif-table thead th:nth-child(3),
+    .notif-table tbody td:nth-child(3) { width: 150px; }
+    .notif-table thead th:nth-child(4),
+    .notif-table tbody td:nth-child(4) { width: auto; }
+    .notif-table thead th:nth-child(5),
+    .notif-table tbody td:nth-child(5) { width: 190px; }
+    .notif-table thead th:nth-child(6),
+    .notif-table tbody td:nth-child(6) { width: 130px; text-align: center; }
     .notif-table tbody td {
       padding: 12px 10px;
       vertical-align: middle;
@@ -278,13 +296,17 @@ unset($cm);
     .notif-ticket-cell {
       display: flex;
       align-items: center;
-      min-width: 250px;
+      min-width: 0;
+      width: 100%;
     }
     .notif-ticket-title {
       font-weight: 700;
       color: #1f2937;
       margin-bottom: 2px;
       line-height: 1.2;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .notif-ticket-code {
       color: #6b7280;
@@ -293,12 +315,24 @@ unset($cm);
     .notif-msg-cell {
       color: #4b5563;
       font-size: 13px;
-      min-width: 320px;
+      min-width: 0;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .notif-msg-preview {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.35;
+      max-height: 2.7em;
     }
     .notif-time-cell {
       color: #1f3bb3;
       font-size: 12px;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
     }
     .notif-empty {
       text-align: center;
@@ -366,6 +400,120 @@ unset($cm);
     .notif-msg { color:#6b7280; font-size:13px; margin-bottom:2px; }
     .notif-time { color:#1f3bb3; font-size:12px; }
     .notif-link { color:#1f3bb3; font-size:12px; text-decoration:none; font-weight:600; }
+    .btn-view-com {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid #1f3bb3;
+      color: #1f3bb3;
+      background: #fff;
+      transition: all .2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-view-com:hover {
+      background: rgba(31, 59, 179, 0.08);
+      color: #132a91;
+      transform: translateY(-1px);
+    }
+    .com-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .com-modal-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .com-modal-content {
+      font-size: 14px;
+      color: #374151;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.55;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      min-height: 130px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .com-modal-meta {
+      margin-top: 10px;
+      color: #6b7280;
+      font-size: 12px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .com-modal-dialog {
+      max-width: 640px;
+      width: calc(100% - 32px);
+    }
+    #comunicadoModal .modal-content {
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 22px 64px rgba(15, 23, 42, 0.28);
+      background: #ffffff;
+    }
+    #comunicadoModal .modal-header {
+      padding: 14px 18px;
+      border-bottom: none;
+      color: #ffffff;
+      background: linear-gradient(120deg, #1f3bb3 0%, #324ed2 50%, #5f70e6 100%);
+    }
+    #comunicadoModal .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #comunicadoModal .btn-close {
+      filter: invert(1) brightness(1.9);
+      opacity: .9;
+    }
+    #comunicadoModal .btn-close:hover {
+      opacity: 1;
+    }
+    #comunicadoModal .modal-body {
+      padding: 16px 18px 12px;
+      background: linear-gradient(180deg, #f8faff 0%, #ffffff 22%);
+    }
+    #comunicadoModal .modal-footer {
+      padding: 12px 18px 16px;
+      border-top: 1px solid #ebeffa;
+      background: #ffffff;
+    }
+    #comModalTitle {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.25;
+    }
+    #btnComMarcarVisto {
+      border-color: #1f3bb3;
+      background: #1f3bb3;
+      min-width: 130px;
+      font-weight: 600;
+    }
+    #btnComMarcarVisto:hover {
+      background: #18329f;
+      border-color: #18329f;
+    }
     .pill-com { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:600; margin-left:8px; }
     .pill-actualizacion { background:rgba(76,175,80,.14); color:#2f7d32; }
     .pill-mantenimiento { background:rgba(245,158,11,.16); color:#b45309; }
@@ -758,7 +906,7 @@ unset($cm);
                     <button type="button" class="btn btn-outline-secondary w-100" id="notifClearFilters" style="height:36px;">Limpiar</button>
                   </div>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive com-history-wrap">
                   <table class="table notif-table mb-0">
                     <thead>
                       <tr>
@@ -777,6 +925,34 @@ unset($cm);
                   <div class="notif-pagination-info" id="comPaginationInfo">Mostrando 0 de 0 comunicados</div>
                   <div class="notif-pagination" id="comPagination"></div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="comunicadoModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered com-modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title"><i class="mdi mdi-eye-outline me-1"></i>Detalle del comunicado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <div class="com-modal-head">
+                  <h5 class="mb-0" id="comModalTitle">Comunicado</h5>
+                  <span class="com-modal-type" id="comModalType"></span>
+                </div>
+                <div class="com-modal-content" id="comModalContent"></div>
+                <div class="com-modal-meta">
+                  <span><i class="mdi mdi-account-outline"></i> <strong>Publicado por:</strong> <span id="comModalAutor">-</span></span>
+                  <span><i class="mdi mdi-clock-outline"></i> <strong>Fecha:</strong> <span id="comModalFecha">-</span></span>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnComMarcarVisto" style="display:none;">
+                  <i class="mdi mdi-eye-check-outline me-1"></i>Marcar visto
+                </button>
               </div>
             </div>
           </div>
@@ -803,8 +979,25 @@ unset($cm);
   let allItems = <?php echo json_encode($comunicadosData, JSON_UNESCAPED_UNICODE); ?>;
   let filteredItems = [];
   let currentPage = 1;
+  const comunicadoModalEl = document.getElementById('comunicadoModal');
+  const comunicadoModal = (window.bootstrap && comunicadoModalEl) ? new bootstrap.Modal(comunicadoModalEl) : null;
+  const btnComMarcarVisto = document.getElementById('btnComMarcarVisto');
 
-  function esc(v){ return String(v ?? ''); }
+  function esc(v){
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function toText(v){ return String(v ?? ''); }
+  function previewText(v, maxLen = 120){
+    const clean = toText(v).replace(/\s+/g, ' ').trim();
+    if (clean.length <= maxLen) return clean;
+    return clean.substring(0, maxLen - 1) + '...';
+  }
+
   function getTypeMeta(tipo) {
     switch(String(tipo || '').toLowerCase()){
       case 'actualizacion': return { icon:'mdi-update', bg:'rgba(76,175,80,.12)', color:'#2f7d32', pill:'pill-actualizacion', label:'Actualizacion' };
@@ -839,13 +1032,13 @@ unset($cm);
     if (!wrap) return;
 
     let html = '';
-    html += `<button class="btn btn-outline-secondary" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">�</button>`;
+    html += `<button class="btn btn-outline-secondary" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">&lt;</button>`;
     const start = Math.max(1, currentPage - 2);
     const end = Math.min(pages, start + 4);
     for (let p = start; p <= end; p++) {
       html += `<button class="btn btn-outline-secondary ${p === currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
     }
-    html += `<button class="btn btn-outline-secondary" ${currentPage === pages ? 'disabled' : ''} data-page="${currentPage + 1}">�</button>`;
+    html += `<button class="btn btn-outline-secondary" ${currentPage === pages ? 'disabled' : ''} data-page="${currentPage + 1}">&gt;</button>`;
     wrap.innerHTML = html;
 
     wrap.querySelectorAll('button[data-page]').forEach(btn => {
@@ -880,9 +1073,11 @@ unset($cm);
       const estadoHtml = Number(n.leido)
         ? '<i class="mdi mdi-eye-check-outline notif-status-eye"></i>'
         : '<span class="notif-status-dot blink"></span>';
-      const actionHtml = Number(n.leido)
-        ? '<span class="text-success" style="font-size:12px;font-weight:600;">Visto</span>'
-        : `<a class="notif-link js-mark-read" href="#" data-id="${n.id}">Marcar visto</a>`;
+      const resumen = previewText(n.contenido || '', 120);
+      const actionHtml = `
+        <button type="button" class="btn-view-com js-open-com" data-id="${n.id}" title="Ver comunicado">
+          <i class="mdi mdi-eye-outline"></i>
+        </button>`;
       html += `
         <tr class="${rowClass}">
           <td>${estadoHtml}</td>
@@ -896,7 +1091,7 @@ unset($cm);
             </div>
           </td>
           <td><span class="pill-com ${meta.pill}">${meta.label}</span></td>
-          <td class="notif-msg-cell">${esc(n.contenido || '')}</td>
+          <td class="notif-msg-cell"><div class="notif-msg-preview">${esc(resumen)}</div></td>
           <td class="notif-time-cell"><i class="mdi mdi-clock-outline"></i> ${esc(n.tiempo || '')}</td>
           <td>${actionHtml}</td>
         </tr>`;
@@ -907,23 +1102,66 @@ unset($cm);
     document.getElementById('comPaginationInfo').textContent = `Mostrando ${shownFrom}-${shownTo} de ${total} comunicados`;
     renderPagination(total);
 
-    el.querySelectorAll('.js-mark-read').forEach(a => {
-      a.addEventListener('click', function(e){
+    el.querySelectorAll('.js-open-com').forEach(btn => {
+      btn.addEventListener('click', function(e){
         e.preventDefault();
         const id = Number(this.dataset.id || 0);
-        if (!id) return;
-        fetch('api/marcar_leido.php', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/x-www-form-urlencoded' },
-          body: `tipo=comunicado&referencia_id=${encodeURIComponent(id)}`
-        }).finally(() => {
-          const idx = allItems.findIndex(x => Number(x.id) === id);
-          if (idx >= 0) allItems[idx].leido = 1;
-          renderHistoryPage();
-        });
+        openComunicadoModal(id);
       });
     });
   }
+
+  function markComunicadoAsRead(id){
+    if (!id) return;
+    fetch('api/marcar_leido.php', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/x-www-form-urlencoded' },
+      body: `tipo=comunicado&referencia_id=${encodeURIComponent(id)}`
+    }).finally(() => {
+      const idx = allItems.findIndex(x => Number(x.id) === Number(id));
+      if (idx >= 0) allItems[idx].leido = 1;
+      window.location.reload();
+    });
+  }
+
+  function openComunicadoModal(id){
+    const item = allItems.find(x => Number(x.id) === Number(id));
+    if (!item) return;
+    const meta = getTypeMeta(item.tipo);
+
+    const titleEl = document.getElementById('comModalTitle');
+    const typeEl = document.getElementById('comModalType');
+    const contentEl = document.getElementById('comModalContent');
+    const autorEl = document.getElementById('comModalAutor');
+    const fechaEl = document.getElementById('comModalFecha');
+
+    if (titleEl) titleEl.textContent = toText(item.titulo || 'Comunicado');
+    if (typeEl) {
+      typeEl.innerHTML = `<i class="mdi ${esc(item.icono || meta.icon)}"></i><span>${esc(meta.label)}</span>`;
+      typeEl.style.background = meta.bg;
+      typeEl.style.color = meta.color;
+    }
+    if (contentEl) contentEl.textContent = toText(item.contenido || '');
+    if (autorEl) autorEl.textContent = toText(item.autor || 'Sistema');
+    if (fechaEl) fechaEl.textContent = toText(item.tiempo || '');
+
+    if (btnComMarcarVisto) {
+      if (Number(item.leido)) {
+        btnComMarcarVisto.style.display = 'none';
+      } else {
+        btnComMarcarVisto.style.display = 'inline-flex';
+        btnComMarcarVisto.dataset.id = String(item.id);
+      }
+    }
+
+    if (comunicadoModal) comunicadoModal.show();
+  }
+
+  btnComMarcarVisto?.addEventListener('click', function(){
+    const id = Number(this.dataset.id || 0);
+    if (!id) return;
+    markComunicadoAsRead(id);
+  });
 
   function loadHistory(){ currentPage = 1; renderHistoryPage(); }
 
@@ -946,12 +1184,15 @@ unset($cm);
   document.getElementById('btnRefreshCom')?.addEventListener('click', loadHistory);
   bindFilters();
   loadHistory();
+
+  const fromDropdownId = Number(new URLSearchParams(window.location.search).get('id') || 0);
+  if (fromDropdownId) {
+    openComunicadoModal(fromDropdownId);
+  }
 })();
 </script>
 <script src="js/sidebar-badges.js"></script>
 </body>
 </html>
-
-
 
 
